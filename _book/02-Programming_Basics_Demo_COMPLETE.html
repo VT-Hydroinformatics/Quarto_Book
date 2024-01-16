@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Hydroinformatics - 2&nbsp; R Tidyverse Programming Basics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./01-Plotting_Demo_COMPLETE.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-Programming_Basics_Demo_COMPLETE.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Tidyverse Programming Basics</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Hydroinformatics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Plotting_Demo_COMPLETE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro to Plotting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Programming_Basics_Demo_COMPLETE.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Tidyverse Programming Basics</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">2.1</span> Introduction</a></li>
+  <li><a href="#you-can-use-r-as-a-calculator" id="toc-you-can-use-r-as-a-calculator" class="nav-link" data-scroll-target="#you-can-use-r-as-a-calculator"><span class="header-section-number">2.2</span> You can use R as a calculator</a></li>
+  <li><a href="#you-can-create-new-objects-using--" id="toc-you-can-create-new-objects-using--" class="nav-link" data-scroll-target="#you-can-create-new-objects-using--"><span class="header-section-number">2.3</span> You can create new objects using &lt;-</a></li>
+  <li><a href="#using-functions" id="toc-using-functions" class="nav-link" data-scroll-target="#using-functions"><span class="header-section-number">2.4</span> Using functions</a></li>
+  <li><a href="#read-in-some-data." id="toc-read-in-some-data." class="nav-link" data-scroll-target="#read-in-some-data."><span class="header-section-number">2.5</span> Read in some data.</a></li>
+  <li><a href="#wait-hold-up.-what-is-a-tibble" id="toc-wait-hold-up.-what-is-a-tibble" class="nav-link" data-scroll-target="#wait-hold-up.-what-is-a-tibble"><span class="header-section-number">2.6</span> Wait, hold up. What is a tibble?</a></li>
+  <li><a href="#data-wrangling-in-dplyr" id="toc-data-wrangling-in-dplyr" class="nav-link" data-scroll-target="#data-wrangling-in-dplyr"><span class="header-section-number">2.7</span> Data wrangling in dplyr</a></li>
+  <li><a href="#filter" id="toc-filter" class="nav-link" data-scroll-target="#filter"><span class="header-section-number">2.8</span> Filter</a>
+  <ul class="collapse">
+  <li><a href="#multiple-conditions" id="toc-multiple-conditions" class="nav-link" data-scroll-target="#multiple-conditions"><span class="header-section-number">2.8.1</span> Multiple conditions</a></li>
+  </ul></li>
+  <li><a href="#arrange" id="toc-arrange" class="nav-link" data-scroll-target="#arrange"><span class="header-section-number">2.9</span> Arrange</a></li>
+  <li><a href="#select" id="toc-select" class="nav-link" data-scroll-target="#select"><span class="header-section-number">2.10</span> Select</a></li>
+  <li><a href="#mutate" id="toc-mutate" class="nav-link" data-scroll-target="#mutate"><span class="header-section-number">2.11</span> Mutate</a></li>
+  <li><a href="#summarize" id="toc-summarize" class="nav-link" data-scroll-target="#summarize"><span class="header-section-number">2.12</span> Summarize</a></li>
+  <li><a href="#multiple-operations-with-pipes" id="toc-multiple-operations-with-pipes" class="nav-link" data-scroll-target="#multiple-operations-with-pipes"><span class="header-section-number">2.13</span> Multiple operations with pipes</a>
+  <ul class="collapse">
+  <li><a href="#lets-say-we-want-to-tell-r-to-make-a-pbj-sandwich-by-using-the-pbbread-jbread-and-joinslices-functions-and-the-data-ingredients.-if-we-do-this-saving-each-step-if-would-look-like-this" id="toc-lets-say-we-want-to-tell-r-to-make-a-pbj-sandwich-by-using-the-pbbread-jbread-and-joinslices-functions-and-the-data-ingredients.-if-we-do-this-saving-each-step-if-would-look-like-this" class="nav-link" data-scroll-target="#lets-say-we-want-to-tell-r-to-make-a-pbj-sandwich-by-using-the-pbbread-jbread-and-joinslices-functions-and-the-data-ingredients.-if-we-do-this-saving-each-step-if-would-look-like-this"><span class="header-section-number">2.13.1</span> Let’s say we want to tell R to make a PB&amp;J sandwich by using the pbbread(), jbread(), and joinslices() functions and the data “ingredients”. If we do this saving each step if would look like this:</a></li>
+  <li><a href="#if-we-nest-the-functions-together-we-get-this" id="toc-if-we-nest-the-functions-together-we-get-this" class="nav-link" data-scroll-target="#if-we-nest-the-functions-together-we-get-this"><span class="header-section-number">2.13.2</span> If we nest the functions together we get this</a></li>
+  <li><a href="#using-the-pipe-it-would-look-like-this" id="toc-using-the-pipe-it-would-look-like-this" class="nav-link" data-scroll-target="#using-the-pipe-it-would-look-like-this"><span class="header-section-number">2.13.3</span> Using the pipe it would look like this</a></li>
+  <li><a href="#when-you-use-the-pipe-it-basically-takes-whatever-came-out-of-the-first-function-and-puts-it-into-the-data-argument-for-the-next-one" id="toc-when-you-use-the-pipe-it-basically-takes-whatever-came-out-of-the-first-function-and-puts-it-into-the-data-argument-for-the-next-one" class="nav-link" data-scroll-target="#when-you-use-the-pipe-it-basically-takes-whatever-came-out-of-the-first-function-and-puts-it-into-the-data-argument-for-the-next-one"><span class="header-section-number">2.13.4</span> When you use the pipe, it basically takes whatever came out of the first function and puts it into the data argument for the next one</a></li>
+  </ul></li>
+  <li><a href="#save-your-results-to-a-new-tibble" id="toc-save-your-results-to-a-new-tibble" class="nav-link" data-scroll-target="#save-your-results-to-a-new-tibble"><span class="header-section-number">2.14</span> Save your results to a new tibble</a></li>
+  <li><a href="#what-about-nas" id="toc-what-about-nas" class="nav-link" data-scroll-target="#what-about-nas"><span class="header-section-number">2.15</span> What about NAs?</a></li>
+  <li><a href="#what-are-some-things-you-think-ill-ask-you-to-do-for-the-activity-next-class" id="toc-what-are-some-things-you-think-ill-ask-you-to-do-for-the-activity-next-class" class="nav-link" data-scroll-target="#what-are-some-things-you-think-ill-ask-you-to-do-for-the-activity-next-class"><span class="header-section-number">2.16</span> What are some things you think I’ll ask you to do for the activity next class?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="Programming" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Tidyverse Programming Basics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Get this document and a version with empty code chunks at the template repository on github: <a href="https://github.com/VT-Hydroinformatics/2-Programming-Basics" class="uri">https://github.com/VT-Hydroinformatics/2-Programming-Basics</a></p>
+<section id="introduction" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
+<p>We have messed around with plotting a bit and you’ve seen a little of what R can do. So now let’s review or introduce you to some basics. Even if you have worked in R before, it is good to be remind of/practice with this stuff, so stay tuned in!</p>
+<p>This exercise covers most of the same principles as two chapters in R for Data Science</p>
+<p>Workflow: basics (<a href="https://r4ds.had.co.nz/workflow-basics.html" class="uri">https://r4ds.had.co.nz/workflow-basics.html</a>)</p>
+<p>Data transformation (<a href="https://r4ds.had.co.nz/transform.html" class="uri">https://r4ds.had.co.nz/transform.html</a>)</p>
+</section>
+<section id="you-can-use-r-as-a-calculator" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="you-can-use-r-as-a-calculator"><span class="header-section-number">2.2</span> You can use R as a calculator</h2>
+<p>If you just type numbers and operators in, R will spit out the results</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+</section>
+<section id="you-can-create-new-objects-using--" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="you-can-create-new-objects-using--"><span class="header-section-number">2.3</span> You can create new objects using &lt;-</h2>
+<p>Yea yea, = does the same thing. But use &lt;-. We will call &lt;- assignment or assignment operator. When we are coding in R we use &lt;- to assign values to objects and = to set values for parameters in functions. Using &lt;- helps us differentiate between the two. Norms for formatting are important because they help us understand what code is doing, especially when stuff gets complex.</p>
+<p>Oh, one more thing: Surround operators with spaces. Don’t code like a gorilla.</p>
+<p>x &lt;- 1 looks better than x&lt;-1 and if you disagree you are wrong. :)</p>
+<p>You can assign single numbers or entire chunks of data using &lt;-</p>
+<p>So if you had an object called my_data and wanted to copy it into my_new_data you could do:</p>
+<p>my_new_data &lt;- my_data</p>
+<p>You can then recall/print the values in an object by just typing the name by itself.</p>
+<p>In the code chunk below, assign a 3 to the object “y” and then print it out.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>If you want to assign multiple values, you have to put them in the function c() c means combine. R doesn’t know what to do if you just give it a bunch of values with space or commas, but if you put them as arguments in the combine function, it’ll make them into a vector.</p>
+<p>Any time you need to use several values, even passing as an argument to a function, you have to put them in c() or it won’t work.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4</code></pre>
+</div>
+</div>
+<p>When you are creating objects, try to give them meaningful names so you can remember what they are. You can’t have spaces or operators that mean something else as part of a name. And remember, everything is case sensitive.</p>
+<p>Assign the value 5.4 to water_pH and then try to recall it by typing “water_ph”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>water_pH <span class="ot">&lt;-</span> <span class="fl">5.4</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#water_ph</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can also set objects equal to strings, or values that have letters in them. To do this you just have to put the value in quotes, otherwise R will think it is an object name and tell you it doesn’t exist.</p>
+<p>Try: name &lt;- “JP” and then name &lt;- JP</p>
+<p>What happens if you forget the ending parenthesis?</p>
+<p>Try: name &lt;- “JP</p>
+<p>R can be cryptic with it’s error messages or other responses, but once you get used to them, you know exactly what is wrong when they pop up.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">"JP"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#name &lt;- JP</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="using-functions" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="using-functions"><span class="header-section-number">2.4</span> Using functions</h2>
+<p><img src="images/Function syntax.png" class="img-fluid"></p>
+<p>As an example, let’s try the seq() function, which creates a sequence of numbers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">1</span>, <span class="at">to =</span> <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#or</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#or</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#what does this do</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="dv">10</span>,<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 10  9  8  7  6  5  4  3  2  1</code></pre>
+</div>
+</div>
+</section>
+<section id="read-in-some-data." class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="read-in-some-data."><span class="header-section-number">2.5</span> Read in some data.</h2>
+<p>For the following demonstration we will use the RBI data from a sample of USGS gages we used last class. First we will load the tidyverse library, everything we have done so far is in base R.</p>
+<p>Important: read_csv() is the tidyverse csv reading function, the base R function is read.csv(). read.csv() will not read your data in as a tibble, which is the format used by tidyverse functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rbi <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Flashy_Dat_Subset.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 49 Columns: 26
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (4): STANAME, STATE, CLASS, AGGECOREGION
+dbl (22): site_no, RBI, RBIrank, DRAIN_SQKM, HUC02, LAT_GAGE, LNG_GAGE, PPTA...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="wait-hold-up.-what-is-a-tibble" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="wait-hold-up.-what-is-a-tibble"><span class="header-section-number">2.6</span> Wait, hold up. What is a tibble?</h2>
+<p>Good question. It’s a fancy way to store data that works well with tidyverse functions. Let’s look at the rbi tibble.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rbi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 26
+  site_no    RBI RBIrank STANAME  DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+1 1013500 0.0584      35 Fish Ri…     2253.      1     47.2    -68.6 ME    Ref  
+2 1021480 0.208      300 Old Str…       76.7     1     44.9    -67.7 ME    Ref  
+3 1022500 0.198      286 Narragu…      574.      1     44.6    -67.9 ME    Ref  
+4 1029200 0.132      183 Seboeis…      445.      1     46.1    -68.6 ME    Ref  
+5 1030500 0.114      147 Mattawa…     3676.      1     45.5    -68.3 ME    Ref  
+6 1031300 0.297      489 Piscata…      304.      1     45.3    -69.6 ME    Ref  
+# ℹ 16 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Now read in the same data with read.csv() which will NOT read the data as a tibble. How is it different? Output each one in the Console.</p>
+<p>Knowing the data type for each column is super helpful for a few reasons…. let’s talk about them.</p>
+<p>Types: int, dbl, fctr, char, logical</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rbi_NT <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Flashy_Dat_Subset.csv"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rbi_NT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  site_no        RBI RBIrank                                     STANAME
+1 1013500 0.05837454      35            Fish River near Fort Kent, Maine
+2 1021480 0.20797008     300               Old Stream near Wesley, Maine
+3 1022500 0.19805382     286     Narraguagus River at Cherryfield, Maine
+4 1029200 0.13151299     183         Seboeis River near Shin Pond, Maine
+5 1030500 0.11350485     147 Mattawamkeag River near Mattawamkeag, Maine
+6 1031300 0.29718786     489       Piscataquis River at Blanchard, Maine
+  DRAIN_SQKM HUC02 LAT_GAGE  LNG_GAGE STATE CLASS AGGECOREGION PPTAVG_BASIN
+1     2252.7     1 47.23739 -68.58264    ME   Ref    NorthEast        97.42
+2       76.7     1 44.93694 -67.73611    ME   Ref    NorthEast       115.39
+3      573.6     1 44.60797 -67.93524    ME   Ref    NorthEast       120.07
+4      444.9     1 46.14306 -68.63361    ME   Ref    NorthEast       102.19
+5     3676.2     1 45.50097 -68.30596    ME   Ref    NorthEast       108.19
+6      304.4     1 45.26722 -69.58389    ME   Ref    NorthEast       119.83
+  PPTAVG_SITE T_AVG_BASIN T_AVG_SITE T_MAX_BASIN T_MAXSTD_BASIN T_MAX_SITE
+1       93.53        3.00        3.0        9.67          0.202       10.0
+2      117.13        5.71        5.8       11.70          0.131       11.9
+3      129.56        5.95        6.3       11.90          0.344       12.2
+4      103.24        3.61        4.0        9.88          0.231       10.4
+5      113.13        4.82        5.4       10.75          0.554       11.7
+6      120.93        3.60        4.2        9.57          0.431       11.0
+  T_MIN_BASIN T_MINSTD_BASIN T_MIN_SITE   PET SNOW_PCT_PRECIP PRECIP_SEAS_IND
+1       -2.49          0.269       -2.7 504.7            36.9           0.102
+2       -0.85          0.123       -0.6 554.2            39.5           0.046
+3        0.06          0.873        1.4 553.1            38.2           0.047
+4       -2.13          0.216       -1.5 513.0            36.4           0.070
+5       -1.49          0.251       -1.2 540.8            37.2           0.033
+6       -2.46          0.268       -1.7 495.8            40.2           0.030
+  FLOWYRS_1990_2009 wy00_09
+1                20      10
+2                11      10
+3                20      10
+4                11      10
+5                20      10
+6                13      10</code></pre>
+</div>
+</div>
+</section>
+<section id="data-wrangling-in-dplyr" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="data-wrangling-in-dplyr"><span class="header-section-number">2.7</span> Data wrangling in dplyr</h2>
+<p>If you forget syntax or what the following functions do, here is an excellent cheat sheet: <a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" class="uri">https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf</a></p>
+<p>We will demo five functions below:</p>
+<ul>
+<li><strong>filter()</strong> - returns rows that meet specified conditions</li>
+<li><strong>arrange()</strong> - reorders rows</li>
+<li><strong>select()</strong> - pull out variables (columns)</li>
+<li><strong>mutate()</strong> - create new variables (columns) or reformat existing ones</li>
+<li><strong>summarize()</strong> - collapse groups of values into summary stats</li>
+</ul>
+<p>With all of these, the first argument is the data and then the arguments after that specify what you want the function to do.</p>
+<p><img src="images/dplyr functions.png" class="img-fluid"></p>
+</section>
+<section id="filter" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="filter"><span class="header-section-number">2.8</span> Filter</h2>
+<p>Write an expression that returns data in rbi for the state of Maine (ME)</p>
+<p>Operators:<br>
+== equal<br>
+!= not equal<br>
+&gt;= , &lt;= greater than or equal to, less than or equal to<br>
+&gt;, &lt; greater than or less then<br>
+%in% included in a list of values<br>
+&amp; and<br>
+| or</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(rbi, STATE <span class="sc">==</span> <span class="st">"ME"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 26
+   site_no    RBI RBIrank STANAME DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 1013500 0.0584      35 Fish R…     2253.      1     47.2    -68.6 ME    Ref  
+ 2 1021480 0.208      300 Old St…       76.7     1     44.9    -67.7 ME    Ref  
+ 3 1022500 0.198      286 Narrag…      574.      1     44.6    -67.9 ME    Ref  
+ 4 1029200 0.132      183 Seboei…      445.      1     46.1    -68.6 ME    Ref  
+ 5 1030500 0.114      147 Mattaw…     3676.      1     45.5    -68.3 ME    Ref  
+ 6 1031300 0.297      489 Piscat…      304.      1     45.3    -69.6 ME    Ref  
+ 7 1031500 0.320      545 Piscat…      769       1     45.2    -69.3 ME    Ref  
+ 8 1037380 0.318      537 Ducktr…       39       1     44.3    -69.1 ME    Ref  
+ 9 1044550 0.242      360 Spence…      500.      1     45.3    -70.2 ME    Ref  
+10 1047000 0.344      608 Carrab…      909.      1     44.9    -70.0 ME    Ref  
+11 1054200 0.492      805 Wild R…      181       1     44.4    -71.0 ME    Ref  
+12 1055000 0.450      762 Swift …      251.      1     44.6    -70.6 ME    Ref  
+13 1057000 0.326      561 Little…      191.      1     44.3    -70.5 ME    Ref  
+# ℹ 16 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<section id="multiple-conditions" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="multiple-conditions"><span class="header-section-number">2.8.1</span> Multiple conditions</h3>
+<p>How many gages are there in Maine with an rbi greater than 0.25</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(rbi, STATE <span class="sc">==</span> <span class="st">"ME"</span> <span class="sc">&amp;</span> RBI <span class="sc">&gt;</span> <span class="fl">0.25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 26
+  site_no   RBI RBIrank STANAME   DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+1 1031300 0.297     489 Piscataq…       304.     1     45.3    -69.6 ME    Ref  
+2 1031500 0.320     545 Piscataq…       769      1     45.2    -69.3 ME    Ref  
+3 1037380 0.318     537 Ducktrap…        39      1     44.3    -69.1 ME    Ref  
+4 1047000 0.344     608 Carrabas…       909.     1     44.9    -70.0 ME    Ref  
+5 1054200 0.492     805 Wild Riv…       181      1     44.4    -71.0 ME    Ref  
+6 1055000 0.450     762 Swift Ri…       251.     1     44.6    -70.6 ME    Ref  
+7 1057000 0.326     561 Little A…       191.     1     44.3    -70.5 ME    Ref  
+# ℹ 16 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="arrange" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="arrange"><span class="header-section-number">2.9</span> Arrange</h2>
+<p>Arrange sorts by a column in your dataset.</p>
+<p>Sort the rbi data by the RBI column in ascending and then descending order</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(rbi, RBI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 26
+   site_no    RBI RBIrank STANAME DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 1305500 0.0464      18 SWAN R…       21.3     2     40.8    -73.0 NY    Non-…
+ 2 1013500 0.0584      35 Fish R…     2253.      1     47.2    -68.6 ME    Ref  
+ 3 1306460 0.0587      37 CONNET…       55.7     2     40.8    -73.2 NY    Non-…
+ 4 1030500 0.114      147 Mattaw…     3676.      1     45.5    -68.3 ME    Ref  
+ 5 1029200 0.132      183 Seboei…      445.      1     46.1    -68.6 ME    Ref  
+ 6 1117468 0.172      244 BEAVER…       25.3     1     41.5    -71.6 RI    Ref  
+ 7 1022500 0.198      286 Narrag…      574.      1     44.6    -67.9 ME    Ref  
+ 8 1021480 0.208      300 Old St…       76.7     1     44.9    -67.7 ME    Ref  
+ 9 1162500 0.213      311 PRIEST…       49.7     1     42.7    -72.1 MA    Ref  
+10 1117370 0.230      338 QUEEN …       50.5     1     41.5    -71.6 RI    Ref  
+# ℹ 39 more rows
+# ℹ 16 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(rbi, <span class="fu">desc</span>(RBI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 26
+   site_no   RBI RBIrank STANAME  DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 1311500 0.856    1017 VALLEY …       18.1     2     40.7    -73.7 NY    Non-…
+ 2 1054200 0.492     805 Wild Ri…      181       1     44.4    -71.0 ME    Ref  
+ 3 1187300 0.487     800 HUBBARD…       53.9     1     42.0    -72.9 MA    Ref  
+ 4 1105600 0.484     797 OLD SWA…       12.7     1     42.2    -70.9 MA    Non-…
+ 5 1055000 0.450     762 Swift R…      251.      1     44.6    -70.6 ME    Ref  
+ 6 1195100 0.430     744 INDIAN …       14.8     1     41.3    -72.5 CT    Ref  
+ 7 1181000 0.420     732 WEST BR…      244.      1     42.2    -72.9 MA    Ref  
+ 8 1350000 0.414     721 SCHOHAR…      612.      2     42.3    -74.4 NY    Ref  
+ 9 1121000 0.404     710 MOUNT H…       70.3     1     41.8    -72.2 CT    Ref  
+10 1169000 0.395     688 NORTH R…      231.      1     42.6    -72.7 MA    Ref  
+# ℹ 39 more rows
+# ℹ 16 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="select" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="select"><span class="header-section-number">2.10</span> Select</h2>
+<p>There are too many columns! You will often want to do this when you are manipulating the structure of your data and need to trim it down to only include what you will use.</p>
+<p>Select Site name, state, and RBI from the rbi data</p>
+<p>Note they come back in the order you put them in in the function, not the order they were in in the original data.</p>
+<p>You can do a lot more with select, especially when you need to select a bunch of columns but don’t want to type them all out. But we don’t need to cover all that today. For a taste though, if you want to select a group of columns you can specify the first and last with a colon in between (first:last) and it’ll return all of them. Select the rbi columns from site_no to DRAIN_SQKM.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(rbi, STANAME, STATE, RBI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 3
+   STANAME                                      STATE    RBI
+   &lt;chr&gt;                                        &lt;chr&gt;  &lt;dbl&gt;
+ 1 Fish River near Fort Kent, Maine             ME    0.0584
+ 2 Old Stream near Wesley, Maine                ME    0.208 
+ 3 Narraguagus River at Cherryfield, Maine      ME    0.198 
+ 4 Seboeis River near Shin Pond, Maine          ME    0.132 
+ 5 Mattawamkeag River near Mattawamkeag, Maine  ME    0.114 
+ 6 Piscataquis River at Blanchard, Maine        ME    0.297 
+ 7 Piscataquis River near Dover-Foxcroft, Maine ME    0.320 
+ 8 Ducktrap River near Lincolnville, Maine      ME    0.318 
+ 9 Spencer Stream near Grand Falls, Maine       ME    0.242 
+10 Carrabassett River near North Anson, Maine   ME    0.344 
+# ℹ 39 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(rbi, site_no<span class="sc">:</span>DRAIN_SQKM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 5
+   site_no    RBI RBIrank STANAME                                     DRAIN_SQKM
+     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                                            &lt;dbl&gt;
+ 1 1013500 0.0584      35 Fish River near Fort Kent, Maine                2253. 
+ 2 1021480 0.208      300 Old Stream near Wesley, Maine                     76.7
+ 3 1022500 0.198      286 Narraguagus River at Cherryfield, Maine          574. 
+ 4 1029200 0.132      183 Seboeis River near Shin Pond, Maine              445. 
+ 5 1030500 0.114      147 Mattawamkeag River near Mattawamkeag, Maine     3676. 
+ 6 1031300 0.297      489 Piscataquis River at Blanchard, Maine            304. 
+ 7 1031500 0.320      545 Piscataquis River near Dover-Foxcroft, Mai…      769  
+ 8 1037380 0.318      537 Ducktrap River near Lincolnville, Maine           39  
+ 9 1044550 0.242      360 Spencer Stream near Grand Falls, Maine           500. 
+10 1047000 0.344      608 Carrabassett River near North Anson, Maine       909. 
+# ℹ 39 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="mutate" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="mutate"><span class="header-section-number">2.11</span> Mutate</h2>
+<p>Use mutate to add new columns based on additional ones. Common uses are to create a column of data in different units, or to calculate something based on two columns. You can also use it to just update a column, by naming the new column the same as the original one (but be careful because you’ll lose the original one!). I commonly use this when I am changing the datatype of a column, say from a character to a factor or a string to a date.</p>
+<p>Create a new column in rbi called T_RANGE by subtracting T_MIN_SITE from T_MAX_SITE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(rbi, <span class="at">T_RANGE =</span> T_MAX_SITE <span class="sc">-</span> T_MIN_SITE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 27
+   site_no    RBI RBIrank STANAME DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 1013500 0.0584      35 Fish R…     2253.      1     47.2    -68.6 ME    Ref  
+ 2 1021480 0.208      300 Old St…       76.7     1     44.9    -67.7 ME    Ref  
+ 3 1022500 0.198      286 Narrag…      574.      1     44.6    -67.9 ME    Ref  
+ 4 1029200 0.132      183 Seboei…      445.      1     46.1    -68.6 ME    Ref  
+ 5 1030500 0.114      147 Mattaw…     3676.      1     45.5    -68.3 ME    Ref  
+ 6 1031300 0.297      489 Piscat…      304.      1     45.3    -69.6 ME    Ref  
+ 7 1031500 0.320      545 Piscat…      769       1     45.2    -69.3 ME    Ref  
+ 8 1037380 0.318      537 Ducktr…       39       1     44.3    -69.1 ME    Ref  
+ 9 1044550 0.242      360 Spence…      500.      1     45.3    -70.2 ME    Ref  
+10 1047000 0.344      608 Carrab…      909.      1     44.9    -70.0 ME    Ref  
+# ℹ 39 more rows
+# ℹ 17 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;,
+#   T_RANGE &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>When downloading data from the USGS through R, you have to enter the gage ID as a character, even though they are all made up of numbers. So to practice doing this, update the site_no column to be a character datatype</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(rbi, <span class="at">site_no =</span> <span class="fu">as.character</span>(site_no))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 49 × 26
+   site_no    RBI RBIrank STANAME DRAIN_SQKM HUC02 LAT_GAGE LNG_GAGE STATE CLASS
+   &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+ 1 1013500 0.0584      35 Fish R…     2253.      1     47.2    -68.6 ME    Ref  
+ 2 1021480 0.208      300 Old St…       76.7     1     44.9    -67.7 ME    Ref  
+ 3 1022500 0.198      286 Narrag…      574.      1     44.6    -67.9 ME    Ref  
+ 4 1029200 0.132      183 Seboei…      445.      1     46.1    -68.6 ME    Ref  
+ 5 1030500 0.114      147 Mattaw…     3676.      1     45.5    -68.3 ME    Ref  
+ 6 1031300 0.297      489 Piscat…      304.      1     45.3    -69.6 ME    Ref  
+ 7 1031500 0.320      545 Piscat…      769       1     45.2    -69.3 ME    Ref  
+ 8 1037380 0.318      537 Ducktr…       39       1     44.3    -69.1 ME    Ref  
+ 9 1044550 0.242      360 Spence…      500.      1     45.3    -70.2 ME    Ref  
+10 1047000 0.344      608 Carrab…      909.      1     44.9    -70.0 ME    Ref  
+# ℹ 39 more rows
+# ℹ 16 more variables: AGGECOREGION &lt;chr&gt;, PPTAVG_BASIN &lt;dbl&gt;,
+#   PPTAVG_SITE &lt;dbl&gt;, T_AVG_BASIN &lt;dbl&gt;, T_AVG_SITE &lt;dbl&gt;, T_MAX_BASIN &lt;dbl&gt;,
+#   T_MAXSTD_BASIN &lt;dbl&gt;, T_MAX_SITE &lt;dbl&gt;, T_MIN_BASIN &lt;dbl&gt;,
+#   T_MINSTD_BASIN &lt;dbl&gt;, T_MIN_SITE &lt;dbl&gt;, PET &lt;dbl&gt;, SNOW_PCT_PRECIP &lt;dbl&gt;,
+#   PRECIP_SEAS_IND &lt;dbl&gt;, FLOWYRS_1990_2009 &lt;dbl&gt;, wy00_09 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="summarize" class="level2" data-number="2.12">
+<h2 data-number="2.12" class="anchored" data-anchor-id="summarize"><span class="header-section-number">2.12</span> Summarize</h2>
+<p>Summarize will perform an operation on all of your data, or groups if you assign groups.</p>
+<p>Use summarize to compute the mean, min, and max rbi</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(rbi, <span class="at">meanrbi =</span> <span class="fu">mean</span>(RBI), <span class="at">maxrbi =</span> <span class="fu">max</span>(RBI), <span class="at">minrbi =</span> <span class="fu">min</span>(RBI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  meanrbi maxrbi minrbi
+    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1   0.316  0.856 0.0464</code></pre>
+</div>
+</div>
+<p>Now use the group function to group by state and then summarize in the same way as above</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>rbistate <span class="ot">&lt;-</span> <span class="fu">group_by</span>(rbi, STATE)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(rbistate, <span class="at">meanrbi =</span> <span class="fu">mean</span>(RBI), <span class="at">maxrbi =</span> <span class="fu">max</span>(RBI), <span class="at">minrbi =</span> <span class="fu">min</span>(RBI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  STATE meanrbi maxrbi minrbi
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 CT      0.366  0.430 0.295 
+2 MA      0.367  0.487 0.213 
+3 ME      0.269  0.492 0.0584
+4 NH      0.336  0.368 0.265 
+5 NY      0.342  0.856 0.0464
+6 RI      0.201  0.230 0.172 
+7 VT      0.299  0.365 0.231 </code></pre>
+</div>
+</div>
+</section>
+<section id="multiple-operations-with-pipes" class="level2" data-number="2.13">
+<h2 data-number="2.13" class="anchored" data-anchor-id="multiple-operations-with-pipes"><span class="header-section-number">2.13</span> Multiple operations with pipes</h2>
+<p>The pipe operator %&gt;% allows you to perform multiple operations in a sequence without saving intermediate steps. Not only is this more efficient, but structuring operations with pipes is also more intuitive than nesting functions within functions (the other way you can do multiple operations).</p>
+<section id="lets-say-we-want-to-tell-r-to-make-a-pbj-sandwich-by-using-the-pbbread-jbread-and-joinslices-functions-and-the-data-ingredients.-if-we-do-this-saving-each-step-if-would-look-like-this" class="level3" data-number="2.13.1">
+<h3 data-number="2.13.1" class="anchored" data-anchor-id="lets-say-we-want-to-tell-r-to-make-a-pbj-sandwich-by-using-the-pbbread-jbread-and-joinslices-functions-and-the-data-ingredients.-if-we-do-this-saving-each-step-if-would-look-like-this"><span class="header-section-number">2.13.1</span> Let’s say we want to tell R to make a PB&amp;J sandwich by using the pbbread(), jbread(), and joinslices() functions and the data “ingredients”. If we do this saving each step if would look like this:</h3>
+<blockquote class="blockquote">
+<p>sando &lt;- pbbread(ingredients)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>sando &lt;- jbread(sando)</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>sando &lt;- joinslices(sando)</p>
+</blockquote>
+</section>
+<section id="if-we-nest-the-functions-together-we-get-this" class="level3" data-number="2.13.2">
+<h3 data-number="2.13.2" class="anchored" data-anchor-id="if-we-nest-the-functions-together-we-get-this"><span class="header-section-number">2.13.2</span> If we nest the functions together we get this</h3>
+<blockquote class="blockquote">
+<p>joinslice(jbread(pbbread(ingredients)))</p>
+</blockquote>
+<p>Efficient… but tough to read/interpret</p>
+</section>
+<section id="using-the-pipe-it-would-look-like-this" class="level3" data-number="2.13.3">
+<h3 data-number="2.13.3" class="anchored" data-anchor-id="using-the-pipe-it-would-look-like-this"><span class="header-section-number">2.13.3</span> Using the pipe it would look like this</h3>
+<blockquote class="blockquote">
+<p>ingredients %&gt;%<br>
+pbbread() %&gt;%<br>
+jbread() %&gt;%<br>
+joinslices()</p>
+</blockquote>
+<p>Much easier to follow!</p>
+</section>
+<section id="when-you-use-the-pipe-it-basically-takes-whatever-came-out-of-the-first-function-and-puts-it-into-the-data-argument-for-the-next-one" class="level3" data-number="2.13.4">
+<h3 data-number="2.13.4" class="anchored" data-anchor-id="when-you-use-the-pipe-it-basically-takes-whatever-came-out-of-the-first-function-and-puts-it-into-the-data-argument-for-the-next-one"><span class="header-section-number">2.13.4</span> When you use the pipe, it basically takes whatever came out of the first function and puts it into the data argument for the next one</h3>
+<p><strong>so rbi %&gt;% group_by(STATE) is the same as group_by(rbi, STATE)</strong></p>
+<p>Take the groupby and summarize code from above and perform the operation using the pipe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>rbi <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(STATE) <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">meanrbi =</span> <span class="fu">mean</span>(RBI), <span class="at">maxrbi =</span> <span class="fu">max</span>(RBI), <span class="at">minrbi =</span> <span class="fu">min</span>(RBI))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  STATE meanrbi maxrbi minrbi
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 CT      0.366  0.430 0.295 
+2 MA      0.367  0.487 0.213 
+3 ME      0.269  0.492 0.0584
+4 NH      0.336  0.368 0.265 
+5 NY      0.342  0.856 0.0464
+6 RI      0.201  0.230 0.172 
+7 VT      0.299  0.365 0.231 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="save-your-results-to-a-new-tibble" class="level2" data-number="2.14">
+<h2 data-number="2.14" class="anchored" data-anchor-id="save-your-results-to-a-new-tibble"><span class="header-section-number">2.14</span> Save your results to a new tibble</h2>
+<p>We have just been writing everything to the screen so we can see what we are doing… In order to save anything we do with these functions to work with it later, we just have to use the assignment operator (&lt;-) to store the data.</p>
+<p>One kind of awesome thing about the assignment operator is that it works both ways…</p>
+<p>x &lt;- 3 and 3 -&gt; x do the same thing (WHAT?!)</p>
+<p>So you can do the assignment at the beginning of the end of your dplyr workings, whatever you like best.</p>
+<p>Use the assignment operator to save the summary table you just made.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>stateRBIs <span class="ot">&lt;-</span> rbi <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(STATE) <span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">meanrbi =</span> <span class="fu">mean</span>(RBI), <span class="at">maxrbi =</span> <span class="fu">max</span>(RBI), <span class="at">minrbi =</span> <span class="fu">min</span>(RBI))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Notice when you do this it doesn't output the result... </span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="co"># You can see what you did by clickon in stateRBIs in your environment panel</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or just type stateRBIs</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>stateRBIs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  STATE meanrbi maxrbi minrbi
+  &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 CT      0.366  0.430 0.295 
+2 MA      0.367  0.487 0.213 
+3 ME      0.269  0.492 0.0584
+4 NH      0.336  0.368 0.265 
+5 NY      0.342  0.856 0.0464
+6 RI      0.201  0.230 0.172 
+7 VT      0.299  0.365 0.231 </code></pre>
+</div>
+</div>
+</section>
+<section id="what-about-nas" class="level2" data-number="2.15">
+<h2 data-number="2.15" class="anchored" data-anchor-id="what-about-nas"><span class="header-section-number">2.15</span> What about NAs?</h2>
+<p>We will talk more about this when we discuss stats, but some operations will fail if there are NA’s in the data. If appropriate, you can tell functions like mean() to ignore NAs. You can also use drop_na() if you’re working with a tibble. But be aware if you use that and save the result, drop_na() gets rid of the whole row, not just the NA. Because what would you replace it with…. an NA?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="cn">NA</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.5</code></pre>
+</div>
+</div>
+</section>
+<section id="what-are-some-things-you-think-ill-ask-you-to-do-for-the-activity-next-class" class="level2" data-number="2.16">
+<h2 data-number="2.16" class="anchored" data-anchor-id="what-are-some-things-you-think-ill-ask-you-to-do-for-the-activity-next-class"><span class="header-section-number">2.16</span> What are some things you think I’ll ask you to do for the activity next class?</h2>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01-Plotting_Demo_COMPLETE.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro to Plotting</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

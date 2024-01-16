@@ -1,0 +1,26 @@
+# Welcome {.unnumbered}
+
+# Introduction
+
+### To help me keep get an idea of who is using this resource so I can improve it in the future, please consider filling out any or all of this survey: <https://forms.gle/6Zcntzvr1wZZUh6S7> Thanks!
+
+This bookdown contains the notes and most exercises for a course on data analysis techniques in hydrology using the programming language R. The material will be updated each time the course is taught. If new topics are added, the topics they replace will be left, in case they are useful to others.
+
+I hope these materials can be a resource to those teaching themselves R for hydrologic analysis and/or for instructors who may want to use a lesson or two or the entire course. Each chapter in this bookdown is linked to a github repository where the code can be downloaded or copied to another github account.
+
+If you have questions, suggestions, or would like activity answer keys, etc. please email me at jpgannon at vt.edu
+
+The following resources, among others, were very helpful when compiling the chapters of this book. They are also linked in specific chapters, along with other resources. These are great resources if you want to dig deeper into topics covered in this bookdown.
+
+R for Data Science: <https://r4ds.had.co.nz/>\
+Statistical Methods in Water Resources: <https://pubs.er.usgs.gov/publication/tm4A3>\
+Geocomputation with R: <https://geocompr.robinlovelace.net/>
+
+## How to use these materials
+
+At the top of each chapter there is a link to a github repository. In each repository is the code that produces each chapter and a version where the code chunks within it are blank. These repositories are all template repositories, so you can easily copy them to your own github space by clicking *Use This Template* on the repo page.
+
+In my class, I work through the each document, live coding with students following along.Typically I ask students to watch as I code and explain the chunk and then replicate it on their computer. Depending on the lesson, I will ask students to try some of the chunks before I show them the code as an in-class activity. Some chunks are explicitly designed for this purpose and are typically labeled a "challenge".
+
+Chapters called ACTIVITY are either homework or class-period-long in-class activities. The code chunks in these are therefore blank. If you would like a key for any of these, please just send me an email.
+
