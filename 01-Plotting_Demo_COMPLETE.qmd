@@ -12,8 +12,6 @@ You only have to install the library once. You have to load it using the library
 #install.packages("tidyverse")
 library(tidyverse)
 #library(webexercises)
-
-
 ```
 
 ## Reading data
