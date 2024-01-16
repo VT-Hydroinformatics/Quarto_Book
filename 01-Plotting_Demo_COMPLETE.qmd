@@ -1,4 +1,4 @@
-# Intro to Plotting 2 {#Plotting}
+# Intro to Plotting 3 {#Plotting}
 
 Get this document and a version with empty code chunks at the template repository on github: <https://github.com/VT-Hydroinformatics/1-Intro-plotting-R>
 
