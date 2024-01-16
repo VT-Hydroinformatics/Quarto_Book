@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Hydroinformatics - 16&nbsp; Intro to Modeling - Getting Started with HBV</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./17-Calibrate-HBV.html" rel="next">
+<link href="./15-Watershed-Delineation-and-Analysis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./16-Modeling-Getting-Started-HBV.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Intro to Modeling - Getting Started with HBV</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Hydroinformatics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Plotting_Demo_COMPLETE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro to Plotting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Programming_Basics_Demo_COMPLETE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Tidyverse Programming Basics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Activity-Intro-Skills.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Skills</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Intro-Stats-Completed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Basic Statistics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Intro-Stats-Activity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Stats</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Get-Format-Plot-hydrodata_COMPLETE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Joins, Pivots, and USGS dataRetrieval</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Activity-Joins-Pivots_dataRetrieval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">ACTIVITY: Joins Pivots dataRetrieval</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Summative_Activity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ACTIVITY Summative 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Flow_Duration_Curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Flow Duration Curves</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-LowFlowStats-FDC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Low Flow Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Flood_Frequency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Flood Frequency Analysis and Creating Functions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Intro-Geospatial-R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Geospatial data in R - Vector</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-Summative-Assessment-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summative Assessment 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-Geospatial-Raster-Hydro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geospatial R Raster - Hydro Analyses</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-Watershed-Delineation-and-Analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Geospatial R Raster - Watershed Delineation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-Modeling-Getting-Started-HBV.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Intro to Modeling - Getting Started with HBV</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-Calibrate-HBV.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Intro to Modeling - Calibrate HBV</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">16.1</span> Introduction</a></li>
+  <li><a href="#creating-the-hbv-model-function" id="toc-creating-the-hbv-model-function" class="nav-link" data-scroll-target="#creating-the-hbv-model-function"><span class="header-section-number">16.2</span> Creating the HBV model function</a></li>
+  <li><a href="#read-in-precip-and-temp" id="toc-read-in-precip-and-temp" class="nav-link" data-scroll-target="#read-in-precip-and-temp"><span class="header-section-number">16.3</span> Read in Precip and Temp</a></li>
+  <li><a href="#calculate-pet" id="toc-calculate-pet" class="nav-link" data-scroll-target="#calculate-pet"><span class="header-section-number">16.4</span> Calculate PET</a></li>
+  <li><a href="#hbv-parameters" id="toc-hbv-parameters" class="nav-link" data-scroll-target="#hbv-parameters"><span class="header-section-number">16.5</span> HBV Parameters</a></li>
+  <li><a href="#first-model-run" id="toc-first-model-run" class="nav-link" data-scroll-target="#first-model-run"><span class="header-section-number">16.6</span> First model run</a></li>
+  <li><a href="#import-observed-streamflow-data" id="toc-import-observed-streamflow-data" class="nav-link" data-scroll-target="#import-observed-streamflow-data"><span class="header-section-number">16.7</span> Import observed streamflow data</a></li>
+  <li><a href="#compare-observed-and-modeled-discharge-graphically" id="toc-compare-observed-and-modeled-discharge-graphically" class="nav-link" data-scroll-target="#compare-observed-and-modeled-discharge-graphically"><span class="header-section-number">16.8</span> Compare observed and modeled discharge graphically</a></li>
+  <li><a href="#compare-observed-and-modelled-discharge-with-interactive-graph" id="toc-compare-observed-and-modelled-discharge-with-interactive-graph" class="nav-link" data-scroll-target="#compare-observed-and-modelled-discharge-with-interactive-graph"><span class="header-section-number">16.9</span> Compare observed and modelled discharge with interactive graph</a></li>
+  <li><a href="#measure-how-well-the-model-fits-with-nse" id="toc-measure-how-well-the-model-fits-with-nse" class="nav-link" data-scroll-target="#measure-how-well-the-model-fits-with-nse"><span class="header-section-number">16.10</span> Measure how well the model fits with NSE</a></li>
+  <li><a href="#assess-model-fit-with-a-different-measure-snow" id="toc-assess-model-fit-with-a-different-measure-snow" class="nav-link" data-scroll-target="#assess-model-fit-with-a-different-measure-snow"><span class="header-section-number">16.11</span> Assess model fit with a different measure: Snow</a></li>
+  <li><a href="#calibrate-hbv-manually" id="toc-calibrate-hbv-manually" class="nav-link" data-scroll-target="#calibrate-hbv-manually"><span class="header-section-number">16.12</span> Calibrate HBV manually</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="modelingintro" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Intro to Modeling - Getting Started with HBV</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">16.1</span> Introduction</h2>
+<p>The following activity is available as a template github repository at the following link: https://github.com/VT-Hydroinformatics/16-Intro-Modeling-HBV</p>
+<p><strong>Before we start with the code below, we will briefly discuss modeling in general, using the following reading as a guide: https://cfpub.epa.gov/si/si_public_record_report.cfm?dirEntryId=339328&amp;Lab=NERL</strong></p>
+<p><strong>Please be prepared to discuss the reading at the start of class.</strong></p>
+<p><em>Goals for this activity:</em></p>
+<ul>
+<li>Become familiar with the process of running a simple hydrologic model</li>
+<li>Try parameterizing the model manually</li>
+<li>Introduction to methods of assessing model success</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_classic</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-the-hbv-model-function" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="creating-the-hbv-model-function"><span class="header-section-number">16.2</span> Creating the HBV model function</h2>
+<p>The code for the HBV model is in the HBV folder, it is called <em>HBV.R</em>. We will open that and look at the code a bit to discuss how HBV works.</p>
+<p>The code in HBV.R creates a function that runs the HBV model. We can run that code by using the source() function in. When we give the location of the HBV.R file to source(), it runs the code and creates the HBV function. Run the line of code below, then type HBV( and you’ll see the input parameters pop up just like any other function.</p>
+<p>From this we see that HBV takes as input pars, P, Temp, PET, and routing.</p>
+<p>pars is a vector of all the parameters that HBV uses to run (discussed below) P is a vector of precipitation values Temp is a vector of temperature values PET is a vector of PET values And routing is a parameter that controls how water is routes through the channel of larger watersheds. We will not use this because we are running the model on a small watershed.</p>
+<p>HBV is a lumped conceptual model. We will use the diagram below and the HBV.R code to discuss how the model works and get an idea of what the parameters do.</p>
+<p><img src="images/HBV-schem-Shrestha-Solomantine-2008.png" title="HBV Model" class="img-fluid" alt="HBV Model"> This schematic was reproduced from: Durga Lal Shrestha &amp; Dimitri P. Solomatine (2008) Data‐driven approaches for estimating uncertainty in rainfall‐runoff modelling, International Journal of River Basin Management, 6:2, 109-122, DOI: 10.1080/15715124.2008.9635341</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'HBV/HBV.R'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="read-in-precip-and-temp" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="read-in-precip-and-temp"><span class="header-section-number">16.3</span> Read in Precip and Temp</h2>
+<p>Our objective today is basically to get the model running with data from watershed 3 at the Hubbard Brook experimental forest in NH, USA.</p>
+<p>Watershed 3 is a hydrologic reference watershed at HBEF. This means it hasn’t been experimentally manipulated, but discharge, temperature, and precipitation have been recorded there for a long time. This makes it a good candidate for some modeling! You can see more about watershed 3 here: https://hubbardbrook.org/watersheds/watershed-3</p>
+<p>As we saw in the chunk above, we need P, Temp, PET, and a set of parameters to run the model.</p>
+<p>We will talk parameters later, but for now we need the data that drives the model: P, Temp, and PET.</p>
+<p>We have P and Temp. The data is in Pwd2009-2012.csv and Tdm2009-2012.csv.</p>
+<p>So how do we get PET?</p>
+<p>We calculate it! But before we do that let’s bring in the precip and temp data and format them how the model wants them.</p>
+<p>Our model function just wants a vector of values. No dates attached. So we must be careful that each set of input data is for the same amount of time with the same number of values. To help with that, we will start below by defining and start and end date for the model run.</p>
+<p>Finally, we will read in the data, select the gage or station we want to represent the watershed, change the format of the date column, and then filter to our start and end date.</p>
+<p>Then we will pull out just the data, so it can be passed to the model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">mdy</span>(<span class="st">"01-01-2009"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">mdy</span>(<span class="st">"12-31-2012"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Precip</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>P1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"HBV/Pwd2009-2012.csv"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">select</span>(DATE, WS_3) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">DATE =</span> <span class="fu">ymd</span>(DATE)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         <span class="fu">filter</span>(DATE <span class="sc">&gt;=</span> start <span class="sc">&amp;</span> DATE <span class="sc">&lt;=</span> end)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1461 Columns: 10
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (10): DATE, WS_1, WS_2, WS_3, WS_4, WS_5, WS_6, WS_7, WS_8, WS_9
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> P1<span class="sc">$</span>WS_3</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Temp in deg C</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>Temp1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"HBV/Tdm2009-2012.csv"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">select</span>(DATE, STA_1) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">DATE =</span> <span class="fu">ymd</span>(DATE)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">filter</span>(DATE <span class="sc">&gt;=</span> start <span class="sc">&amp;</span> DATE <span class="sc">&lt;=</span> end)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1461 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (9): DATE, STA_1, STA_6, STA_14, STA_INT, STA_HQ, STA_23, STA_17, STA_24
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Temp <span class="ot">&lt;-</span> Temp1<span class="sc">$</span>STA_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculate-pet" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="calculate-pet"><span class="header-section-number">16.4</span> Calculate PET</h2>
+<p>Next, we need to calculate PET for the same time reange as our temperature and precipitation record.</p>
+<p>We will use the Hamon method to calculate PET for each day of the record.</p>
+<p>To do that we will take the latitude of the site in radians…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lat <span class="ot">&lt;-</span> <span class="dv">43</span> <span class="sc">+</span> <span class="dv">57</span><span class="sc">/</span><span class="dv">60</span> <span class="co">#43 degrees and 57 minutes</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>latrad <span class="ot">&lt;-</span> (lat<span class="sc">/</span><span class="dv">360</span>) <span class="sc">*</span> <span class="dv">2</span> <span class="sc">*</span> pi <span class="co">#convert to radians</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>PET1 <span class="ot">&lt;-</span> <span class="fu">select</span>(Temp1, DATE) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">DOY =</span> <span class="fu">yday</span>(DATE)) <span class="sc">%&gt;%</span> <span class="co">#DOY for dates</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">tempvar =</span> (<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">365</span>) <span class="sc">*</span> DOY) <span class="sc">%&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         <span class="co">#declination of the sun above the celestial equator in </span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         <span class="co">#radians on day JulDay of the year</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">delta_h =</span> <span class="fl">0.4093</span> <span class="sc">*</span> <span class="fu">sin</span>(tempvar <span class="sc">-</span> <span class="fl">1.405</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>         <span class="co">#day length in h</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">daylen =</span> (<span class="dv">2</span> <span class="sc">*</span> <span class="fu">acos</span>(<span class="sc">-</span><span class="fu">tan</span>(delta_h) <span class="sc">*</span> <span class="fu">tan</span>(latrad)) <span class="sc">/</span> <span class="fl">0.2618</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">PET =</span> <span class="fl">29.8</span> <span class="sc">*</span> daylen <span class="sc">*</span> <span class="fl">0.611</span> <span class="sc">*</span> <span class="fu">exp</span>(<span class="fl">17.3</span> <span class="sc">*</span> Temp <span class="sc">/</span> </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                  (Temp <span class="sc">+</span> <span class="fl">237.3</span>)) <span class="sc">/</span> (Temp <span class="sc">+</span> <span class="fl">273.2</span>))  <span class="co">#PET Hamon method</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>PET <span class="ot">&lt;-</span> PET1<span class="sc">$</span>PET</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="hbv-parameters" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="hbv-parameters"><span class="header-section-number">16.5</span> HBV Parameters</h2>
+<p>Okay, so now we have our data set up. Next we need to talk parameters.</p>
+<p>The table below shows the parameters of the HBV model, the minimum and maximum for those values, and a description of their function in the model.</p>
+<table class="table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 17%">
+<col style="width: 14%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Object Name</th>
+<th>Min</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FC</td>
+<td>40</td>
+<td>400</td>
+<td>Max soil moisture storage, field capacity</td>
+</tr>
+<tr class="even">
+<td>beta</td>
+<td>1</td>
+<td>6</td>
+<td>Shape coefficient governing fate of water input to soil moisture storage</td>
+</tr>
+<tr class="odd">
+<td>LP</td>
+<td>.3</td>
+<td>1</td>
+<td>Threshold for reduction of evaporation</td>
+</tr>
+<tr class="even">
+<td>SFCF</td>
+<td>0.4</td>
+<td>1.2</td>
+<td>Snowfall correction factor</td>
+</tr>
+<tr class="odd">
+<td>TT</td>
+<td>-1.5</td>
+<td>1.2</td>
+<td>Threshold temperature</td>
+</tr>
+<tr class="even">
+<td>CFMAX</td>
+<td>1</td>
+<td>8</td>
+<td>Degree-day factor</td>
+</tr>
+<tr class="odd">
+<td>k0</td>
+<td>0.05</td>
+<td>0.5</td>
+<td>Recession constant (upper storage, near surface)</td>
+</tr>
+<tr class="even">
+<td>k1</td>
+<td>0.01</td>
+<td>0.3</td>
+<td>Recession constant (upper storage)</td>
+</tr>
+<tr class="odd">
+<td>k2</td>
+<td>0.001</td>
+<td>0.15</td>
+<td>Recession constant (lower storage)</td>
+</tr>
+<tr class="even">
+<td>UZL</td>
+<td>0</td>
+<td>70</td>
+<td>Threshold for shallow storage</td>
+</tr>
+<tr class="odd">
+<td>PERC</td>
+<td>0</td>
+<td>4</td>
+<td>Percolation, max flow from upper to lower storage</td>
+</tr>
+<tr class="even">
+<td>MAXBAS</td>
+<td>1</td>
+<td>3</td>
+<td>base of the triangular routing function, days”</td>
+</tr>
+</tbody>
+</table>
+<p>To pass a set of parameters to the model, we just put them into a single vector in the order they are in the table above. In the chunk below, I’ve structured this to make it easy to see a description of each parameter, but you could also just do it in one line without all the comments. Just be sure to get the order right!</p>
+<p>The code below sets the routing to 0, which is what we want for a small catchment.</p>
+<p>Then I just set each parameter to it’s minimum value. We will use this parameter set to run the model and see what happens!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#when this term = 1, then triangular routing is invoked, or for no routing, routing = 0</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#if routing = 0 then MAXBAS doesn't do anything</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>routing <span class="ot">&lt;-</span> <span class="dv">0</span>      </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#hard code parameters </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">40</span>,    <span class="co">#FCM ax soil moisture storage, field capacity</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>,     <span class="co">#beta Shape coefficient governing fate of water input to soil moisture storage</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.3</span>,   <span class="co">#LP Threshold for reduction of evap</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.4</span>,   <span class="co">#SFCF Snowfall correction factor</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            <span class="sc">-</span><span class="fl">1.5</span>,  <span class="co">#TT Threshold temperature</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>,     <span class="co">#CFMAX Degree-day factor</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.05</span>,  <span class="co">#k0 Recession constant (upper storage, near surface)</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.01</span>,  <span class="co">#k1 Recession constant (upper storage)</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.001</span>, <span class="co">#k2 Recession constant (lower storage)</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>,     <span class="co">#UZLThreshold for shallow storage</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>,     <span class="co">#PERC Percolation, max flow from upper to lower storage</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>      <span class="co">#MAXBAS base of the triangular routing function, days</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="first-model-run" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="first-model-run"><span class="header-section-number">16.6</span> First model run</h2>
+<p>Let’s run the model! Remember the function is HBV(parameters, Precip, Temp, PET, routing)</p>
+<p>We will set the output of the model equal to ModelOutput and then have a look at what it outputs.</p>
+<p>How can we tell how this did at modeling flow in watershed 3?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ModelOutput <span class="ot">&lt;-</span> <span class="fu">HBV</span>(params, P, Temp, PET, routing)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ModelOutput)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 12
+      q    qs    qi    qb Storage   SWE   AET    SF    S1    S2  soil     w
+  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0     0     0     0       0    0      0  0        0     0     0     0
+2     0     0     0     0      40  152.     0  0        0     0    40     0
+3     0     0     0     0      40  152.     0  0        0     0    40     0
+4     0     0     0     0      40  152.     0  0        0     0    40     0
+5     0     0     0     0      40  154.     0  1.16     0     0    40     0
+6     0     0     0     0      40  154.     0  0        0     0    40     0</code></pre>
+</div>
+</div>
+</section>
+<section id="import-observed-streamflow-data" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="import-observed-streamflow-data"><span class="header-section-number">16.7</span> Import observed streamflow data</h2>
+<p>q in the model output is discharge, and we also have a record of measured discharge from watershed 3 in the file called SWD2009-2012.csv</p>
+<p>In order to compare the modeled discharge to the measured discharge, we will read in the data and process it the same way we did with the model inputs. Then we can attach it to the model output so we can compare the two.</p>
+<p>NOTE: These data are all nicely processed. They have the same temporal resolution (daily), there are no NAs, and they are in the same units. These are all things to check if you are preparing data from another site.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Streamflow mm/d</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Qobs1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"HBV/SWD2009-2012.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">select</span>(DATE, WS_3) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">DATE =</span> <span class="fu">ymd</span>(DATE)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">filter</span>(DATE <span class="sc">&gt;=</span> start <span class="sc">&amp;</span> DATE <span class="sc">&lt;=</span> end)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1461 Columns: 10
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (10): DATE, WS_1, WS_2, WS_3, WS_4, WS_5, WS_6, WS_7, WS_8, WS_9
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Qobs <span class="ot">&lt;-</span> Qobs1<span class="sc">$</span>WS_3</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>ModelOutput <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(ModelOutput, Qobs1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="compare-observed-and-modeled-discharge-graphically" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="compare-observed-and-modeled-discharge-graphically"><span class="header-section-number">16.8</span> Compare observed and modeled discharge graphically</h2>
+<p>Now that we have the observed values glued on to our model output, we can plot the two and see how they compare. Below we will plot the modelled and observed discharge as two lines on a ggplot.</p>
+<p>Because the model starts out with its storages at zero, it takes some time for it to actually approximate real conditions. For this reason, you will typically set aside part of the modelled period as a “warm up” period. The duration of this period depends on the system, but for our purposes, we are doing to drop the first half of the model run and only look at the second half: 2011 - 2013. So we will filter the data to just look at that time.</p>
+<p>How’d we do? Did the model do a good job of capturing runoff dynamics in watershed 3?</p>
+<p>Describe what it looks like the model did well and what it did poorly?</p>
+<p>When you are looking at results like this, it is often helpful to look at the full timeframe but to also zoom in and look at specific event dynamics to see what hydrologic processes the model is or is not capturing well. One helpful tool at doing that is plotly. Plotly allows you to create interactive plots. The code chunk after the ggplot creates a plotly graph. From here on out we will use plotly to look at our modeling results so we can investigate them more thoroughly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>OutputTrim <span class="ot">&lt;-</span> <span class="fu">filter</span>(ModelOutput, DATE <span class="sc">&gt;=</span> <span class="fu">mdy</span>(<span class="st">"01-01-2011"</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(OutputTrim, <span class="fu">aes</span>(<span class="at">x =</span> DATE, <span class="at">y =</span> WS_3, <span class="at">color =</span> <span class="st">"Measured"</span>))<span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> q, <span class="at">color =</span> <span class="st">"Modelled"</span>))<span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Discharge (mm/d)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="16-Modeling-Getting-Started-HBV_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="compare-observed-and-modelled-discharge-with-interactive-graph" class="level2" data-number="16.9">
+<h2 data-number="16.9" class="anchored" data-anchor-id="compare-observed-and-modelled-discharge-with-interactive-graph"><span class="header-section-number">16.9</span> Compare observed and modelled discharge with interactive graph</h2>
+<p>The code below creates a plot analogous to the ggplot above. Note the differences in syntax. All the same information is there, it is just a different recipe, and you use pipes instead of +.</p>
+<p>You can click and drag a box over any time you want to look at to zoom, and if you hover over one of the lines, it will show you the values in a dialogue box. There is a lot of other functionality as well, which you can explore in the menu in the upper right.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>OutputTrim <span class="sc">%&gt;%</span> <span class="fu">plot_ly</span>(<span class="at">x =</span> <span class="sc">~</span>DATE) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_trace</span>(<span class="at">y =</span> <span class="sc">~</span>q, <span class="at">name =</span> <span class="st">'Modeled'</span>,  <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_trace</span>(<span class="at">y =</span> <span class="sc">~</span>WS_3, <span class="at">name =</span> <span class="st">'Measured'</span>,  <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-22612e1f4ddf24490ef3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-22612e1f4ddf24490ef3">{"x":{"visdat":{"319f2cb38ad9":["function () ","plotlyVisDat"]},"cur_data":"319f2cb38ad9","attrs":{"319f2cb38ad9":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"y":{},"name":"Modeled","type":"scatter","mode":"lines","inherit":true},"319f2cb38ad9.1":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"y":{},"name":"Measured","type":"scatter","mode":"lines","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"DATE"},"yaxis":{"domain":[0,1],"automargin":true,"title":"q"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2011-01-01","2011-01-02","2011-01-03","2011-01-04","2011-01-05","2011-01-06","2011-01-07","2011-01-08","2011-01-09","2011-01-10","2011-01-11","2011-01-12","2011-01-13","2011-01-14","2011-01-15","2011-01-16","2011-01-17","2011-01-18","2011-01-19","2011-01-20","2011-01-21","2011-01-22","2011-01-23","2011-01-24","2011-01-25","2011-01-26","2011-01-27","2011-01-28","2011-01-29","2011-01-30","2011-01-31","2011-02-01","2011-02-02","2011-02-03","2011-02-04","2011-02-05","2011-02-06","2011-02-07","2011-02-08","2011-02-09","2011-02-10","2011-02-11","2011-02-12","2011-02-13","2011-02-14","2011-02-15","2011-02-16","2011-02-17","2011-02-18","2011-02-19","2011-02-20","2011-02-21","2011-02-22","2011-02-23","2011-02-24","2011-02-25","2011-02-26","2011-02-27","2011-02-28","2011-03-01","2011-03-02","2011-03-03","2011-03-04","2011-03-05","2011-03-06","2011-03-07","2011-03-08","2011-03-09","2011-03-10","2011-03-11","2011-03-12","2011-03-13","2011-03-14","2011-03-15","2011-03-16","2011-03-17","2011-03-18","2011-03-19","2011-03-20","2011-03-21","2011-03-22","2011-03-23","2011-03-24","2011-03-25","2011-03-26","2011-03-27","2011-03-28","2011-03-29","2011-03-30","2011-03-31","2011-04-01","2011-04-02","2011-04-03","2011-04-04","2011-04-05","2011-04-06","2011-04-07","2011-04-08","2011-04-09","2011-04-10","2011-04-11","2011-04-12","2011-04-13","2011-04-14","2011-04-15","2011-04-16","2011-04-17","2011-04-18","2011-04-19","2011-04-20","2011-04-21","2011-04-22","2011-04-23","2011-04-24","2011-04-25","2011-04-26","2011-04-27","2011-04-28","2011-04-29","2011-04-30","2011-05-01","2011-05-02","2011-05-03","2011-05-04","2011-05-05","2011-05-06","2011-05-07","2011-05-08","2011-05-09","2011-05-10","2011-05-11","2011-05-12","2011-05-13","2011-05-14","2011-05-15","2011-05-16","2011-05-17","2011-05-18","2011-05-19","2011-05-20","2011-05-21","2011-05-22","2011-05-23","2011-05-24","2011-05-25","2011-05-26","2011-05-27","2011-05-28","2011-05-29","2011-05-30","2011-05-31","2011-06-01","2011-06-02","2011-06-03","2011-06-04","2011-06-05","2011-06-06","2011-06-07","2011-06-08","2011-06-09","2011-06-10","2011-06-11","2011-06-12","2011-06-13","2011-06-14","2011-06-15","2011-06-16","2011-06-17","2011-06-18","2011-06-19","2011-06-20","2011-06-21","2011-06-22","2011-06-23","2011-06-24","2011-06-25","2011-06-26","2011-06-27","2011-06-28","2011-06-29","2011-06-30","2011-07-01","2011-07-02","2011-07-03","2011-07-04","2011-07-05","2011-07-06","2011-07-07","2011-07-08","2011-07-09","2011-07-10","2011-07-11","2011-07-12","2011-07-13","2011-07-14","2011-07-15","2011-07-16","2011-07-17","2011-07-18","2011-07-19","2011-07-20","2011-07-21","2011-07-22","2011-07-23","2011-07-24","2011-07-25","2011-07-26","2011-07-27","2011-07-28","2011-07-29","2011-07-30","2011-07-31","2011-08-01","2011-08-02","2011-08-03","2011-08-04","2011-08-05","2011-08-06","2011-08-07","2011-08-08","2011-08-09","2011-08-10","2011-08-11","2011-08-12","2011-08-13","2011-08-14","2011-08-15","2011-08-16","2011-08-17","2011-08-18","2011-08-19","2011-08-20","2011-08-21","2011-08-22","2011-08-23","2011-08-24","2011-08-25","2011-08-26","2011-08-27","2011-08-28","2011-08-29","2011-08-30","2011-08-31","2011-09-01","2011-09-02","2011-09-03","2011-09-04","2011-09-05","2011-09-06","2011-09-07","2011-09-08","2011-09-09","2011-09-10","2011-09-11","2011-09-12","2011-09-13","2011-09-14","2011-09-15","2011-09-16","2011-09-17","2011-09-18","2011-09-19","2011-09-20","2011-09-21","2011-09-22","2011-09-23","2011-09-24","2011-09-25","2011-09-26","2011-09-27","2011-09-28","2011-09-29","2011-09-30","2011-10-01","2011-10-02","2011-10-03","2011-10-04","2011-10-05","2011-10-06","2011-10-07","2011-10-08","2011-10-09","2011-10-10","2011-10-11","2011-10-12","2011-10-13","2011-10-14","2011-10-15","2011-10-16","2011-10-17","2011-10-18","2011-10-19","2011-10-20","2011-10-21","2011-10-22","2011-10-23","2011-10-24","2011-10-25","2011-10-26","2011-10-27","2011-10-28","2011-10-29","2011-10-30","2011-10-31","2011-11-01","2011-11-02","2011-11-03","2011-11-04","2011-11-05","2011-11-06","2011-11-07","2011-11-08","2011-11-09","2011-11-10","2011-11-11","2011-11-12","2011-11-13","2011-11-14","2011-11-15","2011-11-16","2011-11-17","2011-11-18","2011-11-19","2011-11-20","2011-11-21","2011-11-22","2011-11-23","2011-11-24","2011-11-25","2011-11-26","2011-11-27","2011-11-28","2011-11-29","2011-11-30","2011-12-01","2011-12-02","2011-12-03","2011-12-04","2011-12-05","2011-12-06","2011-12-07","2011-12-08","2011-12-09","2011-12-10","2011-12-11","2011-12-12","2011-12-13","2011-12-14","2011-12-15","2011-12-16","2011-12-17","2011-12-18","2011-12-19","2011-12-20","2011-12-21","2011-12-22","2011-12-23","2011-12-24","2011-12-25","2011-12-26","2011-12-27","2011-12-28","2011-12-29","2011-12-30","2011-12-31","2012-01-01","2012-01-02","2012-01-03","2012-01-04","2012-01-05","2012-01-06","2012-01-07","2012-01-08","2012-01-09","2012-01-10","2012-01-11","2012-01-12","2012-01-13","2012-01-14","2012-01-15","2012-01-16","2012-01-17","2012-01-18","2012-01-19","2012-01-20","2012-01-21","2012-01-22","2012-01-23","2012-01-24","2012-01-25","2012-01-26","2012-01-27","2012-01-28","2012-01-29","2012-01-30","2012-01-31","2012-02-01","2012-02-02","2012-02-03","2012-02-04","2012-02-05","2012-02-06","2012-02-07","2012-02-08","2012-02-09","2012-02-10","2012-02-11","2012-02-12","2012-02-13","2012-02-14","2012-02-15","2012-02-16","2012-02-17","2012-02-18","2012-02-19","2012-02-20","2012-02-21","2012-02-22","2012-02-23","2012-02-24","2012-02-25","2012-02-26","2012-02-27","2012-02-28","2012-02-29","2012-03-01","2012-03-02","2012-03-03","2012-03-04","2012-03-05","2012-03-06","2012-03-07","2012-03-08","2012-03-09","2012-03-10","2012-03-11","2012-03-12","2012-03-13","2012-03-14","2012-03-15","2012-03-16","2012-03-17","2012-03-18","2012-03-19","2012-03-20","2012-03-21","2012-03-22","2012-03-23","2012-03-24","2012-03-25","2012-03-26","2012-03-27","2012-03-28","2012-03-29","2012-03-30","2012-03-31","2012-04-01","2012-04-02","2012-04-03","2012-04-04","2012-04-05","2012-04-06","2012-04-07","2012-04-08","2012-04-09","2012-04-10","2012-04-11","2012-04-12","2012-04-13","2012-04-14","2012-04-15","2012-04-16","2012-04-17","2012-04-18","2012-04-19","2012-04-20","2012-04-21","2012-04-22","2012-04-23","2012-04-24","2012-04-25","2012-04-26","2012-04-27","2012-04-28","2012-04-29","2012-04-30","2012-05-01","2012-05-02","2012-05-03","2012-05-04","2012-05-05","2012-05-06","2012-05-07","2012-05-08","2012-05-09","2012-05-10","2012-05-11","2012-05-12","2012-05-13","2012-05-14","2012-05-15","2012-05-16","2012-05-17","2012-05-18","2012-05-19","2012-05-20","2012-05-21","2012-05-22","2012-05-23","2012-05-24","2012-05-25","2012-05-26","2012-05-27","2012-05-28","2012-05-29","2012-05-30","2012-05-31","2012-06-01","2012-06-02","2012-06-03","2012-06-04","2012-06-05","2012-06-06","2012-06-07","2012-06-08","2012-06-09","2012-06-10","2012-06-11","2012-06-12","2012-06-13","2012-06-14","2012-06-15","2012-06-16","2012-06-17","2012-06-18","2012-06-19","2012-06-20","2012-06-21","2012-06-22","2012-06-23","2012-06-24","2012-06-25","2012-06-26","2012-06-27","2012-06-28","2012-06-29","2012-06-30","2012-07-01","2012-07-02","2012-07-03","2012-07-04","2012-07-05","2012-07-06","2012-07-07","2012-07-08","2012-07-09","2012-07-10","2012-07-11","2012-07-12","2012-07-13","2012-07-14","2012-07-15","2012-07-16","2012-07-17","2012-07-18","2012-07-19","2012-07-20","2012-07-21","2012-07-22","2012-07-23","2012-07-24","2012-07-25","2012-07-26","2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-08","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13","2012-08-14","2012-08-15","2012-08-16","2012-08-17","2012-08-18","2012-08-19","2012-08-20","2012-08-21","2012-08-22","2012-08-23","2012-08-24","2012-08-25","2012-08-26","2012-08-27","2012-08-28","2012-08-29","2012-08-30","2012-08-31","2012-09-01","2012-09-02","2012-09-03","2012-09-04","2012-09-05","2012-09-06","2012-09-07","2012-09-08","2012-09-09","2012-09-10","2012-09-11","2012-09-12","2012-09-13","2012-09-14","2012-09-15","2012-09-16","2012-09-17","2012-09-18","2012-09-19","2012-09-20","2012-09-21","2012-09-22","2012-09-23","2012-09-24","2012-09-25","2012-09-26","2012-09-27","2012-09-28","2012-09-29","2012-09-30","2012-10-01","2012-10-02","2012-10-03","2012-10-04","2012-10-05","2012-10-06","2012-10-07","2012-10-08","2012-10-09","2012-10-10","2012-10-11","2012-10-12","2012-10-13","2012-10-14","2012-10-15","2012-10-16","2012-10-17","2012-10-18","2012-10-19","2012-10-20","2012-10-21","2012-10-22","2012-10-23","2012-10-24","2012-10-25","2012-10-26","2012-10-27","2012-10-28","2012-10-29","2012-10-30","2012-10-31","2012-11-01","2012-11-02","2012-11-03","2012-11-04","2012-11-05","2012-11-06","2012-11-07","2012-11-08","2012-11-09","2012-11-10","2012-11-11","2012-11-12","2012-11-13","2012-11-14","2012-11-15","2012-11-16","2012-11-17","2012-11-18","2012-11-19","2012-11-20","2012-11-21","2012-11-22","2012-11-23","2012-11-24","2012-11-25","2012-11-26","2012-11-27","2012-11-28","2012-11-29","2012-11-30","2012-12-01","2012-12-02","2012-12-03","2012-12-04","2012-12-05","2012-12-06","2012-12-07","2012-12-08","2012-12-09","2012-12-10","2012-12-11","2012-12-12","2012-12-13","2012-12-14","2012-12-15","2012-12-16","2012-12-17","2012-12-18","2012-12-19","2012-12-20","2012-12-21","2012-12-22","2012-12-23","2012-12-24","2012-12-25","2012-12-26","2012-12-27","2012-12-28","2012-12-29","2012-12-30","2012-12-31"],"y":[2.2077411750833305,2.297183920300597,2.1593528850825612,2.0297917119776074,1.9080042092589511,1.7935239567034142,1.6859125193012092,1.5847577681431366,1.4896723020545484,1.4002919639312754,1.316274446095399,1.237297979329675,1.1630601005698944,1.0932764945357007,1.0276799048635588,0.96601911057174517,0.90805796393744043,0.85357448610119413,0.80236001693512249,0.75421841591901517,0.70896531096387416,0.66642739230604175,0.62644174876767933,0.58885524384161858,0.55352392921112148,0.52031249345845421,0.48909374385094689,0.45974811921989006,0.43216323206669666,0.40623343814269486,0.38185943185413318,0.35894786594288514,0.33741099398631202,0.31716633434713326,0.29813635428630525,0.28024817302912691,0.42142597669208931,0.52402499966150384,0.4925834996818137,0.46302848970090493,0.43524678031885067,0.40913197349971964,0.38458405508973642,0.36150901178435219,0.33981847107729102,0.31942936281265355,0.30026360104389432,0.30705478137534259,0.70348196584963474,0.6612730478986566,0.62159666502473732,0.58430086512325297,0.54924281321585777,0.51628824442290622,0.48531094975753186,0.4561922927720799,0.42882075520575508,0.40309150989340975,0.37890601929980516,0.35617165814181684,0.33480135865330785,0.31471327713410935,0.29583048050606281,0.27808065167569901,3.6337685876883477,3.4157424724270471,3.2107979240814242,3.0181500486365382,2.8370610457183454,3.6529212108650793,3.6513923094390233,3.6023351779990351,3.3861950673190928,3.1830233632799474,2.9920419614831508,3.1399023982451375,3.4623031825916,3.2545649916361041,3.0592910921379382,2.8757336266096614,2.7031896090130823,2.5409982324722975,2.3885383385239596,2.2452260382125222,2.1105124759197706,1.9838817273645841,1.864848823722709,1.7529578942993465,1.6477804206413855,1.5489135954029025,1.4559787796787282,1.45367775296415,1.5308653810261958,2.1000091471057383,2.6594463896679885,2.7184697279960188,2.7200768106246578,2.8534067064402735,3.2424674981930823,4.387730302439401,6.3165230993637538,6.5883829076423233,6.9279544149465933,6.8692288711286169,6.4570751388608993,6.0696506305292459,7.3529228014863968,7.3107244788172636,7.3010602761603138,7.6279678318539954,7.4552811905391181,7.1102284890089225,7.5141356727828343,7.1204881928882484,7.2536214006702089,8.2290340423933177,7.8001972886512165,7.7327483891932101,7.2883983308281266,6.8510944309784394,6.4400287651197328,6.0536270392125484,5.6942047882151918,6.0549963705788254,5.7418109471484531,5.397302290319546,5.0734641529003728,4.7690563037263507,4.4829129255027702,4.2139381499726047,3.9611018609742485,3.7234357493157928,3.5000296043568451,3.5305336310929265,4.5058486025011826,4.2942821289697894,4.1859282491364818,4.1952134268702075,4.6392366514222951,4.5087825271401671,4.9360799048842559,4.6814900345255932,4.8325346315608639,4.5425825536672129,4.2700276004471798,4.1481953948919452,3.9475926917569479,3.7107371302515308,3.4880929024364393,3.3422824411566312,3.1417454946872336,2.9532407650059995,2.7811735748696575,2.6143031603774785,2.4574449707548296,2.30999827250954,2.1713983761589675,2.0411144735894293,1.9192189512546771,1.8276656504628856,1.7180057114351126,1.8767559309979218,1.8803371300737082,2.2502560639199713,2.2336011355975849,2.1433267433139167,2.0257174497994659,2.0042869146701401,1.9836340977648352,1.889105812447428,1.7757594637005827,1.6692138958785478,1.6535993266685161,1.8810147187400168,2.4579576445804099,2.3464509283478239,2.3451591266491016,2.2167678350768778,2.1116758979205739,1.984975344045339,1.8752640533131641,1.7701035337630855,1.6638973217373003,1.5954819021930957,1.4997529880615099,1.4097678087778194,1.4632129419283941,1.3754201654126905,1.2961308131679521,1.3382302288688228,1.2579364151366936,1.1824602302284919,1.1115126164147824,1.0481379325146174,0.98524965656374019,0.92613467716991593,0.8705665965397209,0.81833260074733771,0.84576786157386796,0.79502178987943595,0.74732048248666982,0.7024812535374696,0.6603323783252214,0.62071243562570799,0.58346968948816558,0.59654750506735021,0.6024513555364881,0.56630427420429885,0.53232601775204091,0.6126238815571754,0.58768186337194639,0.55242095156962956,0.51927569447545174,0.5033878499550114,0.47951618810260299,0.46942000300199427,0.44125480282187457,0.41951818146066822,0.54050980324093711,0.52416099483265588,0.57994449191110808,0.85098595381283482,0.79992679658406474,0.75193118878902099,0.70681531746167969,1.2699112128077055,3.1986727746740691,3.8058823933244765,3.5775294497250081,3.3803296583855156,3.1891774321317277,2.9978267862038241,4.3630447217125266,4.3436490724174277,4.0830301280723811,3.8380483203880384,3.9532894707057773,3.7160921024634308,3.6133538085122212,9.615760459667511,9.1157268234877726,8.5687832140785058,8.0546562212337953,7.5713768479597663,7.1170942370821804,6.6900685828572497,6.6477334576963756,7.1117505473435134,7.0504551317493922,7.4664291887830743,7.3909498223176566,6.9474928329785977,6.5306432629998818,6.1388046672198886,5.7704763871866955,5.4242478039554936,5.0987929357181638,5.3185951528131854,4.9994794436443941,4.6995106770257307,4.417540036404187,4.1524876342199359,3.9582064662102621,3.7207140782376458,3.8126603424725651,3.6969620341549065,3.5727835270786494,3.3584165154539303,3.1569115245266945,2.9674968330550922,2.7894470230717867,3.5119494807404692,4.5974005024988394,4.8046734589922186,6.2744554796682204,6.0394259614514869,5.7172358606219955,5.4706416532466031,5.1424031540518067,4.833858964808698,4.5438274269201759,4.2711977813049646,4.0149259144266658,3.774030359561066,3.5475885379874024,3.4704661397219292,5.2263193089563513,5.3031211902980306,5.2456703923008989,5.0031866899787261,4.7029954885800018,4.5974985590934514,4.6721738330862141,4.3918434031010403,4.1586600784422325,3.9091404737356976,3.7772719800608079,3.5506356612571595,3.33759752158173,3.4691289701309054,3.3430707954599468,3.450968031298344,3.450113103998357,3.2431063177584551,3.048519938692948,2.8656087423713714,2.6936722178290888,2.5320518847593436,2.3801287716737831,2.2373210453733563,2.1030817826509547,1.9768968756918976,1.8582830631503837,2.2743800328788346,2.1714981487427396,2.0412082598181751,1.9187357642290845,1.9921396065838115,1.89769527989475,2.0818459890858048,2.0101447988597432,1.8895361109281588,1.776163944272469,1.6695941076161209,1.5694184611591537,1.481887548274303,2.6476219637862961,2.4887646459591184,2.3524637770552412,2.2113159504319273,2.0786369934060116,1.9539187738016515,2.0477531522698484,3.1789508960969077,3.0079133933013069,2.8274385897032284,2.6577922743210349,2.4983247378617728,2.3484252535900665,2.4522570696755319,3.1247071508549045,2.9372247218036103,2.7609912384953939,2.5953317641856701,2.4396118583345299,2.3481848367764,2.3434087637639611,2.2302910920020955,3.1478978838653573,3.0546786841203923,2.8713979630731679,2.6991140852887785,2.5371672401714518,2.3849372057611644,2.2418409734154947,2.4246704236298928,2.2791901982120994,2.1424387863193735,2.013892459140211,1.8930589115917986,1.7794753768962903,1.6727068542825128,1.572344443025562,1.4780037764440281,1.5253724798400461,1.989120279918539,1.8697730631234264,1.7575866793360211,1.6521314785758596,1.5530035898613082,1.4598233744696296,1.3722339720014518,1.289899933681365,1.2125059376604832,1.1397555814008542,1.0713702465168029,1.0070880317257951,0.94666274982224741,0.8898629848329126,0.83647120574293776,0.78628293339836153,0.73910595739445983,0.69475959995079217,0.6530740239537447,0.61388958251651993,0.57705620756552878,0.54243283511159712,0.50988686500490132,0.47929365310460714,0.45053603391833075,0.65622907402084363,2.4280398629142543,2.4401929355858796,2.2937813594507266,2.1561544778836832,2.026785209210662,2.1433097299650998,2.014711146167194,1.8938284773971623,1.7801987687533325,1.6733868426281326,1.5729836320704447,1.4786046141462179,1.3898883372974449,1.306495037059598,1.2664295352399273,1.1904437631255318,1.1190171373379998,1.0518761090977198,0.98876354255185661,0.93325238537615363,1.094296771753106,1.491058180414002,1.4979234654573719,1.4080480575299295,1.3235651740781336,1.2441512636334455,1.4647690888634974,1.5968856726724177,2.2876750882463783,2.1504145829515959,2.0213897079745,1.90010632549603,1.7860999459662681,1.6789339492082922,1.5781979122557948,1.4835060375204472,2.0648033469958866,1.9854109646083256,1.8662863067318261,1.7543091283279166,1.8318718172175912,2.6887283823756833,3.0849959674350211,2.8998962093889196,2.8790901874186656,3.462066531948242,3.5995298221047691,3.4412663642376038,3.3135673531739549,3.4690651323724722,3.260921224430124,3.0652659509643163,2.8813499939064573,2.7084689942720694,2.5459608546157453,2.3932032033388007,2.2496110111384726,2.1499731573453715,2.1914795345088462,2.1844473876767339,2.0533805444161293,2.0057264038051441,1.9756826073670479,1.8847453932815521,1.7716606696846591,1.6909962889440271,1.5895365116073854,1.4941643209109423,1.4045144616562859,1.320243593956909,1.2410289783194943,1.1665672396203248,1.1093926426432346,1.3813238378005983,1.2984444075325625,1.2205377430806086,1.1473054784957721,1.0784671497860256,1.0137591207988641,0.95293357355093211,0.89575755913787614,0.84201210558960349,0.79149137925422741,0.74400189649897364,0.69936178270903515,0.81694904552573677,1.3517631786377813,2.6648328660277238,2.6068702169086464,2.4504580038941275,2.8239224653787867,2.7862510042066715,2.6190759439542708,2.4619313873170148,2.3142155040779939,2.9746919161659391,2.8682742517217177,2.800726593399312,3.3247469582968643,3.1656508205364626,2.9757117713042751,2.7971690650260181,3.6075963398613191,3.6383250447080129,4.3743579237111163,4.2835059883263549,4.0264956290267726,3.7849058912851667,3.6587931081310576,5.8905578190304624,6.0721850390295726,5.8135138204141317,5.4647029911892835,5.1368208117179268,4.8286115630148503,4.5953136955787848,4.3965404120347333,4.1327479873126496,3.8847831080738899,3.7585270979338432,3.5330154720578122,3.3210345437343434,3.1326740960999682,5.0531495213507922,4.7682041633656604,4.4821119135637213,4.2131851987498985,6.2081832112872579,6.2053602585135774,6.1026358188213194,5.7595565133283673,5.7877082318781463,5.4786681635118599,5.526102681977382,5.198431877579333,4.8865259649245729,4.5933344070290989,4.8848074231611625,5.5118316993145733,5.1811217973556989,4.8702544895143562,4.5780392201434941,4.3033568669348847,4.0451554549187918,3.8024461276236643,3.5742993599662443,3.3598413983682702,3.1582509144661741,2.9687558595982035,2.7906305080223115,3.4790875068876792,3.3006401121379394,3.248726515976831,3.0538029250182213,2.8705747495171279,2.6983402645461001,2.5535682136974436,2.404049071440006,2.2598061271536061,2.405314557387122,2.2609956839438952,2.1253359429072614,1.9978157863328256,1.8779468391528562,1.7652700288036849,1.6593538270754637,1.5597925974509359,1.4662050416038797,1.3782327391076468,1.2955387747611882,1.2199562110840994,1.1516207522040807,1.1407062312701051,1.0742405413392129,1.00978610885886,0.94919894232732838,0.89224700578768856,0.83871218544042736,0.8353921810995063,0.94456206402861898,0.88788834018690177,0.9205586563153042,0.88656303290652327,1.0206626317891974,1.4156634838224149,1.3307236747930702,1.250880254305486,1.2959524912909295,1.2181953418134737,1.145103621304665,1.0763974040263851,1.2681740039464491,1.1920835637096621,1.1205585498870823,1.0533250368938576,2.2345797427786307,6.0420406541185718,6.142508407354657,6.0491114129142289,5.6861647281393743,5.344994844451012,5.318232540644626,4.9991385882059483,4.7679913778607323,4.4819118951890875,4.2129971814777427,3.9602173505890774,3.7226043095537333,3.4992480509805093,3.2892931679216781,3.0919355778463777,2.906419443175595,2.7320342765850594,2.7396317746167229,3.2225170651504151,3.0291660412413899,2.8474160787669063,2.6959248143418559,2.534169325481344,2.5900067372666,2.434606333030604,2.530768572376048,2.8772307432722459,2.704596898675911,2.5423210847553563,3.0848419459965593,2.8997514292367659,2.7257663434825599,2.5622203628736058,2.4084871411011899,2.2639779126351183,2.1281392378770119,2.0004508836043913,1.8804238305881278,1.76759840075284,4.6271687797138314,4.5351234443752357,4.2630160377127222,4.0072350754499588,3.922854407046843,3.8085910405003203,3.5800755780703013,3.3652710433860835,3.2019168604289439,3.0329789313899602,3.2321452233251136,3.1005718086189105,3.0325785053369048,3.2426803068036349,3.0481194883954164,3.3911756892963383,3.3399760494450397,3.1472633609173362,3.2578184722016537,3.2153849826786067,3.056499419401784,2.8731094542376772,3.0214734370316814,2.8514950134462915,2.8279498697493732,2.6582728775644111,2.8428345529795891,2.7945670726143232,2.6534748380200157,2.4942663477388152,2.3446103668744862,3.4987793993209833,3.5238878689936737,3.3702209477289466,3.1680076908652097,2.977927229413297,2.7992515956484993,2.6312964999095891,2.4734187099150144,2.3250135873201132,2.185512772080906,2.7144702679877586,4.3967755565036919,4.252546789367682,3.997393982005621,3.7716308326146142,3.5453329826577376,3.3326130036982731,3.1326562234763768,2.9446968500677944,2.7680150390637266,2.6833617958244442,2.5466421013040721,2.3938435752258274,2.2502129607122781,2.1152001830695415,2.5452398561378127,2.3925254647695438,2.2489739368833712,2.114035500670369,1.9871933706301468,1.867961768392338,1.7558840622887977,1.6505310185514699,1.5514991574383816,1.4584092079920787,1.3804159047523628,1.3500404245772266,1.2690379991025929,1.1928957191564373,1.1213219760070512,1.0540426574466282,0.99080009799983049,0.93135209211984049,0.87547096659265011,1.5326768660921093,1.6044735448583261,1.5338606199315481,1.8625359681495126,1.750783810060542,1.6457367814569097,1.5861040647186546,1.4995020394953706,2.5800761790585014,2.4252716083149912,2.2797553118160918,2.1429699931071258,2.0143917935206979,1.8935282859094562,1.7799165887548889,1.6731215934295955,2.4594823680795246,2.5659089394660302,2.4405250124982123,3.542416015703151,3.3298710547609618,3.1300787914753041,2.9422740639867864,2.7657376201475792,2.5997933629387244,2.4438057611624013,2.2971774154926576,2.1593467705630975,2.0297859643293115,1.9079988064695528],"name":"Modeled","type":"scatter","mode":"lines","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2011-01-01","2011-01-02","2011-01-03","2011-01-04","2011-01-05","2011-01-06","2011-01-07","2011-01-08","2011-01-09","2011-01-10","2011-01-11","2011-01-12","2011-01-13","2011-01-14","2011-01-15","2011-01-16","2011-01-17","2011-01-18","2011-01-19","2011-01-20","2011-01-21","2011-01-22","2011-01-23","2011-01-24","2011-01-25","2011-01-26","2011-01-27","2011-01-28","2011-01-29","2011-01-30","2011-01-31","2011-02-01","2011-02-02","2011-02-03","2011-02-04","2011-02-05","2011-02-06","2011-02-07","2011-02-08","2011-02-09","2011-02-10","2011-02-11","2011-02-12","2011-02-13","2011-02-14","2011-02-15","2011-02-16","2011-02-17","2011-02-18","2011-02-19","2011-02-20","2011-02-21","2011-02-22","2011-02-23","2011-02-24","2011-02-25","2011-02-26","2011-02-27","2011-02-28","2011-03-01","2011-03-02","2011-03-03","2011-03-04","2011-03-05","2011-03-06","2011-03-07","2011-03-08","2011-03-09","2011-03-10","2011-03-11","2011-03-12","2011-03-13","2011-03-14","2011-03-15","2011-03-16","2011-03-17","2011-03-18","2011-03-19","2011-03-20","2011-03-21","2011-03-22","2011-03-23","2011-03-24","2011-03-25","2011-03-26","2011-03-27","2011-03-28","2011-03-29","2011-03-30","2011-03-31","2011-04-01","2011-04-02","2011-04-03","2011-04-04","2011-04-05","2011-04-06","2011-04-07","2011-04-08","2011-04-09","2011-04-10","2011-04-11","2011-04-12","2011-04-13","2011-04-14","2011-04-15","2011-04-16","2011-04-17","2011-04-18","2011-04-19","2011-04-20","2011-04-21","2011-04-22","2011-04-23","2011-04-24","2011-04-25","2011-04-26","2011-04-27","2011-04-28","2011-04-29","2011-04-30","2011-05-01","2011-05-02","2011-05-03","2011-05-04","2011-05-05","2011-05-06","2011-05-07","2011-05-08","2011-05-09","2011-05-10","2011-05-11","2011-05-12","2011-05-13","2011-05-14","2011-05-15","2011-05-16","2011-05-17","2011-05-18","2011-05-19","2011-05-20","2011-05-21","2011-05-22","2011-05-23","2011-05-24","2011-05-25","2011-05-26","2011-05-27","2011-05-28","2011-05-29","2011-05-30","2011-05-31","2011-06-01","2011-06-02","2011-06-03","2011-06-04","2011-06-05","2011-06-06","2011-06-07","2011-06-08","2011-06-09","2011-06-10","2011-06-11","2011-06-12","2011-06-13","2011-06-14","2011-06-15","2011-06-16","2011-06-17","2011-06-18","2011-06-19","2011-06-20","2011-06-21","2011-06-22","2011-06-23","2011-06-24","2011-06-25","2011-06-26","2011-06-27","2011-06-28","2011-06-29","2011-06-30","2011-07-01","2011-07-02","2011-07-03","2011-07-04","2011-07-05","2011-07-06","2011-07-07","2011-07-08","2011-07-09","2011-07-10","2011-07-11","2011-07-12","2011-07-13","2011-07-14","2011-07-15","2011-07-16","2011-07-17","2011-07-18","2011-07-19","2011-07-20","2011-07-21","2011-07-22","2011-07-23","2011-07-24","2011-07-25","2011-07-26","2011-07-27","2011-07-28","2011-07-29","2011-07-30","2011-07-31","2011-08-01","2011-08-02","2011-08-03","2011-08-04","2011-08-05","2011-08-06","2011-08-07","2011-08-08","2011-08-09","2011-08-10","2011-08-11","2011-08-12","2011-08-13","2011-08-14","2011-08-15","2011-08-16","2011-08-17","2011-08-18","2011-08-19","2011-08-20","2011-08-21","2011-08-22","2011-08-23","2011-08-24","2011-08-25","2011-08-26","2011-08-27","2011-08-28","2011-08-29","2011-08-30","2011-08-31","2011-09-01","2011-09-02","2011-09-03","2011-09-04","2011-09-05","2011-09-06","2011-09-07","2011-09-08","2011-09-09","2011-09-10","2011-09-11","2011-09-12","2011-09-13","2011-09-14","2011-09-15","2011-09-16","2011-09-17","2011-09-18","2011-09-19","2011-09-20","2011-09-21","2011-09-22","2011-09-23","2011-09-24","2011-09-25","2011-09-26","2011-09-27","2011-09-28","2011-09-29","2011-09-30","2011-10-01","2011-10-02","2011-10-03","2011-10-04","2011-10-05","2011-10-06","2011-10-07","2011-10-08","2011-10-09","2011-10-10","2011-10-11","2011-10-12","2011-10-13","2011-10-14","2011-10-15","2011-10-16","2011-10-17","2011-10-18","2011-10-19","2011-10-20","2011-10-21","2011-10-22","2011-10-23","2011-10-24","2011-10-25","2011-10-26","2011-10-27","2011-10-28","2011-10-29","2011-10-30","2011-10-31","2011-11-01","2011-11-02","2011-11-03","2011-11-04","2011-11-05","2011-11-06","2011-11-07","2011-11-08","2011-11-09","2011-11-10","2011-11-11","2011-11-12","2011-11-13","2011-11-14","2011-11-15","2011-11-16","2011-11-17","2011-11-18","2011-11-19","2011-11-20","2011-11-21","2011-11-22","2011-11-23","2011-11-24","2011-11-25","2011-11-26","2011-11-27","2011-11-28","2011-11-29","2011-11-30","2011-12-01","2011-12-02","2011-12-03","2011-12-04","2011-12-05","2011-12-06","2011-12-07","2011-12-08","2011-12-09","2011-12-10","2011-12-11","2011-12-12","2011-12-13","2011-12-14","2011-12-15","2011-12-16","2011-12-17","2011-12-18","2011-12-19","2011-12-20","2011-12-21","2011-12-22","2011-12-23","2011-12-24","2011-12-25","2011-12-26","2011-12-27","2011-12-28","2011-12-29","2011-12-30","2011-12-31","2012-01-01","2012-01-02","2012-01-03","2012-01-04","2012-01-05","2012-01-06","2012-01-07","2012-01-08","2012-01-09","2012-01-10","2012-01-11","2012-01-12","2012-01-13","2012-01-14","2012-01-15","2012-01-16","2012-01-17","2012-01-18","2012-01-19","2012-01-20","2012-01-21","2012-01-22","2012-01-23","2012-01-24","2012-01-25","2012-01-26","2012-01-27","2012-01-28","2012-01-29","2012-01-30","2012-01-31","2012-02-01","2012-02-02","2012-02-03","2012-02-04","2012-02-05","2012-02-06","2012-02-07","2012-02-08","2012-02-09","2012-02-10","2012-02-11","2012-02-12","2012-02-13","2012-02-14","2012-02-15","2012-02-16","2012-02-17","2012-02-18","2012-02-19","2012-02-20","2012-02-21","2012-02-22","2012-02-23","2012-02-24","2012-02-25","2012-02-26","2012-02-27","2012-02-28","2012-02-29","2012-03-01","2012-03-02","2012-03-03","2012-03-04","2012-03-05","2012-03-06","2012-03-07","2012-03-08","2012-03-09","2012-03-10","2012-03-11","2012-03-12","2012-03-13","2012-03-14","2012-03-15","2012-03-16","2012-03-17","2012-03-18","2012-03-19","2012-03-20","2012-03-21","2012-03-22","2012-03-23","2012-03-24","2012-03-25","2012-03-26","2012-03-27","2012-03-28","2012-03-29","2012-03-30","2012-03-31","2012-04-01","2012-04-02","2012-04-03","2012-04-04","2012-04-05","2012-04-06","2012-04-07","2012-04-08","2012-04-09","2012-04-10","2012-04-11","2012-04-12","2012-04-13","2012-04-14","2012-04-15","2012-04-16","2012-04-17","2012-04-18","2012-04-19","2012-04-20","2012-04-21","2012-04-22","2012-04-23","2012-04-24","2012-04-25","2012-04-26","2012-04-27","2012-04-28","2012-04-29","2012-04-30","2012-05-01","2012-05-02","2012-05-03","2012-05-04","2012-05-05","2012-05-06","2012-05-07","2012-05-08","2012-05-09","2012-05-10","2012-05-11","2012-05-12","2012-05-13","2012-05-14","2012-05-15","2012-05-16","2012-05-17","2012-05-18","2012-05-19","2012-05-20","2012-05-21","2012-05-22","2012-05-23","2012-05-24","2012-05-25","2012-05-26","2012-05-27","2012-05-28","2012-05-29","2012-05-30","2012-05-31","2012-06-01","2012-06-02","2012-06-03","2012-06-04","2012-06-05","2012-06-06","2012-06-07","2012-06-08","2012-06-09","2012-06-10","2012-06-11","2012-06-12","2012-06-13","2012-06-14","2012-06-15","2012-06-16","2012-06-17","2012-06-18","2012-06-19","2012-06-20","2012-06-21","2012-06-22","2012-06-23","2012-06-24","2012-06-25","2012-06-26","2012-06-27","2012-06-28","2012-06-29","2012-06-30","2012-07-01","2012-07-02","2012-07-03","2012-07-04","2012-07-05","2012-07-06","2012-07-07","2012-07-08","2012-07-09","2012-07-10","2012-07-11","2012-07-12","2012-07-13","2012-07-14","2012-07-15","2012-07-16","2012-07-17","2012-07-18","2012-07-19","2012-07-20","2012-07-21","2012-07-22","2012-07-23","2012-07-24","2012-07-25","2012-07-26","2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-08","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13","2012-08-14","2012-08-15","2012-08-16","2012-08-17","2012-08-18","2012-08-19","2012-08-20","2012-08-21","2012-08-22","2012-08-23","2012-08-24","2012-08-25","2012-08-26","2012-08-27","2012-08-28","2012-08-29","2012-08-30","2012-08-31","2012-09-01","2012-09-02","2012-09-03","2012-09-04","2012-09-05","2012-09-06","2012-09-07","2012-09-08","2012-09-09","2012-09-10","2012-09-11","2012-09-12","2012-09-13","2012-09-14","2012-09-15","2012-09-16","2012-09-17","2012-09-18","2012-09-19","2012-09-20","2012-09-21","2012-09-22","2012-09-23","2012-09-24","2012-09-25","2012-09-26","2012-09-27","2012-09-28","2012-09-29","2012-09-30","2012-10-01","2012-10-02","2012-10-03","2012-10-04","2012-10-05","2012-10-06","2012-10-07","2012-10-08","2012-10-09","2012-10-10","2012-10-11","2012-10-12","2012-10-13","2012-10-14","2012-10-15","2012-10-16","2012-10-17","2012-10-18","2012-10-19","2012-10-20","2012-10-21","2012-10-22","2012-10-23","2012-10-24","2012-10-25","2012-10-26","2012-10-27","2012-10-28","2012-10-29","2012-10-30","2012-10-31","2012-11-01","2012-11-02","2012-11-03","2012-11-04","2012-11-05","2012-11-06","2012-11-07","2012-11-08","2012-11-09","2012-11-10","2012-11-11","2012-11-12","2012-11-13","2012-11-14","2012-11-15","2012-11-16","2012-11-17","2012-11-18","2012-11-19","2012-11-20","2012-11-21","2012-11-22","2012-11-23","2012-11-24","2012-11-25","2012-11-26","2012-11-27","2012-11-28","2012-11-29","2012-11-30","2012-12-01","2012-12-02","2012-12-03","2012-12-04","2012-12-05","2012-12-06","2012-12-07","2012-12-08","2012-12-09","2012-12-10","2012-12-11","2012-12-12","2012-12-13","2012-12-14","2012-12-15","2012-12-16","2012-12-17","2012-12-18","2012-12-19","2012-12-20","2012-12-21","2012-12-22","2012-12-23","2012-12-24","2012-12-25","2012-12-26","2012-12-27","2012-12-28","2012-12-29","2012-12-30","2012-12-31"],"y":[2.7930000000000001,5.399,3.4350000000000001,2.3769999999999998,1.9419999999999999,1.647,1.46,1.3340000000000001,1.181,1.0720000000000001,1.0529999999999999,1.0029999999999999,0.94499999999999995,0.80000000000000004,0.71799999999999997,0.70099999999999996,0.76300000000000001,0.82999999999999996,0.86599999999999999,0.872,0.81699999999999995,0.79500000000000004,0.76000000000000001,0.72299999999999998,0.69399999999999995,0.65900000000000003,0.61699999999999999,0.60299999999999998,0.59099999999999997,0.58099999999999996,0.59499999999999997,0.61299999999999999,0.622,0.63900000000000001,0.64900000000000002,0.60399999999999998,0.61799999999999999,0.622,0.60999999999999999,0.59999999999999998,0.59699999999999998,0.59599999999999997,0.59299999999999997,0.60599999999999998,0.59499999999999997,0.55900000000000005,0.55600000000000005,0.77100000000000002,1.8160000000000001,1.7110000000000001,1.143,0.94099999999999995,0.89400000000000002,0.80600000000000005,0.76800000000000002,0.75700000000000001,0.73399999999999999,0.76900000000000002,0.82599999999999996,0.72099999999999997,0.66700000000000004,0.65600000000000003,0.69199999999999995,0.68999999999999995,20.071999999999999,35.228999999999999,9.0980000000000008,5.0659999999999998,3.8849999999999998,9.0839999999999996,9.5950000000000006,5.1790000000000003,3.8889999999999998,3.298,3.2120000000000002,3.847,13.622,10.723000000000001,6.0620000000000003,4.8490000000000002,3.79,3.125,2.7389999999999999,2.3530000000000002,2.129,2.0230000000000001,1.7769999999999999,1.673,1.738,1.871,1.821,1.8560000000000001,2.2320000000000002,2.573,3.4550000000000001,3.2970000000000002,3.2010000000000001,4.4189999999999996,7.2539999999999996,16.446000000000002,54.427,33.418999999999997,18.190999999999999,16.396000000000001,10.760999999999999,6.9619999999999997,27.681000000000001,11.052,7.3860000000000001,7.5119999999999996,6.1760000000000002,5.3090000000000002,4.9290000000000003,10.734,9.5809999999999995,30.515999999999998,11.821999999999999,9.907,8.5690000000000008,5.3029999999999999,3.948,3.218,2.7509999999999999,4.4370000000000003,4.7599999999999998,3.427,2.8130000000000002,2.4180000000000001,2.1000000000000001,1.835,1.6930000000000001,1.5660000000000001,1.452,1.7350000000000001,9.3019999999999996,9.2100000000000009,5.657,5.2549999999999999,11.734999999999999,6.7770000000000001,8.1159999999999997,6.5659999999999998,7.7130000000000001,7.8150000000000004,4.7949999999999999,3.5209999999999999,3.2719999999999998,2.7360000000000002,2.4569999999999999,1.9990000000000001,1.3959999999999999,1.1000000000000001,0.91500000000000004,0.89200000000000002,0.77200000000000002,0.64800000000000002,0.42699999999999999,0.34899999999999998,0.27400000000000002,0.23400000000000001,0.20300000000000001,0.54600000000000004,1.2849999999999999,1.6100000000000001,3.157,1.357,0.82399999999999995,0.55800000000000005,1.0209999999999999,0.77000000000000002,0.53500000000000003,0.33400000000000002,0.27700000000000002,1.0089999999999999,3.8650000000000002,4.3490000000000002,2.339,1.8560000000000001,1.0880000000000001,0.78900000000000003,0.59499999999999997,0.54000000000000004,0.375,0.5,0.55800000000000005,0.32700000000000001,0.34899999999999998,0.504,0.30099999999999999,0.52100000000000002,0.35299999999999998,0.23499999999999999,0.25,0.24399999999999999,0.25600000000000001,0.17999999999999999,0.14000000000000001,0.14399999999999999,0.184,0.18099999999999999,0.079000000000000001,0.078,0.062,0.062,0.067000000000000004,0.072999999999999995,0.152,0.085000000000000006,0.091999999999999998,0.122,0.16700000000000001,0.088999999999999996,0.079000000000000001,0.086999999999999994,0.090999999999999998,0.071999999999999995,0.075999999999999998,0.080000000000000002,0.20300000000000001,0.14899999999999999,0.088999999999999996,0.40799999999999997,0.25900000000000001,0.13100000000000001,0.10299999999999999,0.55700000000000005,3.556,6.6150000000000002,1.895,0.67500000000000004,0.36199999999999999,0.217,1.105,8.1940000000000008,1.6870000000000001,0.77100000000000002,0.91300000000000003,1.363,0.66500000000000004,70.593999999999994,18.437999999999999,5.0860000000000003,2.5699999999999998,1.6080000000000001,1.1379999999999999,0.85899999999999999,0.84299999999999997,3.6699999999999999,8.0850000000000009,8.7560000000000002,11.074999999999999,4.923,2.7040000000000002,1.8100000000000001,1.361,0.94999999999999996,0.73099999999999998,2.3279999999999998,1.913,1.165,0.83199999999999996,0.64600000000000002,0.67900000000000005,0.71099999999999997,1.704,3.0600000000000001,4.2729999999999997,2.3700000000000001,1.4350000000000001,0.95999999999999996,0.76800000000000002,5.3109999999999999,11.334,19.193000000000001,22.093,13.334,6.617,4.4829999999999997,3.238,2.4590000000000001,1.972,1.5860000000000001,1.343,1.1639999999999999,1.071,1.6040000000000001,11.522,14.451000000000001,6.4720000000000004,4.4390000000000001,3.3079999999999998,2.774,3.7650000000000001,2.9740000000000002,2.4710000000000001,2.1850000000000001,1.9350000000000001,1.8480000000000001,1.6950000000000001,1.6719999999999999,1.744,1.6579999999999999,1.5720000000000001,1.6719999999999999,2.3050000000000002,2.3090000000000002,1.9370000000000001,1.6299999999999999,1.4279999999999999,1.2889999999999999,1.256,1.1679999999999999,1.034,1.6479999999999999,2.6850000000000001,1.7669999999999999,1.5580000000000001,1.4870000000000001,2.145,1.923,2.7879999999999998,2.0569999999999999,1.7170000000000001,1.5760000000000001,1.3959999999999999,1.2769999999999999,1.405,1.286,1.659,3.1549999999999998,4.4569999999999999,5.3120000000000003,3.7810000000000001,21.773,6.944,4.3979999999999997,3.367,2.8119999999999998,2.4470000000000001,4.3780000000000001,9.4789999999999992,4.7389999999999999,3.5510000000000002,2.8799999999999999,2.456,2.1779999999999999,2.0059999999999998,3.54,6.6870000000000003,5.1059999999999999,3.488,2.621,2.339,2.0590000000000002,2.4089999999999998,4.0940000000000003,3.3999999999999999,2.5819999999999999,2.2679999999999998,2.0699999999999998,3.8540000000000001,19.039000000000001,6.4859999999999998,4.1799999999999997,3.4460000000000002,3.9750000000000001,7.375,4.1340000000000003,2.863,2.456,2.1080000000000001,1.97,1.774,1.6120000000000001,1.47,1.3120000000000001,2.4590000000000001,1.3340000000000001,1.131,1.1240000000000001,1.115,1.1220000000000001,1.0760000000000001,0.94799999999999995,0.89300000000000002,0.86599999999999999,0.82099999999999995,1.25,8.8710000000000004,3.5990000000000002,2.3919999999999999,3.556,3.6800000000000002,2.4740000000000002,1.99,1.7809999999999999,1.9970000000000001,2.2189999999999999,1.776,1.627,1.464,1.4119999999999999,1.3380000000000001,1.2470000000000001,1.2170000000000001,1.1459999999999999,1.145,1.1259999999999999,1.1599999999999999,1.0669999999999999,0.87,0.78400000000000003,0.79000000000000004,0.76600000000000001,0.76000000000000001,0.73399999999999999,0.77500000000000002,0.79800000000000004,0.82499999999999996,0.83699999999999997,0.85599999999999998,0.80600000000000005,0.71899999999999997,0.69499999999999995,0.70599999999999996,0.71099999999999997,0.69899999999999995,0.72999999999999998,0.76800000000000002,0.78700000000000003,0.78600000000000003,1.018,3.4630000000000001,7.1840000000000002,3.2309999999999999,2.4889999999999999,4.0800000000000001,12.631,12.704000000000001,7.6379999999999999,6.2160000000000002,12.118,19.132999999999999,16.103999999999999,11.335000000000001,7.399,5.3250000000000002,4.0830000000000002,3.2200000000000002,3.6720000000000002,3.335,2.4769999999999999,2.2629999999999999,2.2040000000000002,2.0859999999999999,3.4529999999999998,1.992,1.5780000000000001,1.4299999999999999,1.3580000000000001,1.2649999999999999,1.1180000000000001,1.0129999999999999,1.038,1.8979999999999999,2.0950000000000002,1.6930000000000001,1.462,1.294,1.224,1.139,1.117,1.03,0.94999999999999996,0.92700000000000005,0.91800000000000004,1.431,4.0659999999999998,19.152000000000001,9.8200000000000003,5.4960000000000004,3.8900000000000001,6.7779999999999996,3.972,3.04,2.52,6.3789999999999996,5.3529999999999998,4.7560000000000002,8.827,5.8609999999999998,4.1660000000000004,3.3170000000000002,27.385000000000002,18.609999999999999,12.629,7.319,4.7990000000000004,3.597,2.992,13.381,11.137,8.2599999999999998,5.5620000000000003,3.9500000000000002,2.8759999999999999,2.1070000000000002,1.972,1.6200000000000001,1.3460000000000001,1.7150000000000001,1.764,1.2270000000000001,1.0009999999999999,15.039,12.596,4.444,2.7109999999999999,20.044,17.600999999999999,7.1959999999999997,4.3869999999999996,3.8010000000000002,4.0919999999999996,3.137,3.226,2.0990000000000002,1.571,1.681,13.289,5.0629999999999997,3.0350000000000001,2.2629999999999999,1.8560000000000001,1.359,1.2270000000000001,0.91400000000000003,0.65800000000000003,0.47199999999999998,0.35499999999999998,0.28999999999999998,2.8260000000000001,2.5350000000000001,1.6359999999999999,1.1499999999999999,0.78400000000000003,0.50700000000000001,1.4350000000000001,0.38200000000000001,0.246,0.55900000000000005,0.73599999999999999,0.45700000000000002,0.32800000000000001,0.23400000000000001,0.17499999999999999,0.14499999999999999,0.121,0.104,0.091999999999999998,0.080000000000000002,0.071999999999999995,0.086999999999999994,0.072999999999999995,0.113,0.081000000000000003,0.078,0.073999999999999996,0.071999999999999995,0.086999999999999994,0.255,0.10000000000000001,0.087999999999999995,0.19400000000000001,0.20499999999999999,0.52200000000000002,0.35599999999999998,0.14999999999999999,0.13800000000000001,0.316,0.14599999999999999,0.092999999999999999,0.16300000000000001,0.38200000000000001,0.14899999999999999,0.098000000000000004,2.2949999999999999,28.957000000000001,11.403,5.2859999999999996,2.9510000000000001,1.6699999999999999,1.827,1.52,0.97199999999999998,0.68500000000000005,0.45000000000000001,0.30099999999999999,0.20000000000000001,0.153,0.11,0.097000000000000003,0.083000000000000004,0.108,0.23599999999999999,1.9430000000000001,0.60899999999999999,0.313,0.185,0.16500000000000001,0.28100000000000003,0.23699999999999999,0.53300000000000003,3.6509999999999998,1.3759999999999999,0.73899999999999999,1.595,2.9420000000000002,1.2829999999999999,0.76300000000000001,0.48299999999999998,0.34100000000000003,0.252,0.20300000000000001,0.17499999999999999,0.157,18.486000000000001,20.957999999999998,4.8399999999999999,2.6840000000000002,1.988,2.137,1.4350000000000001,1.1499999999999999,1.0209999999999999,0.97299999999999998,1.5329999999999999,2.1669999999999998,1.8640000000000001,3.319,2.3180000000000001,4.109,4.3520000000000003,3.4329999999999998,2.968,2.786,2.8109999999999999,2.0779999999999998,2.3039999999999998,2.9630000000000001,2.2759999999999998,1.9099999999999999,2.8290000000000002,2.8740000000000001,2.6509999999999998,2.069,1.738,7.9189999999999996,13.907999999999999,6.1100000000000003,4.0519999999999996,2.8719999999999999,2.3839999999999999,2.0379999999999998,1.8300000000000001,1.6899999999999999,1.554,1.7969999999999999,17.856999999999999,18.489999999999998,7.3250000000000002,4.6689999999999996,3.419,2.7410000000000001,2.3109999999999999,1.972,1.786,1.694,1.548,1.49,1.3819999999999999,1.3080000000000001,2.8399999999999999,2.4460000000000002,1.901,1.595,1.3720000000000001,1.194,1.1799999999999999,1.157,1.1040000000000001,1.0449999999999999,1.05,1.014,0.95599999999999996,0.877,0.80400000000000005,0.80900000000000005,0.76600000000000001,0.72199999999999998,0.67000000000000004,1.5669999999999999,5.6310000000000002,2.9470000000000001,4.1070000000000002,2.7229999999999999,2.1019999999999999,1.8660000000000001,1.6619999999999999,6.4930000000000003,7.3120000000000003,3.6840000000000002,2.6509999999999998,2.2280000000000002,1.883,1.6200000000000001,1.5429999999999999,3.0259999999999998,4.7140000000000004,2.9239999999999999,7.1740000000000004,8.3979999999999997,4.226,2.9670000000000001,2.399,2.0169999999999999,1.8999999999999999,1.6850000000000001,1.5569999999999999,1.4570000000000001,1.3340000000000001],"name":"Measured","type":"scatter","mode":"lines","marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="measure-how-well-the-model-fits-with-nse" class="level2" data-number="16.10">
+<h2 data-number="16.10" class="anchored" data-anchor-id="measure-how-well-the-model-fits-with-nse"><span class="header-section-number">16.10</span> Measure how well the model fits with NSE</h2>
+<p>Before we can start trying to tune our model to look more like the observed discharge record, it would be helpful to have some sort of quantified metric for how well our modeled data fits the measured data.</p>
+<p>There are many different ways to do this, but discussion of the pros and cons of those approaches is beyond this quick introduction to modeling. So we are just going to look at one method, the Nash-Sutcliffe Efficiency (NSE).</p>
+<p>Basically, the NSE looks at how much better your model run did that if you had just used the mean discharge for the data record as your “modelled results”. It does this by comparing how far off the observed values where from the mean discharge to how far off the modeled values were from the observed discharge.</p>
+<p>Mathematically NSE the sum of the squared differences between the modeled and observed discharge divided by the sum of the squared differences between the observed and mean discharge, subtracted by 1.</p>
+<p><span class="math display">\[
+NSE = 1 - \frac{\sum_{t = 1}^{T}{(Q_m^t - Q_o^t)^2}}{\sum_{t = 1}^{T}{(Q_o^t - \bar{Q_o})^2}}
+\]</span> Where <span class="math inline">\(Q_m^t\)</span> is modeled discharge at time t, <span class="math inline">\(Q_o^t\)</span> is observed discharge at time t, and <span class="math inline">\(\bar{Q_o}\)</span> is mean observed discharge.</p>
+<p>Below, we calculate NSE for the model run above. We will continue to exclude the warm up period.</p>
+<p>An NSE over 0 means the model did better than the mean discharge at predicting discharge. An NSE of 1 would be a perfect model fit. How’d we do? Does this make sense with the timeseries we looked at above?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate NSE</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>NSE <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> ((<span class="fu">sum</span>((OutputTrim<span class="sc">$</span>q <span class="sc">-</span> OutputTrim<span class="sc">$</span>WS_3) <span class="sc">^</span> <span class="dv">2</span>)) <span class="sc">/</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum</span>((OutputTrim<span class="sc">$</span>WS_3 <span class="sc">-</span> <span class="fu">mean</span>(OutputTrim<span class="sc">$</span>WS_3)) <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>NSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2135378</code></pre>
+</div>
+</div>
+</section>
+<section id="assess-model-fit-with-a-different-measure-snow" class="level2" data-number="16.11">
+<h2 data-number="16.11" class="anchored" data-anchor-id="assess-model-fit-with-a-different-measure-snow"><span class="header-section-number">16.11</span> Assess model fit with a different measure: Snow</h2>
+<p>Before we jump into trying to parameterize this thing, I wanted to note that there are other things you can calibrate your model to other than discharge. In the case of watershed 3, for example, we also have a snow record. Snowmelt is a very important input driving our model so we might want to make sure that the model is doing a good job of capturing that as well!</p>
+<p>Let’s pull in snow, calculate NSE between the modeled and measure snow, and look at a plot of the data.</p>
+<p>Snow is not measured daily, so we will plot the measured values as points. Likewise, we will have filter our data to only times when we have a modeled snow amount AND a recorded snow amount when we calculate NSE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Read and prep snow data</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>snow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"HBV/sno2009-2012.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">select</span>(DATE, STA2) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>         <span class="fu">mutate</span>(<span class="at">DATE =</span> <span class="fu">ymd</span>(DATE)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">filter</span>(DATE <span class="sc">&gt;=</span> start <span class="sc">&amp;</span> DATE <span class="sc">&lt;=</span> end)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 76 Columns: 25
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(1): DATE dbl (21): STA1, STA2, STA3, STA4, STA5, STA6, STA7, STA8, STA9,
+STA10, STA11... lgl (3): ...23, ...24, ...25
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...23`
+• `` -&gt; `...24`
+• `` -&gt; `...25`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `DATE = ymd(DATE)`.
+Caused by warning:
+!  8 failed to parse.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Join measured snow to model output</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>OutputTrimSno <span class="ot">&lt;-</span> <span class="fu">left_join</span>(OutputTrim, snow, <span class="at">by =</span> <span class="st">"DATE"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot modeled and measured snow</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>OutputTrimSno <span class="sc">%&gt;%</span> <span class="fu">plot_ly</span>(<span class="at">x =</span> <span class="sc">~</span>DATE) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_trace</span>(<span class="at">y =</span> <span class="sc">~</span>SWE, <span class="at">name =</span> <span class="st">'Modeled'</span>, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_trace</span>(<span class="at">y =</span> <span class="sc">~</span>STA2, <span class="at">name =</span> <span class="st">'Measured'</span>, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'markers'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Ignoring 698 observations</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3e3aaa0fc5d2d6f62a44" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3e3aaa0fc5d2d6f62a44">{"x":{"visdat":{"319f29e488a6":["function () ","plotlyVisDat"]},"cur_data":"319f29e488a6","attrs":{"319f29e488a6":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"y":{},"name":"Modeled","type":"scatter","mode":"lines","inherit":true},"319f29e488a6.1":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"y":{},"name":"Measured","type":"scatter","mode":"markers","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"DATE"},"yaxis":{"domain":[0,1],"automargin":true,"title":"SWE"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2011-01-01","2011-01-02","2011-01-03","2011-01-04","2011-01-05","2011-01-06","2011-01-07","2011-01-08","2011-01-09","2011-01-10","2011-01-11","2011-01-12","2011-01-13","2011-01-14","2011-01-15","2011-01-16","2011-01-17","2011-01-18","2011-01-19","2011-01-20","2011-01-21","2011-01-22","2011-01-23","2011-01-24","2011-01-25","2011-01-26","2011-01-27","2011-01-28","2011-01-29","2011-01-30","2011-01-31","2011-02-01","2011-02-02","2011-02-03","2011-02-04","2011-02-05","2011-02-06","2011-02-07","2011-02-08","2011-02-09","2011-02-10","2011-02-11","2011-02-12","2011-02-13","2011-02-14","2011-02-15","2011-02-16","2011-02-17","2011-02-18","2011-02-19","2011-02-20","2011-02-21","2011-02-22","2011-02-23","2011-02-24","2011-02-25","2011-02-26","2011-02-27","2011-02-28","2011-03-01","2011-03-02","2011-03-03","2011-03-04","2011-03-05","2011-03-06","2011-03-07","2011-03-08","2011-03-09","2011-03-10","2011-03-11","2011-03-12","2011-03-13","2011-03-14","2011-03-15","2011-03-16","2011-03-17","2011-03-18","2011-03-19","2011-03-20","2011-03-21","2011-03-22","2011-03-23","2011-03-24","2011-03-25","2011-03-26","2011-03-27","2011-03-28","2011-03-29","2011-03-30","2011-03-31","2011-04-01","2011-04-02","2011-04-03","2011-04-04","2011-04-05","2011-04-06","2011-04-07","2011-04-08","2011-04-09","2011-04-10","2011-04-11","2011-04-12","2011-04-13","2011-04-14","2011-04-15","2011-04-16","2011-04-17","2011-04-18","2011-04-19","2011-04-20","2011-04-21","2011-04-22","2011-04-23","2011-04-24","2011-04-25","2011-04-26","2011-04-27","2011-04-28","2011-04-29","2011-04-30","2011-05-01","2011-05-02","2011-05-03","2011-05-04","2011-05-05","2011-05-06","2011-05-07","2011-05-08","2011-05-09","2011-05-10","2011-05-11","2011-05-12","2011-05-13","2011-05-14","2011-05-15","2011-05-16","2011-05-17","2011-05-18","2011-05-19","2011-05-20","2011-05-21","2011-05-22","2011-05-23","2011-05-24","2011-05-25","2011-05-26","2011-05-27","2011-05-28","2011-05-29","2011-05-30","2011-05-31","2011-06-01","2011-06-02","2011-06-03","2011-06-04","2011-06-05","2011-06-06","2011-06-07","2011-06-08","2011-06-09","2011-06-10","2011-06-11","2011-06-12","2011-06-13","2011-06-14","2011-06-15","2011-06-16","2011-06-17","2011-06-18","2011-06-19","2011-06-20","2011-06-21","2011-06-22","2011-06-23","2011-06-24","2011-06-25","2011-06-26","2011-06-27","2011-06-28","2011-06-29","2011-06-30","2011-07-01","2011-07-02","2011-07-03","2011-07-04","2011-07-05","2011-07-06","2011-07-07","2011-07-08","2011-07-09","2011-07-10","2011-07-11","2011-07-12","2011-07-13","2011-07-14","2011-07-15","2011-07-16","2011-07-17","2011-07-18","2011-07-19","2011-07-20","2011-07-21","2011-07-22","2011-07-23","2011-07-24","2011-07-25","2011-07-26","2011-07-27","2011-07-28","2011-07-29","2011-07-30","2011-07-31","2011-08-01","2011-08-02","2011-08-03","2011-08-04","2011-08-05","2011-08-06","2011-08-07","2011-08-08","2011-08-09","2011-08-10","2011-08-11","2011-08-12","2011-08-13","2011-08-14","2011-08-15","2011-08-16","2011-08-17","2011-08-18","2011-08-19","2011-08-20","2011-08-21","2011-08-22","2011-08-23","2011-08-24","2011-08-25","2011-08-26","2011-08-27","2011-08-28","2011-08-29","2011-08-30","2011-08-31","2011-09-01","2011-09-02","2011-09-03","2011-09-04","2011-09-05","2011-09-06","2011-09-07","2011-09-08","2011-09-09","2011-09-10","2011-09-11","2011-09-12","2011-09-13","2011-09-14","2011-09-15","2011-09-16","2011-09-17","2011-09-18","2011-09-19","2011-09-20","2011-09-21","2011-09-22","2011-09-23","2011-09-24","2011-09-25","2011-09-26","2011-09-27","2011-09-28","2011-09-29","2011-09-30","2011-10-01","2011-10-02","2011-10-03","2011-10-04","2011-10-05","2011-10-06","2011-10-07","2011-10-08","2011-10-09","2011-10-10","2011-10-11","2011-10-12","2011-10-13","2011-10-14","2011-10-15","2011-10-16","2011-10-17","2011-10-18","2011-10-19","2011-10-20","2011-10-21","2011-10-22","2011-10-23","2011-10-24","2011-10-25","2011-10-26","2011-10-27","2011-10-28","2011-10-29","2011-10-30","2011-10-31","2011-11-01","2011-11-02","2011-11-03","2011-11-04","2011-11-05","2011-11-06","2011-11-07","2011-11-08","2011-11-09","2011-11-10","2011-11-11","2011-11-12","2011-11-13","2011-11-14","2011-11-15","2011-11-16","2011-11-17","2011-11-18","2011-11-19","2011-11-20","2011-11-21","2011-11-22","2011-11-23","2011-11-24","2011-11-25","2011-11-26","2011-11-27","2011-11-28","2011-11-29","2011-11-30","2011-12-01","2011-12-02","2011-12-03","2011-12-04","2011-12-05","2011-12-06","2011-12-07","2011-12-08","2011-12-09","2011-12-10","2011-12-11","2011-12-12","2011-12-13","2011-12-14","2011-12-15","2011-12-16","2011-12-17","2011-12-18","2011-12-19","2011-12-20","2011-12-21","2011-12-22","2011-12-23","2011-12-24","2011-12-25","2011-12-26","2011-12-27","2011-12-28","2011-12-29","2011-12-30","2011-12-31","2012-01-01","2012-01-02","2012-01-03","2012-01-04","2012-01-05","2012-01-06","2012-01-07","2012-01-08","2012-01-09","2012-01-10","2012-01-11","2012-01-12","2012-01-13","2012-01-14","2012-01-15","2012-01-16","2012-01-17","2012-01-18","2012-01-19","2012-01-20","2012-01-21","2012-01-22","2012-01-23","2012-01-24","2012-01-25","2012-01-26","2012-01-27","2012-01-28","2012-01-29","2012-01-30","2012-01-31","2012-02-01","2012-02-02","2012-02-03","2012-02-04","2012-02-05","2012-02-06","2012-02-07","2012-02-08","2012-02-09","2012-02-10","2012-02-11","2012-02-12","2012-02-13","2012-02-14","2012-02-15","2012-02-16","2012-02-17","2012-02-18","2012-02-19","2012-02-20","2012-02-21","2012-02-22","2012-02-23","2012-02-24","2012-02-25","2012-02-26","2012-02-27","2012-02-28","2012-02-29","2012-03-01","2012-03-02","2012-03-03","2012-03-04","2012-03-05","2012-03-06","2012-03-07","2012-03-08","2012-03-09","2012-03-10","2012-03-11","2012-03-12","2012-03-13","2012-03-14","2012-03-15","2012-03-16","2012-03-17","2012-03-18","2012-03-19","2012-03-20","2012-03-21","2012-03-22","2012-03-23","2012-03-24","2012-03-25","2012-03-26","2012-03-27","2012-03-28","2012-03-29","2012-03-30","2012-03-31","2012-04-01","2012-04-02","2012-04-03","2012-04-04","2012-04-05","2012-04-06","2012-04-07","2012-04-08","2012-04-09","2012-04-10","2012-04-11","2012-04-12","2012-04-13","2012-04-14","2012-04-15","2012-04-16","2012-04-17","2012-04-18","2012-04-19","2012-04-20","2012-04-21","2012-04-22","2012-04-23","2012-04-24","2012-04-25","2012-04-26","2012-04-27","2012-04-28","2012-04-29","2012-04-30","2012-05-01","2012-05-02","2012-05-03","2012-05-04","2012-05-05","2012-05-06","2012-05-07","2012-05-08","2012-05-09","2012-05-10","2012-05-11","2012-05-12","2012-05-13","2012-05-14","2012-05-15","2012-05-16","2012-05-17","2012-05-18","2012-05-19","2012-05-20","2012-05-21","2012-05-22","2012-05-23","2012-05-24","2012-05-25","2012-05-26","2012-05-27","2012-05-28","2012-05-29","2012-05-30","2012-05-31","2012-06-01","2012-06-02","2012-06-03","2012-06-04","2012-06-05","2012-06-06","2012-06-07","2012-06-08","2012-06-09","2012-06-10","2012-06-11","2012-06-12","2012-06-13","2012-06-14","2012-06-15","2012-06-16","2012-06-17","2012-06-18","2012-06-19","2012-06-20","2012-06-21","2012-06-22","2012-06-23","2012-06-24","2012-06-25","2012-06-26","2012-06-27","2012-06-28","2012-06-29","2012-06-30","2012-07-01","2012-07-02","2012-07-03","2012-07-04","2012-07-05","2012-07-06","2012-07-07","2012-07-08","2012-07-09","2012-07-10","2012-07-11","2012-07-12","2012-07-13","2012-07-14","2012-07-15","2012-07-16","2012-07-17","2012-07-18","2012-07-19","2012-07-20","2012-07-21","2012-07-22","2012-07-23","2012-07-24","2012-07-25","2012-07-26","2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-08","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13","2012-08-14","2012-08-15","2012-08-16","2012-08-17","2012-08-18","2012-08-19","2012-08-20","2012-08-21","2012-08-22","2012-08-23","2012-08-24","2012-08-25","2012-08-26","2012-08-27","2012-08-28","2012-08-29","2012-08-30","2012-08-31","2012-09-01","2012-09-02","2012-09-03","2012-09-04","2012-09-05","2012-09-06","2012-09-07","2012-09-08","2012-09-09","2012-09-10","2012-09-11","2012-09-12","2012-09-13","2012-09-14","2012-09-15","2012-09-16","2012-09-17","2012-09-18","2012-09-19","2012-09-20","2012-09-21","2012-09-22","2012-09-23","2012-09-24","2012-09-25","2012-09-26","2012-09-27","2012-09-28","2012-09-29","2012-09-30","2012-10-01","2012-10-02","2012-10-03","2012-10-04","2012-10-05","2012-10-06","2012-10-07","2012-10-08","2012-10-09","2012-10-10","2012-10-11","2012-10-12","2012-10-13","2012-10-14","2012-10-15","2012-10-16","2012-10-17","2012-10-18","2012-10-19","2012-10-20","2012-10-21","2012-10-22","2012-10-23","2012-10-24","2012-10-25","2012-10-26","2012-10-27","2012-10-28","2012-10-29","2012-10-30","2012-10-31","2012-11-01","2012-11-02","2012-11-03","2012-11-04","2012-11-05","2012-11-06","2012-11-07","2012-11-08","2012-11-09","2012-11-10","2012-11-11","2012-11-12","2012-11-13","2012-11-14","2012-11-15","2012-11-16","2012-11-17","2012-11-18","2012-11-19","2012-11-20","2012-11-21","2012-11-22","2012-11-23","2012-11-24","2012-11-25","2012-11-26","2012-11-27","2012-11-28","2012-11-29","2012-11-30","2012-12-01","2012-12-02","2012-12-03","2012-12-04","2012-12-05","2012-12-06","2012-12-07","2012-12-08","2012-12-09","2012-12-10","2012-12-11","2012-12-12","2012-12-13","2012-12-14","2012-12-15","2012-12-16","2012-12-17","2012-12-18","2012-12-19","2012-12-20","2012-12-21","2012-12-22","2012-12-23","2012-12-24","2012-12-25","2012-12-26","2012-12-27","2012-12-28","2012-12-29","2012-12-30","2012-12-31"],"y":[3.8280000000000003,0,0,0.44000000000000006,1.2400000000000002,1.2800000000000002,1.2800000000000002,1.6400000000000003,2.3200000000000003,2.3200000000000003,2.3200000000000003,10.08,10.359999999999999,10.359999999999999,10.92,11.68,11.68,24,25.199999999999999,25.559999999999999,27.439999999999998,27.439999999999998,27.439999999999998,27.679999999999996,27.839999999999996,27.839999999999996,27.839999999999996,27.839999999999996,28.039999999999996,28.319999999999997,28.319999999999997,30.919999999999998,40.359999999999999,40.399999999999999,40.399999999999999,46.600000000000001,50.710000000000001,50.160000000000004,52.440000000000005,52.440000000000005,52.440000000000005,52.440000000000005,54.080000000000013,54.160000000000011,54.88000000000001,54.88000000000001,54.88000000000001,54.444500000000012,47.294500000000014,49.014500000000012,49.014500000000012,49.414500000000011,49.414500000000018,49.414500000000018,49.414500000000018,60.374500000000019,60.534500000000016,62.774500000000018,70.494500000000031,70.494500000000016,71.454500000000024,71.454500000000024,71.454500000000024,71.654500000000027,74.969950000000026,90.329950000000025,90.329950000000025,90.329950000000025,92.08995000000003,91.821950000000015,91.271950000000018,90.721950000000021,90.721950000000021,90.721950000000035,95.001950000000036,89.517450000000039,81.267450000000039,81.387450000000044,81.387450000000044,87.147450000000049,87.947450000000046,88.187450000000041,88.54745000000004,88.54745000000004,88.54745000000004,88.54745000000004,88.54745000000004,88.54745000000004,88.54745000000004,88.647450000000035,92.88745000000003,91.464450000000028,88.714450000000028,87.064450000000036,82.114450000000033,81.564450000000036,78.814450000000036,73.864450000000033,64.514450000000039,52.964450000000035,41.414450000000038,30.964450000000035,27.114450000000033,23.264450000000036,23.264450000000032,26.064450000000033,21.504450000000034,15.454450000000033,8.304450000000033,4.4544500000000333,1.7044500000000333,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.080000000000000016,0,0,0,0,0,0,0,0,0,0,0,0,0,5.2000000000000002,5.2000000000000002,5.2800000000000002,5.2800000000000002,4.1580000000000004,1.4080000000000004,0.85800000000000032,0,0,0,0,0,0,4.2400000000000002,0,4.7600000000000007,4.7600000000000007,5.2000000000000011,6.5200000000000014,15.680000000000001,20.480000000000004,20.480000000000004,20.680000000000003,19.998000000000005,15.048000000000004,18.368000000000002,18.368000000000002,18.368000000000002,18.368000000000002,18.888000000000002,18.888000000000002,18.888000000000002,18.888000000000005,18.888000000000005,18.888000000000005,24.448,27.167999999999999,27.727999999999998,27.727999999999998,27.727999999999998,29.727999999999998,30.527999999999999,31.927999999999997,33.047999999999995,33.567999999999998,33.567999999999998,43.488,45.488,45.688000000000002,47.039300000000004,46.489300000000007,43.739300000000007,44.219300000000004,44.219299999999997,45.579299999999996,43.645799999999994,43.645799999999994,43.645799999999994,43.885800000000003,43.885800000000003,43.885800000000003,43.885800000000003,43.885799999999996,43.885799999999996,43.222299999999997,43.662299999999995,43.662299999999995,43.662299999999995,43.662299999999995,43.596299999999992,40.846299999999992,36.996299999999998,35.346299999999992,35.346299999999992,35.346299999999992,35.706299999999992,31.259799999999991,28.509799999999991,27.959799999999991,30.15979999999999,30.15979999999999,30.399799999999988,30.67979999999999,31.079799999999992,34.079799999999992,34.479799999999983,36.259299999999982,35.709299999999985,35.709299999999985,35.709299999999985,32.629299999999986,21.079299999999989,19.429299999999987,20.989299999999986,18.422799999999985,5.7727999999999859,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.20000000000000001,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.16000000000000003,0.16000000000000003,0.16000000000000003,0.28000000000000003,1.3200000000000001,1.3200000000000001,2.8000000000000003,2.5300000000000002,0,0,0,0,0,0,0,0,0,0,0,0,0,3.1200000000000001,6.6400000000000006,4.5540000000000003,2.9040000000000008,2.3540000000000005,0,0.27999999999999997,0.31999999999999995,0.52000000000000002,1.52,1.52,6.9199999999999999,7.7199999999999998,10.76,12.08,12.08],"name":"Modeled","type":"scatter","mode":"lines","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2011-01-04","2011-01-10","2011-01-20","2011-01-25","2011-01-31","2011-02-07","2011-02-14","2011-02-22","2011-03-01","2011-03-08","2011-03-14","2011-03-21","2011-03-28","2011-04-06","2011-04-12","2011-04-18","2011-04-25","2011-05-02","2011-05-10","2011-12-27","2012-01-03","2012-01-09","2012-01-18","2012-01-23","2012-01-30","2012-02-06","2012-02-13","2012-02-21","2012-02-27","2012-03-06","2012-03-12","2012-03-19","2012-03-26"],"y":[0,0,22,26,31,46,49,44,60,46,65,48,52,56,0,0,0,0,0,0,0,0,9,12,21,16,19,19,27,36,34,0,0],"name":"Measured","type":"scatter","mode":"markers","marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Drop rows where there isn't a measured snow amount</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>CompareSnow <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(OutputTrimSno, STA2)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate NSE for snow, SWE is modeled, STA2 is measured</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>NSEsno <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> ((<span class="fu">sum</span>((CompareSnow<span class="sc">$</span>SWE <span class="sc">-</span> CompareSnow<span class="sc">$</span>STA2) <span class="sc">^</span> <span class="dv">2</span>)) <span class="sc">/</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum</span>((CompareSnow<span class="sc">$</span>STA2 <span class="sc">-</span> <span class="fu">mean</span>(CompareSnow<span class="sc">$</span>STA2)) <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>NSEsno</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1339054</code></pre>
+</div>
+</div>
+</section>
+<section id="calibrate-hbv-manually" class="level2" data-number="16.12">
+<h2 data-number="16.12" class="anchored" data-anchor-id="calibrate-hbv-manually"><span class="header-section-number">16.12</span> Calibrate HBV manually</h2>
+<p>Woohoo! We can now run our model and assess how well it is working!</p>
+<p>Now, let’s see how well we can get it to work. The code below runs the model, produces a plot, and calculates the NSE based on discharge.</p>
+<p>By changing the parameters, see how well you can get the model to fit. Take note of how the discharge changes when you change certain parameters. Let’s see who can get the highest NSE!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#when this term = 1, then triangular routing is invoked, or for no routing, routing = 0</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#if routing = 0 then MAXBAS doesn't do anything</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>routing <span class="ot">&lt;-</span> <span class="dv">0</span>      </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#hard code parameters </span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">40</span>,     <span class="co">#FCM ax soil moisture storage, field capacity</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>,      <span class="co">#beta Shape coefficient governing fate of water input to soil moisture storage</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.3</span>,    <span class="co">#LP Threshold for reduction of evap</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.4</span>,    <span class="co">#SFCF Snowfall correction factor</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>            <span class="sc">-</span><span class="fl">1.5</span>,   <span class="co">#TT Threshold temperature</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>,      <span class="co">#CFMAX Degree-day factor</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.05</span>,   <span class="co">#k0 Recession constant (upper storage, near surface)</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.01</span>,   <span class="co">#k1 Recession constant (upper storage)</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>            <span class="fl">0.001</span>,  <span class="co">#k2 Recession constant (lower storage)</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>,      <span class="co">#UZL Threshold for shallow storage</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>,      <span class="co">#PERC Percolation, max flow from upper to lower storage</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span>       <span class="co">#MAXBAS base of the triangular routing function, days</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co">#Run the model</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>Out <span class="ot">&lt;-</span> <span class="fu">HBV</span>(params, P, Temp, PET, routing)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Add observed output</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>Out <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(Out, Qobs1)</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Trim out the warm up period</span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>OutTrim <span class="ot">&lt;-</span> <span class="fu">filter</span>(Out, DATE <span class="sc">&gt;=</span> <span class="fu">mdy</span>(<span class="st">"01-01-2011"</span>))</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate NSE</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>NSE <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> ((<span class="fu">sum</span>((OutTrim<span class="sc">$</span>q <span class="sc">-</span> OutTrim<span class="sc">$</span>WS_3) <span class="sc">^</span> <span class="dv">2</span>)) <span class="sc">/</span> </span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sum</span>((OutTrim<span class="sc">$</span>WS_3 <span class="sc">-</span> <span class="fu">mean</span>(OutTrim<span class="sc">$</span>WS_3)) <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co">#Create plot with NSE in title</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>OutTrim <span class="sc">%&gt;%</span> <span class="fu">plot_ly</span>(<span class="at">x =</span> <span class="sc">~</span>DATE) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_trace</span>(<span class="at">y =</span> <span class="sc">~</span>q, <span class="at">name =</span> <span class="st">'Modeled'</span>,  <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_trace</span>(<span class="at">y =</span> <span class="sc">~</span>WS_3, <span class="at">name =</span> <span class="st">'Measured'</span>, <span class="at">type =</span> <span class="st">'scatter'</span>, <span class="at">mode =</span> <span class="st">'lines'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">layout</span>(<span class="at">title=</span><span class="fu">paste</span>(<span class="st">"NSE: "</span>, <span class="fu">round</span>(NSE,<span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-0d0227267ff37b31a5c9" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-0d0227267ff37b31a5c9">{"x":{"visdat":{"319f5760eeb9":["function () ","plotlyVisDat"]},"cur_data":"319f5760eeb9","attrs":{"319f5760eeb9":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"y":{},"name":"Modeled","type":"scatter","mode":"lines","inherit":true},"319f5760eeb9.1":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"y":{},"name":"Measured","type":"scatter","mode":"lines","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"NSE:  0.21","xaxis":{"domain":[0,1],"automargin":true,"title":"DATE"},"yaxis":{"domain":[0,1],"automargin":true,"title":"q"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2011-01-01","2011-01-02","2011-01-03","2011-01-04","2011-01-05","2011-01-06","2011-01-07","2011-01-08","2011-01-09","2011-01-10","2011-01-11","2011-01-12","2011-01-13","2011-01-14","2011-01-15","2011-01-16","2011-01-17","2011-01-18","2011-01-19","2011-01-20","2011-01-21","2011-01-22","2011-01-23","2011-01-24","2011-01-25","2011-01-26","2011-01-27","2011-01-28","2011-01-29","2011-01-30","2011-01-31","2011-02-01","2011-02-02","2011-02-03","2011-02-04","2011-02-05","2011-02-06","2011-02-07","2011-02-08","2011-02-09","2011-02-10","2011-02-11","2011-02-12","2011-02-13","2011-02-14","2011-02-15","2011-02-16","2011-02-17","2011-02-18","2011-02-19","2011-02-20","2011-02-21","2011-02-22","2011-02-23","2011-02-24","2011-02-25","2011-02-26","2011-02-27","2011-02-28","2011-03-01","2011-03-02","2011-03-03","2011-03-04","2011-03-05","2011-03-06","2011-03-07","2011-03-08","2011-03-09","2011-03-10","2011-03-11","2011-03-12","2011-03-13","2011-03-14","2011-03-15","2011-03-16","2011-03-17","2011-03-18","2011-03-19","2011-03-20","2011-03-21","2011-03-22","2011-03-23","2011-03-24","2011-03-25","2011-03-26","2011-03-27","2011-03-28","2011-03-29","2011-03-30","2011-03-31","2011-04-01","2011-04-02","2011-04-03","2011-04-04","2011-04-05","2011-04-06","2011-04-07","2011-04-08","2011-04-09","2011-04-10","2011-04-11","2011-04-12","2011-04-13","2011-04-14","2011-04-15","2011-04-16","2011-04-17","2011-04-18","2011-04-19","2011-04-20","2011-04-21","2011-04-22","2011-04-23","2011-04-24","2011-04-25","2011-04-26","2011-04-27","2011-04-28","2011-04-29","2011-04-30","2011-05-01","2011-05-02","2011-05-03","2011-05-04","2011-05-05","2011-05-06","2011-05-07","2011-05-08","2011-05-09","2011-05-10","2011-05-11","2011-05-12","2011-05-13","2011-05-14","2011-05-15","2011-05-16","2011-05-17","2011-05-18","2011-05-19","2011-05-20","2011-05-21","2011-05-22","2011-05-23","2011-05-24","2011-05-25","2011-05-26","2011-05-27","2011-05-28","2011-05-29","2011-05-30","2011-05-31","2011-06-01","2011-06-02","2011-06-03","2011-06-04","2011-06-05","2011-06-06","2011-06-07","2011-06-08","2011-06-09","2011-06-10","2011-06-11","2011-06-12","2011-06-13","2011-06-14","2011-06-15","2011-06-16","2011-06-17","2011-06-18","2011-06-19","2011-06-20","2011-06-21","2011-06-22","2011-06-23","2011-06-24","2011-06-25","2011-06-26","2011-06-27","2011-06-28","2011-06-29","2011-06-30","2011-07-01","2011-07-02","2011-07-03","2011-07-04","2011-07-05","2011-07-06","2011-07-07","2011-07-08","2011-07-09","2011-07-10","2011-07-11","2011-07-12","2011-07-13","2011-07-14","2011-07-15","2011-07-16","2011-07-17","2011-07-18","2011-07-19","2011-07-20","2011-07-21","2011-07-22","2011-07-23","2011-07-24","2011-07-25","2011-07-26","2011-07-27","2011-07-28","2011-07-29","2011-07-30","2011-07-31","2011-08-01","2011-08-02","2011-08-03","2011-08-04","2011-08-05","2011-08-06","2011-08-07","2011-08-08","2011-08-09","2011-08-10","2011-08-11","2011-08-12","2011-08-13","2011-08-14","2011-08-15","2011-08-16","2011-08-17","2011-08-18","2011-08-19","2011-08-20","2011-08-21","2011-08-22","2011-08-23","2011-08-24","2011-08-25","2011-08-26","2011-08-27","2011-08-28","2011-08-29","2011-08-30","2011-08-31","2011-09-01","2011-09-02","2011-09-03","2011-09-04","2011-09-05","2011-09-06","2011-09-07","2011-09-08","2011-09-09","2011-09-10","2011-09-11","2011-09-12","2011-09-13","2011-09-14","2011-09-15","2011-09-16","2011-09-17","2011-09-18","2011-09-19","2011-09-20","2011-09-21","2011-09-22","2011-09-23","2011-09-24","2011-09-25","2011-09-26","2011-09-27","2011-09-28","2011-09-29","2011-09-30","2011-10-01","2011-10-02","2011-10-03","2011-10-04","2011-10-05","2011-10-06","2011-10-07","2011-10-08","2011-10-09","2011-10-10","2011-10-11","2011-10-12","2011-10-13","2011-10-14","2011-10-15","2011-10-16","2011-10-17","2011-10-18","2011-10-19","2011-10-20","2011-10-21","2011-10-22","2011-10-23","2011-10-24","2011-10-25","2011-10-26","2011-10-27","2011-10-28","2011-10-29","2011-10-30","2011-10-31","2011-11-01","2011-11-02","2011-11-03","2011-11-04","2011-11-05","2011-11-06","2011-11-07","2011-11-08","2011-11-09","2011-11-10","2011-11-11","2011-11-12","2011-11-13","2011-11-14","2011-11-15","2011-11-16","2011-11-17","2011-11-18","2011-11-19","2011-11-20","2011-11-21","2011-11-22","2011-11-23","2011-11-24","2011-11-25","2011-11-26","2011-11-27","2011-11-28","2011-11-29","2011-11-30","2011-12-01","2011-12-02","2011-12-03","2011-12-04","2011-12-05","2011-12-06","2011-12-07","2011-12-08","2011-12-09","2011-12-10","2011-12-11","2011-12-12","2011-12-13","2011-12-14","2011-12-15","2011-12-16","2011-12-17","2011-12-18","2011-12-19","2011-12-20","2011-12-21","2011-12-22","2011-12-23","2011-12-24","2011-12-25","2011-12-26","2011-12-27","2011-12-28","2011-12-29","2011-12-30","2011-12-31","2012-01-01","2012-01-02","2012-01-03","2012-01-04","2012-01-05","2012-01-06","2012-01-07","2012-01-08","2012-01-09","2012-01-10","2012-01-11","2012-01-12","2012-01-13","2012-01-14","2012-01-15","2012-01-16","2012-01-17","2012-01-18","2012-01-19","2012-01-20","2012-01-21","2012-01-22","2012-01-23","2012-01-24","2012-01-25","2012-01-26","2012-01-27","2012-01-28","2012-01-29","2012-01-30","2012-01-31","2012-02-01","2012-02-02","2012-02-03","2012-02-04","2012-02-05","2012-02-06","2012-02-07","2012-02-08","2012-02-09","2012-02-10","2012-02-11","2012-02-12","2012-02-13","2012-02-14","2012-02-15","2012-02-16","2012-02-17","2012-02-18","2012-02-19","2012-02-20","2012-02-21","2012-02-22","2012-02-23","2012-02-24","2012-02-25","2012-02-26","2012-02-27","2012-02-28","2012-02-29","2012-03-01","2012-03-02","2012-03-03","2012-03-04","2012-03-05","2012-03-06","2012-03-07","2012-03-08","2012-03-09","2012-03-10","2012-03-11","2012-03-12","2012-03-13","2012-03-14","2012-03-15","2012-03-16","2012-03-17","2012-03-18","2012-03-19","2012-03-20","2012-03-21","2012-03-22","2012-03-23","2012-03-24","2012-03-25","2012-03-26","2012-03-27","2012-03-28","2012-03-29","2012-03-30","2012-03-31","2012-04-01","2012-04-02","2012-04-03","2012-04-04","2012-04-05","2012-04-06","2012-04-07","2012-04-08","2012-04-09","2012-04-10","2012-04-11","2012-04-12","2012-04-13","2012-04-14","2012-04-15","2012-04-16","2012-04-17","2012-04-18","2012-04-19","2012-04-20","2012-04-21","2012-04-22","2012-04-23","2012-04-24","2012-04-25","2012-04-26","2012-04-27","2012-04-28","2012-04-29","2012-04-30","2012-05-01","2012-05-02","2012-05-03","2012-05-04","2012-05-05","2012-05-06","2012-05-07","2012-05-08","2012-05-09","2012-05-10","2012-05-11","2012-05-12","2012-05-13","2012-05-14","2012-05-15","2012-05-16","2012-05-17","2012-05-18","2012-05-19","2012-05-20","2012-05-21","2012-05-22","2012-05-23","2012-05-24","2012-05-25","2012-05-26","2012-05-27","2012-05-28","2012-05-29","2012-05-30","2012-05-31","2012-06-01","2012-06-02","2012-06-03","2012-06-04","2012-06-05","2012-06-06","2012-06-07","2012-06-08","2012-06-09","2012-06-10","2012-06-11","2012-06-12","2012-06-13","2012-06-14","2012-06-15","2012-06-16","2012-06-17","2012-06-18","2012-06-19","2012-06-20","2012-06-21","2012-06-22","2012-06-23","2012-06-24","2012-06-25","2012-06-26","2012-06-27","2012-06-28","2012-06-29","2012-06-30","2012-07-01","2012-07-02","2012-07-03","2012-07-04","2012-07-05","2012-07-06","2012-07-07","2012-07-08","2012-07-09","2012-07-10","2012-07-11","2012-07-12","2012-07-13","2012-07-14","2012-07-15","2012-07-16","2012-07-17","2012-07-18","2012-07-19","2012-07-20","2012-07-21","2012-07-22","2012-07-23","2012-07-24","2012-07-25","2012-07-26","2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-08","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13","2012-08-14","2012-08-15","2012-08-16","2012-08-17","2012-08-18","2012-08-19","2012-08-20","2012-08-21","2012-08-22","2012-08-23","2012-08-24","2012-08-25","2012-08-26","2012-08-27","2012-08-28","2012-08-29","2012-08-30","2012-08-31","2012-09-01","2012-09-02","2012-09-03","2012-09-04","2012-09-05","2012-09-06","2012-09-07","2012-09-08","2012-09-09","2012-09-10","2012-09-11","2012-09-12","2012-09-13","2012-09-14","2012-09-15","2012-09-16","2012-09-17","2012-09-18","2012-09-19","2012-09-20","2012-09-21","2012-09-22","2012-09-23","2012-09-24","2012-09-25","2012-09-26","2012-09-27","2012-09-28","2012-09-29","2012-09-30","2012-10-01","2012-10-02","2012-10-03","2012-10-04","2012-10-05","2012-10-06","2012-10-07","2012-10-08","2012-10-09","2012-10-10","2012-10-11","2012-10-12","2012-10-13","2012-10-14","2012-10-15","2012-10-16","2012-10-17","2012-10-18","2012-10-19","2012-10-20","2012-10-21","2012-10-22","2012-10-23","2012-10-24","2012-10-25","2012-10-26","2012-10-27","2012-10-28","2012-10-29","2012-10-30","2012-10-31","2012-11-01","2012-11-02","2012-11-03","2012-11-04","2012-11-05","2012-11-06","2012-11-07","2012-11-08","2012-11-09","2012-11-10","2012-11-11","2012-11-12","2012-11-13","2012-11-14","2012-11-15","2012-11-16","2012-11-17","2012-11-18","2012-11-19","2012-11-20","2012-11-21","2012-11-22","2012-11-23","2012-11-24","2012-11-25","2012-11-26","2012-11-27","2012-11-28","2012-11-29","2012-11-30","2012-12-01","2012-12-02","2012-12-03","2012-12-04","2012-12-05","2012-12-06","2012-12-07","2012-12-08","2012-12-09","2012-12-10","2012-12-11","2012-12-12","2012-12-13","2012-12-14","2012-12-15","2012-12-16","2012-12-17","2012-12-18","2012-12-19","2012-12-20","2012-12-21","2012-12-22","2012-12-23","2012-12-24","2012-12-25","2012-12-26","2012-12-27","2012-12-28","2012-12-29","2012-12-30","2012-12-31"],"y":[2.2077411750833305,2.297183920300597,2.1593528850825612,2.0297917119776074,1.9080042092589511,1.7935239567034142,1.6859125193012092,1.5847577681431366,1.4896723020545484,1.4002919639312754,1.316274446095399,1.237297979329675,1.1630601005698944,1.0932764945357007,1.0276799048635588,0.96601911057174517,0.90805796393744043,0.85357448610119413,0.80236001693512249,0.75421841591901517,0.70896531096387416,0.66642739230604175,0.62644174876767933,0.58885524384161858,0.55352392921112148,0.52031249345845421,0.48909374385094689,0.45974811921989006,0.43216323206669666,0.40623343814269486,0.38185943185413318,0.35894786594288514,0.33741099398631202,0.31716633434713326,0.29813635428630525,0.28024817302912691,0.42142597669208931,0.52402499966150384,0.4925834996818137,0.46302848970090493,0.43524678031885067,0.40913197349971964,0.38458405508973642,0.36150901178435219,0.33981847107729102,0.31942936281265355,0.30026360104389432,0.30705478137534259,0.70348196584963474,0.6612730478986566,0.62159666502473732,0.58430086512325297,0.54924281321585777,0.51628824442290622,0.48531094975753186,0.4561922927720799,0.42882075520575508,0.40309150989340975,0.37890601929980516,0.35617165814181684,0.33480135865330785,0.31471327713410935,0.29583048050606281,0.27808065167569901,3.6337685876883477,3.4157424724270471,3.2107979240814242,3.0181500486365382,2.8370610457183454,3.6529212108650793,3.6513923094390233,3.6023351779990351,3.3861950673190928,3.1830233632799474,2.9920419614831508,3.1399023982451375,3.4623031825916,3.2545649916361041,3.0592910921379382,2.8757336266096614,2.7031896090130823,2.5409982324722975,2.3885383385239596,2.2452260382125222,2.1105124759197706,1.9838817273645841,1.864848823722709,1.7529578942993465,1.6477804206413855,1.5489135954029025,1.4559787796787282,1.45367775296415,1.5308653810261958,2.1000091471057383,2.6594463896679885,2.7184697279960188,2.7200768106246578,2.8534067064402735,3.2424674981930823,4.387730302439401,6.3165230993637538,6.5883829076423233,6.9279544149465933,6.8692288711286169,6.4570751388608993,6.0696506305292459,7.3529228014863968,7.3107244788172636,7.3010602761603138,7.6279678318539954,7.4552811905391181,7.1102284890089225,7.5141356727828343,7.1204881928882484,7.2536214006702089,8.2290340423933177,7.8001972886512165,7.7327483891932101,7.2883983308281266,6.8510944309784394,6.4400287651197328,6.0536270392125484,5.6942047882151918,6.0549963705788254,5.7418109471484531,5.397302290319546,5.0734641529003728,4.7690563037263507,4.4829129255027702,4.2139381499726047,3.9611018609742485,3.7234357493157928,3.5000296043568451,3.5305336310929265,4.5058486025011826,4.2942821289697894,4.1859282491364818,4.1952134268702075,4.6392366514222951,4.5087825271401671,4.9360799048842559,4.6814900345255932,4.8325346315608639,4.5425825536672129,4.2700276004471798,4.1481953948919452,3.9475926917569479,3.7107371302515308,3.4880929024364393,3.3422824411566312,3.1417454946872336,2.9532407650059995,2.7811735748696575,2.6143031603774785,2.4574449707548296,2.30999827250954,2.1713983761589675,2.0411144735894293,1.9192189512546771,1.8276656504628856,1.7180057114351126,1.8767559309979218,1.8803371300737082,2.2502560639199713,2.2336011355975849,2.1433267433139167,2.0257174497994659,2.0042869146701401,1.9836340977648352,1.889105812447428,1.7757594637005827,1.6692138958785478,1.6535993266685161,1.8810147187400168,2.4579576445804099,2.3464509283478239,2.3451591266491016,2.2167678350768778,2.1116758979205739,1.984975344045339,1.8752640533131641,1.7701035337630855,1.6638973217373003,1.5954819021930957,1.4997529880615099,1.4097678087778194,1.4632129419283941,1.3754201654126905,1.2961308131679521,1.3382302288688228,1.2579364151366936,1.1824602302284919,1.1115126164147824,1.0481379325146174,0.98524965656374019,0.92613467716991593,0.8705665965397209,0.81833260074733771,0.84576786157386796,0.79502178987943595,0.74732048248666982,0.7024812535374696,0.6603323783252214,0.62071243562570799,0.58346968948816558,0.59654750506735021,0.6024513555364881,0.56630427420429885,0.53232601775204091,0.6126238815571754,0.58768186337194639,0.55242095156962956,0.51927569447545174,0.5033878499550114,0.47951618810260299,0.46942000300199427,0.44125480282187457,0.41951818146066822,0.54050980324093711,0.52416099483265588,0.57994449191110808,0.85098595381283482,0.79992679658406474,0.75193118878902099,0.70681531746167969,1.2699112128077055,3.1986727746740691,3.8058823933244765,3.5775294497250081,3.3803296583855156,3.1891774321317277,2.9978267862038241,4.3630447217125266,4.3436490724174277,4.0830301280723811,3.8380483203880384,3.9532894707057773,3.7160921024634308,3.6133538085122212,9.615760459667511,9.1157268234877726,8.5687832140785058,8.0546562212337953,7.5713768479597663,7.1170942370821804,6.6900685828572497,6.6477334576963756,7.1117505473435134,7.0504551317493922,7.4664291887830743,7.3909498223176566,6.9474928329785977,6.5306432629998818,6.1388046672198886,5.7704763871866955,5.4242478039554936,5.0987929357181638,5.3185951528131854,4.9994794436443941,4.6995106770257307,4.417540036404187,4.1524876342199359,3.9582064662102621,3.7207140782376458,3.8126603424725651,3.6969620341549065,3.5727835270786494,3.3584165154539303,3.1569115245266945,2.9674968330550922,2.7894470230717867,3.5119494807404692,4.5974005024988394,4.8046734589922186,6.2744554796682204,6.0394259614514869,5.7172358606219955,5.4706416532466031,5.1424031540518067,4.833858964808698,4.5438274269201759,4.2711977813049646,4.0149259144266658,3.774030359561066,3.5475885379874024,3.4704661397219292,5.2263193089563513,5.3031211902980306,5.2456703923008989,5.0031866899787261,4.7029954885800018,4.5974985590934514,4.6721738330862141,4.3918434031010403,4.1586600784422325,3.9091404737356976,3.7772719800608079,3.5506356612571595,3.33759752158173,3.4691289701309054,3.3430707954599468,3.450968031298344,3.450113103998357,3.2431063177584551,3.048519938692948,2.8656087423713714,2.6936722178290888,2.5320518847593436,2.3801287716737831,2.2373210453733563,2.1030817826509547,1.9768968756918976,1.8582830631503837,2.2743800328788346,2.1714981487427396,2.0412082598181751,1.9187357642290845,1.9921396065838115,1.89769527989475,2.0818459890858048,2.0101447988597432,1.8895361109281588,1.776163944272469,1.6695941076161209,1.5694184611591537,1.481887548274303,2.6476219637862961,2.4887646459591184,2.3524637770552412,2.2113159504319273,2.0786369934060116,1.9539187738016515,2.0477531522698484,3.1789508960969077,3.0079133933013069,2.8274385897032284,2.6577922743210349,2.4983247378617728,2.3484252535900665,2.4522570696755319,3.1247071508549045,2.9372247218036103,2.7609912384953939,2.5953317641856701,2.4396118583345299,2.3481848367764,2.3434087637639611,2.2302910920020955,3.1478978838653573,3.0546786841203923,2.8713979630731679,2.6991140852887785,2.5371672401714518,2.3849372057611644,2.2418409734154947,2.4246704236298928,2.2791901982120994,2.1424387863193735,2.013892459140211,1.8930589115917986,1.7794753768962903,1.6727068542825128,1.572344443025562,1.4780037764440281,1.5253724798400461,1.989120279918539,1.8697730631234264,1.7575866793360211,1.6521314785758596,1.5530035898613082,1.4598233744696296,1.3722339720014518,1.289899933681365,1.2125059376604832,1.1397555814008542,1.0713702465168029,1.0070880317257951,0.94666274982224741,0.8898629848329126,0.83647120574293776,0.78628293339836153,0.73910595739445983,0.69475959995079217,0.6530740239537447,0.61388958251651993,0.57705620756552878,0.54243283511159712,0.50988686500490132,0.47929365310460714,0.45053603391833075,0.65622907402084363,2.4280398629142543,2.4401929355858796,2.2937813594507266,2.1561544778836832,2.026785209210662,2.1433097299650998,2.014711146167194,1.8938284773971623,1.7801987687533325,1.6733868426281326,1.5729836320704447,1.4786046141462179,1.3898883372974449,1.306495037059598,1.2664295352399273,1.1904437631255318,1.1190171373379998,1.0518761090977198,0.98876354255185661,0.93325238537615363,1.094296771753106,1.491058180414002,1.4979234654573719,1.4080480575299295,1.3235651740781336,1.2441512636334455,1.4647690888634974,1.5968856726724177,2.2876750882463783,2.1504145829515959,2.0213897079745,1.90010632549603,1.7860999459662681,1.6789339492082922,1.5781979122557948,1.4835060375204472,2.0648033469958866,1.9854109646083256,1.8662863067318261,1.7543091283279166,1.8318718172175912,2.6887283823756833,3.0849959674350211,2.8998962093889196,2.8790901874186656,3.462066531948242,3.5995298221047691,3.4412663642376038,3.3135673531739549,3.4690651323724722,3.260921224430124,3.0652659509643163,2.8813499939064573,2.7084689942720694,2.5459608546157453,2.3932032033388007,2.2496110111384726,2.1499731573453715,2.1914795345088462,2.1844473876767339,2.0533805444161293,2.0057264038051441,1.9756826073670479,1.8847453932815521,1.7716606696846591,1.6909962889440271,1.5895365116073854,1.4941643209109423,1.4045144616562859,1.320243593956909,1.2410289783194943,1.1665672396203248,1.1093926426432346,1.3813238378005983,1.2984444075325625,1.2205377430806086,1.1473054784957721,1.0784671497860256,1.0137591207988641,0.95293357355093211,0.89575755913787614,0.84201210558960349,0.79149137925422741,0.74400189649897364,0.69936178270903515,0.81694904552573677,1.3517631786377813,2.6648328660277238,2.6068702169086464,2.4504580038941275,2.8239224653787867,2.7862510042066715,2.6190759439542708,2.4619313873170148,2.3142155040779939,2.9746919161659391,2.8682742517217177,2.800726593399312,3.3247469582968643,3.1656508205364626,2.9757117713042751,2.7971690650260181,3.6075963398613191,3.6383250447080129,4.3743579237111163,4.2835059883263549,4.0264956290267726,3.7849058912851667,3.6587931081310576,5.8905578190304624,6.0721850390295726,5.8135138204141317,5.4647029911892835,5.1368208117179268,4.8286115630148503,4.5953136955787848,4.3965404120347333,4.1327479873126496,3.8847831080738899,3.7585270979338432,3.5330154720578122,3.3210345437343434,3.1326740960999682,5.0531495213507922,4.7682041633656604,4.4821119135637213,4.2131851987498985,6.2081832112872579,6.2053602585135774,6.1026358188213194,5.7595565133283673,5.7877082318781463,5.4786681635118599,5.526102681977382,5.198431877579333,4.8865259649245729,4.5933344070290989,4.8848074231611625,5.5118316993145733,5.1811217973556989,4.8702544895143562,4.5780392201434941,4.3033568669348847,4.0451554549187918,3.8024461276236643,3.5742993599662443,3.3598413983682702,3.1582509144661741,2.9687558595982035,2.7906305080223115,3.4790875068876792,3.3006401121379394,3.248726515976831,3.0538029250182213,2.8705747495171279,2.6983402645461001,2.5535682136974436,2.404049071440006,2.2598061271536061,2.405314557387122,2.2609956839438952,2.1253359429072614,1.9978157863328256,1.8779468391528562,1.7652700288036849,1.6593538270754637,1.5597925974509359,1.4662050416038797,1.3782327391076468,1.2955387747611882,1.2199562110840994,1.1516207522040807,1.1407062312701051,1.0742405413392129,1.00978610885886,0.94919894232732838,0.89224700578768856,0.83871218544042736,0.8353921810995063,0.94456206402861898,0.88788834018690177,0.9205586563153042,0.88656303290652327,1.0206626317891974,1.4156634838224149,1.3307236747930702,1.250880254305486,1.2959524912909295,1.2181953418134737,1.145103621304665,1.0763974040263851,1.2681740039464491,1.1920835637096621,1.1205585498870823,1.0533250368938576,2.2345797427786307,6.0420406541185718,6.142508407354657,6.0491114129142289,5.6861647281393743,5.344994844451012,5.318232540644626,4.9991385882059483,4.7679913778607323,4.4819118951890875,4.2129971814777427,3.9602173505890774,3.7226043095537333,3.4992480509805093,3.2892931679216781,3.0919355778463777,2.906419443175595,2.7320342765850594,2.7396317746167229,3.2225170651504151,3.0291660412413899,2.8474160787669063,2.6959248143418559,2.534169325481344,2.5900067372666,2.434606333030604,2.530768572376048,2.8772307432722459,2.704596898675911,2.5423210847553563,3.0848419459965593,2.8997514292367659,2.7257663434825599,2.5622203628736058,2.4084871411011899,2.2639779126351183,2.1281392378770119,2.0004508836043913,1.8804238305881278,1.76759840075284,4.6271687797138314,4.5351234443752357,4.2630160377127222,4.0072350754499588,3.922854407046843,3.8085910405003203,3.5800755780703013,3.3652710433860835,3.2019168604289439,3.0329789313899602,3.2321452233251136,3.1005718086189105,3.0325785053369048,3.2426803068036349,3.0481194883954164,3.3911756892963383,3.3399760494450397,3.1472633609173362,3.2578184722016537,3.2153849826786067,3.056499419401784,2.8731094542376772,3.0214734370316814,2.8514950134462915,2.8279498697493732,2.6582728775644111,2.8428345529795891,2.7945670726143232,2.6534748380200157,2.4942663477388152,2.3446103668744862,3.4987793993209833,3.5238878689936737,3.3702209477289466,3.1680076908652097,2.977927229413297,2.7992515956484993,2.6312964999095891,2.4734187099150144,2.3250135873201132,2.185512772080906,2.7144702679877586,4.3967755565036919,4.252546789367682,3.997393982005621,3.7716308326146142,3.5453329826577376,3.3326130036982731,3.1326562234763768,2.9446968500677944,2.7680150390637266,2.6833617958244442,2.5466421013040721,2.3938435752258274,2.2502129607122781,2.1152001830695415,2.5452398561378127,2.3925254647695438,2.2489739368833712,2.114035500670369,1.9871933706301468,1.867961768392338,1.7558840622887977,1.6505310185514699,1.5514991574383816,1.4584092079920787,1.3804159047523628,1.3500404245772266,1.2690379991025929,1.1928957191564373,1.1213219760070512,1.0540426574466282,0.99080009799983049,0.93135209211984049,0.87547096659265011,1.5326768660921093,1.6044735448583261,1.5338606199315481,1.8625359681495126,1.750783810060542,1.6457367814569097,1.5861040647186546,1.4995020394953706,2.5800761790585014,2.4252716083149912,2.2797553118160918,2.1429699931071258,2.0143917935206979,1.8935282859094562,1.7799165887548889,1.6731215934295955,2.4594823680795246,2.5659089394660302,2.4405250124982123,3.542416015703151,3.3298710547609618,3.1300787914753041,2.9422740639867864,2.7657376201475792,2.5997933629387244,2.4438057611624013,2.2971774154926576,2.1593467705630975,2.0297859643293115,1.9079988064695528],"name":"Modeled","type":"scatter","mode":"lines","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2011-01-01","2011-01-02","2011-01-03","2011-01-04","2011-01-05","2011-01-06","2011-01-07","2011-01-08","2011-01-09","2011-01-10","2011-01-11","2011-01-12","2011-01-13","2011-01-14","2011-01-15","2011-01-16","2011-01-17","2011-01-18","2011-01-19","2011-01-20","2011-01-21","2011-01-22","2011-01-23","2011-01-24","2011-01-25","2011-01-26","2011-01-27","2011-01-28","2011-01-29","2011-01-30","2011-01-31","2011-02-01","2011-02-02","2011-02-03","2011-02-04","2011-02-05","2011-02-06","2011-02-07","2011-02-08","2011-02-09","2011-02-10","2011-02-11","2011-02-12","2011-02-13","2011-02-14","2011-02-15","2011-02-16","2011-02-17","2011-02-18","2011-02-19","2011-02-20","2011-02-21","2011-02-22","2011-02-23","2011-02-24","2011-02-25","2011-02-26","2011-02-27","2011-02-28","2011-03-01","2011-03-02","2011-03-03","2011-03-04","2011-03-05","2011-03-06","2011-03-07","2011-03-08","2011-03-09","2011-03-10","2011-03-11","2011-03-12","2011-03-13","2011-03-14","2011-03-15","2011-03-16","2011-03-17","2011-03-18","2011-03-19","2011-03-20","2011-03-21","2011-03-22","2011-03-23","2011-03-24","2011-03-25","2011-03-26","2011-03-27","2011-03-28","2011-03-29","2011-03-30","2011-03-31","2011-04-01","2011-04-02","2011-04-03","2011-04-04","2011-04-05","2011-04-06","2011-04-07","2011-04-08","2011-04-09","2011-04-10","2011-04-11","2011-04-12","2011-04-13","2011-04-14","2011-04-15","2011-04-16","2011-04-17","2011-04-18","2011-04-19","2011-04-20","2011-04-21","2011-04-22","2011-04-23","2011-04-24","2011-04-25","2011-04-26","2011-04-27","2011-04-28","2011-04-29","2011-04-30","2011-05-01","2011-05-02","2011-05-03","2011-05-04","2011-05-05","2011-05-06","2011-05-07","2011-05-08","2011-05-09","2011-05-10","2011-05-11","2011-05-12","2011-05-13","2011-05-14","2011-05-15","2011-05-16","2011-05-17","2011-05-18","2011-05-19","2011-05-20","2011-05-21","2011-05-22","2011-05-23","2011-05-24","2011-05-25","2011-05-26","2011-05-27","2011-05-28","2011-05-29","2011-05-30","2011-05-31","2011-06-01","2011-06-02","2011-06-03","2011-06-04","2011-06-05","2011-06-06","2011-06-07","2011-06-08","2011-06-09","2011-06-10","2011-06-11","2011-06-12","2011-06-13","2011-06-14","2011-06-15","2011-06-16","2011-06-17","2011-06-18","2011-06-19","2011-06-20","2011-06-21","2011-06-22","2011-06-23","2011-06-24","2011-06-25","2011-06-26","2011-06-27","2011-06-28","2011-06-29","2011-06-30","2011-07-01","2011-07-02","2011-07-03","2011-07-04","2011-07-05","2011-07-06","2011-07-07","2011-07-08","2011-07-09","2011-07-10","2011-07-11","2011-07-12","2011-07-13","2011-07-14","2011-07-15","2011-07-16","2011-07-17","2011-07-18","2011-07-19","2011-07-20","2011-07-21","2011-07-22","2011-07-23","2011-07-24","2011-07-25","2011-07-26","2011-07-27","2011-07-28","2011-07-29","2011-07-30","2011-07-31","2011-08-01","2011-08-02","2011-08-03","2011-08-04","2011-08-05","2011-08-06","2011-08-07","2011-08-08","2011-08-09","2011-08-10","2011-08-11","2011-08-12","2011-08-13","2011-08-14","2011-08-15","2011-08-16","2011-08-17","2011-08-18","2011-08-19","2011-08-20","2011-08-21","2011-08-22","2011-08-23","2011-08-24","2011-08-25","2011-08-26","2011-08-27","2011-08-28","2011-08-29","2011-08-30","2011-08-31","2011-09-01","2011-09-02","2011-09-03","2011-09-04","2011-09-05","2011-09-06","2011-09-07","2011-09-08","2011-09-09","2011-09-10","2011-09-11","2011-09-12","2011-09-13","2011-09-14","2011-09-15","2011-09-16","2011-09-17","2011-09-18","2011-09-19","2011-09-20","2011-09-21","2011-09-22","2011-09-23","2011-09-24","2011-09-25","2011-09-26","2011-09-27","2011-09-28","2011-09-29","2011-09-30","2011-10-01","2011-10-02","2011-10-03","2011-10-04","2011-10-05","2011-10-06","2011-10-07","2011-10-08","2011-10-09","2011-10-10","2011-10-11","2011-10-12","2011-10-13","2011-10-14","2011-10-15","2011-10-16","2011-10-17","2011-10-18","2011-10-19","2011-10-20","2011-10-21","2011-10-22","2011-10-23","2011-10-24","2011-10-25","2011-10-26","2011-10-27","2011-10-28","2011-10-29","2011-10-30","2011-10-31","2011-11-01","2011-11-02","2011-11-03","2011-11-04","2011-11-05","2011-11-06","2011-11-07","2011-11-08","2011-11-09","2011-11-10","2011-11-11","2011-11-12","2011-11-13","2011-11-14","2011-11-15","2011-11-16","2011-11-17","2011-11-18","2011-11-19","2011-11-20","2011-11-21","2011-11-22","2011-11-23","2011-11-24","2011-11-25","2011-11-26","2011-11-27","2011-11-28","2011-11-29","2011-11-30","2011-12-01","2011-12-02","2011-12-03","2011-12-04","2011-12-05","2011-12-06","2011-12-07","2011-12-08","2011-12-09","2011-12-10","2011-12-11","2011-12-12","2011-12-13","2011-12-14","2011-12-15","2011-12-16","2011-12-17","2011-12-18","2011-12-19","2011-12-20","2011-12-21","2011-12-22","2011-12-23","2011-12-24","2011-12-25","2011-12-26","2011-12-27","2011-12-28","2011-12-29","2011-12-30","2011-12-31","2012-01-01","2012-01-02","2012-01-03","2012-01-04","2012-01-05","2012-01-06","2012-01-07","2012-01-08","2012-01-09","2012-01-10","2012-01-11","2012-01-12","2012-01-13","2012-01-14","2012-01-15","2012-01-16","2012-01-17","2012-01-18","2012-01-19","2012-01-20","2012-01-21","2012-01-22","2012-01-23","2012-01-24","2012-01-25","2012-01-26","2012-01-27","2012-01-28","2012-01-29","2012-01-30","2012-01-31","2012-02-01","2012-02-02","2012-02-03","2012-02-04","2012-02-05","2012-02-06","2012-02-07","2012-02-08","2012-02-09","2012-02-10","2012-02-11","2012-02-12","2012-02-13","2012-02-14","2012-02-15","2012-02-16","2012-02-17","2012-02-18","2012-02-19","2012-02-20","2012-02-21","2012-02-22","2012-02-23","2012-02-24","2012-02-25","2012-02-26","2012-02-27","2012-02-28","2012-02-29","2012-03-01","2012-03-02","2012-03-03","2012-03-04","2012-03-05","2012-03-06","2012-03-07","2012-03-08","2012-03-09","2012-03-10","2012-03-11","2012-03-12","2012-03-13","2012-03-14","2012-03-15","2012-03-16","2012-03-17","2012-03-18","2012-03-19","2012-03-20","2012-03-21","2012-03-22","2012-03-23","2012-03-24","2012-03-25","2012-03-26","2012-03-27","2012-03-28","2012-03-29","2012-03-30","2012-03-31","2012-04-01","2012-04-02","2012-04-03","2012-04-04","2012-04-05","2012-04-06","2012-04-07","2012-04-08","2012-04-09","2012-04-10","2012-04-11","2012-04-12","2012-04-13","2012-04-14","2012-04-15","2012-04-16","2012-04-17","2012-04-18","2012-04-19","2012-04-20","2012-04-21","2012-04-22","2012-04-23","2012-04-24","2012-04-25","2012-04-26","2012-04-27","2012-04-28","2012-04-29","2012-04-30","2012-05-01","2012-05-02","2012-05-03","2012-05-04","2012-05-05","2012-05-06","2012-05-07","2012-05-08","2012-05-09","2012-05-10","2012-05-11","2012-05-12","2012-05-13","2012-05-14","2012-05-15","2012-05-16","2012-05-17","2012-05-18","2012-05-19","2012-05-20","2012-05-21","2012-05-22","2012-05-23","2012-05-24","2012-05-25","2012-05-26","2012-05-27","2012-05-28","2012-05-29","2012-05-30","2012-05-31","2012-06-01","2012-06-02","2012-06-03","2012-06-04","2012-06-05","2012-06-06","2012-06-07","2012-06-08","2012-06-09","2012-06-10","2012-06-11","2012-06-12","2012-06-13","2012-06-14","2012-06-15","2012-06-16","2012-06-17","2012-06-18","2012-06-19","2012-06-20","2012-06-21","2012-06-22","2012-06-23","2012-06-24","2012-06-25","2012-06-26","2012-06-27","2012-06-28","2012-06-29","2012-06-30","2012-07-01","2012-07-02","2012-07-03","2012-07-04","2012-07-05","2012-07-06","2012-07-07","2012-07-08","2012-07-09","2012-07-10","2012-07-11","2012-07-12","2012-07-13","2012-07-14","2012-07-15","2012-07-16","2012-07-17","2012-07-18","2012-07-19","2012-07-20","2012-07-21","2012-07-22","2012-07-23","2012-07-24","2012-07-25","2012-07-26","2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-08","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13","2012-08-14","2012-08-15","2012-08-16","2012-08-17","2012-08-18","2012-08-19","2012-08-20","2012-08-21","2012-08-22","2012-08-23","2012-08-24","2012-08-25","2012-08-26","2012-08-27","2012-08-28","2012-08-29","2012-08-30","2012-08-31","2012-09-01","2012-09-02","2012-09-03","2012-09-04","2012-09-05","2012-09-06","2012-09-07","2012-09-08","2012-09-09","2012-09-10","2012-09-11","2012-09-12","2012-09-13","2012-09-14","2012-09-15","2012-09-16","2012-09-17","2012-09-18","2012-09-19","2012-09-20","2012-09-21","2012-09-22","2012-09-23","2012-09-24","2012-09-25","2012-09-26","2012-09-27","2012-09-28","2012-09-29","2012-09-30","2012-10-01","2012-10-02","2012-10-03","2012-10-04","2012-10-05","2012-10-06","2012-10-07","2012-10-08","2012-10-09","2012-10-10","2012-10-11","2012-10-12","2012-10-13","2012-10-14","2012-10-15","2012-10-16","2012-10-17","2012-10-18","2012-10-19","2012-10-20","2012-10-21","2012-10-22","2012-10-23","2012-10-24","2012-10-25","2012-10-26","2012-10-27","2012-10-28","2012-10-29","2012-10-30","2012-10-31","2012-11-01","2012-11-02","2012-11-03","2012-11-04","2012-11-05","2012-11-06","2012-11-07","2012-11-08","2012-11-09","2012-11-10","2012-11-11","2012-11-12","2012-11-13","2012-11-14","2012-11-15","2012-11-16","2012-11-17","2012-11-18","2012-11-19","2012-11-20","2012-11-21","2012-11-22","2012-11-23","2012-11-24","2012-11-25","2012-11-26","2012-11-27","2012-11-28","2012-11-29","2012-11-30","2012-12-01","2012-12-02","2012-12-03","2012-12-04","2012-12-05","2012-12-06","2012-12-07","2012-12-08","2012-12-09","2012-12-10","2012-12-11","2012-12-12","2012-12-13","2012-12-14","2012-12-15","2012-12-16","2012-12-17","2012-12-18","2012-12-19","2012-12-20","2012-12-21","2012-12-22","2012-12-23","2012-12-24","2012-12-25","2012-12-26","2012-12-27","2012-12-28","2012-12-29","2012-12-30","2012-12-31"],"y":[2.7930000000000001,5.399,3.4350000000000001,2.3769999999999998,1.9419999999999999,1.647,1.46,1.3340000000000001,1.181,1.0720000000000001,1.0529999999999999,1.0029999999999999,0.94499999999999995,0.80000000000000004,0.71799999999999997,0.70099999999999996,0.76300000000000001,0.82999999999999996,0.86599999999999999,0.872,0.81699999999999995,0.79500000000000004,0.76000000000000001,0.72299999999999998,0.69399999999999995,0.65900000000000003,0.61699999999999999,0.60299999999999998,0.59099999999999997,0.58099999999999996,0.59499999999999997,0.61299999999999999,0.622,0.63900000000000001,0.64900000000000002,0.60399999999999998,0.61799999999999999,0.622,0.60999999999999999,0.59999999999999998,0.59699999999999998,0.59599999999999997,0.59299999999999997,0.60599999999999998,0.59499999999999997,0.55900000000000005,0.55600000000000005,0.77100000000000002,1.8160000000000001,1.7110000000000001,1.143,0.94099999999999995,0.89400000000000002,0.80600000000000005,0.76800000000000002,0.75700000000000001,0.73399999999999999,0.76900000000000002,0.82599999999999996,0.72099999999999997,0.66700000000000004,0.65600000000000003,0.69199999999999995,0.68999999999999995,20.071999999999999,35.228999999999999,9.0980000000000008,5.0659999999999998,3.8849999999999998,9.0839999999999996,9.5950000000000006,5.1790000000000003,3.8889999999999998,3.298,3.2120000000000002,3.847,13.622,10.723000000000001,6.0620000000000003,4.8490000000000002,3.79,3.125,2.7389999999999999,2.3530000000000002,2.129,2.0230000000000001,1.7769999999999999,1.673,1.738,1.871,1.821,1.8560000000000001,2.2320000000000002,2.573,3.4550000000000001,3.2970000000000002,3.2010000000000001,4.4189999999999996,7.2539999999999996,16.446000000000002,54.427,33.418999999999997,18.190999999999999,16.396000000000001,10.760999999999999,6.9619999999999997,27.681000000000001,11.052,7.3860000000000001,7.5119999999999996,6.1760000000000002,5.3090000000000002,4.9290000000000003,10.734,9.5809999999999995,30.515999999999998,11.821999999999999,9.907,8.5690000000000008,5.3029999999999999,3.948,3.218,2.7509999999999999,4.4370000000000003,4.7599999999999998,3.427,2.8130000000000002,2.4180000000000001,2.1000000000000001,1.835,1.6930000000000001,1.5660000000000001,1.452,1.7350000000000001,9.3019999999999996,9.2100000000000009,5.657,5.2549999999999999,11.734999999999999,6.7770000000000001,8.1159999999999997,6.5659999999999998,7.7130000000000001,7.8150000000000004,4.7949999999999999,3.5209999999999999,3.2719999999999998,2.7360000000000002,2.4569999999999999,1.9990000000000001,1.3959999999999999,1.1000000000000001,0.91500000000000004,0.89200000000000002,0.77200000000000002,0.64800000000000002,0.42699999999999999,0.34899999999999998,0.27400000000000002,0.23400000000000001,0.20300000000000001,0.54600000000000004,1.2849999999999999,1.6100000000000001,3.157,1.357,0.82399999999999995,0.55800000000000005,1.0209999999999999,0.77000000000000002,0.53500000000000003,0.33400000000000002,0.27700000000000002,1.0089999999999999,3.8650000000000002,4.3490000000000002,2.339,1.8560000000000001,1.0880000000000001,0.78900000000000003,0.59499999999999997,0.54000000000000004,0.375,0.5,0.55800000000000005,0.32700000000000001,0.34899999999999998,0.504,0.30099999999999999,0.52100000000000002,0.35299999999999998,0.23499999999999999,0.25,0.24399999999999999,0.25600000000000001,0.17999999999999999,0.14000000000000001,0.14399999999999999,0.184,0.18099999999999999,0.079000000000000001,0.078,0.062,0.062,0.067000000000000004,0.072999999999999995,0.152,0.085000000000000006,0.091999999999999998,0.122,0.16700000000000001,0.088999999999999996,0.079000000000000001,0.086999999999999994,0.090999999999999998,0.071999999999999995,0.075999999999999998,0.080000000000000002,0.20300000000000001,0.14899999999999999,0.088999999999999996,0.40799999999999997,0.25900000000000001,0.13100000000000001,0.10299999999999999,0.55700000000000005,3.556,6.6150000000000002,1.895,0.67500000000000004,0.36199999999999999,0.217,1.105,8.1940000000000008,1.6870000000000001,0.77100000000000002,0.91300000000000003,1.363,0.66500000000000004,70.593999999999994,18.437999999999999,5.0860000000000003,2.5699999999999998,1.6080000000000001,1.1379999999999999,0.85899999999999999,0.84299999999999997,3.6699999999999999,8.0850000000000009,8.7560000000000002,11.074999999999999,4.923,2.7040000000000002,1.8100000000000001,1.361,0.94999999999999996,0.73099999999999998,2.3279999999999998,1.913,1.165,0.83199999999999996,0.64600000000000002,0.67900000000000005,0.71099999999999997,1.704,3.0600000000000001,4.2729999999999997,2.3700000000000001,1.4350000000000001,0.95999999999999996,0.76800000000000002,5.3109999999999999,11.334,19.193000000000001,22.093,13.334,6.617,4.4829999999999997,3.238,2.4590000000000001,1.972,1.5860000000000001,1.343,1.1639999999999999,1.071,1.6040000000000001,11.522,14.451000000000001,6.4720000000000004,4.4390000000000001,3.3079999999999998,2.774,3.7650000000000001,2.9740000000000002,2.4710000000000001,2.1850000000000001,1.9350000000000001,1.8480000000000001,1.6950000000000001,1.6719999999999999,1.744,1.6579999999999999,1.5720000000000001,1.6719999999999999,2.3050000000000002,2.3090000000000002,1.9370000000000001,1.6299999999999999,1.4279999999999999,1.2889999999999999,1.256,1.1679999999999999,1.034,1.6479999999999999,2.6850000000000001,1.7669999999999999,1.5580000000000001,1.4870000000000001,2.145,1.923,2.7879999999999998,2.0569999999999999,1.7170000000000001,1.5760000000000001,1.3959999999999999,1.2769999999999999,1.405,1.286,1.659,3.1549999999999998,4.4569999999999999,5.3120000000000003,3.7810000000000001,21.773,6.944,4.3979999999999997,3.367,2.8119999999999998,2.4470000000000001,4.3780000000000001,9.4789999999999992,4.7389999999999999,3.5510000000000002,2.8799999999999999,2.456,2.1779999999999999,2.0059999999999998,3.54,6.6870000000000003,5.1059999999999999,3.488,2.621,2.339,2.0590000000000002,2.4089999999999998,4.0940000000000003,3.3999999999999999,2.5819999999999999,2.2679999999999998,2.0699999999999998,3.8540000000000001,19.039000000000001,6.4859999999999998,4.1799999999999997,3.4460000000000002,3.9750000000000001,7.375,4.1340000000000003,2.863,2.456,2.1080000000000001,1.97,1.774,1.6120000000000001,1.47,1.3120000000000001,2.4590000000000001,1.3340000000000001,1.131,1.1240000000000001,1.115,1.1220000000000001,1.0760000000000001,0.94799999999999995,0.89300000000000002,0.86599999999999999,0.82099999999999995,1.25,8.8710000000000004,3.5990000000000002,2.3919999999999999,3.556,3.6800000000000002,2.4740000000000002,1.99,1.7809999999999999,1.9970000000000001,2.2189999999999999,1.776,1.627,1.464,1.4119999999999999,1.3380000000000001,1.2470000000000001,1.2170000000000001,1.1459999999999999,1.145,1.1259999999999999,1.1599999999999999,1.0669999999999999,0.87,0.78400000000000003,0.79000000000000004,0.76600000000000001,0.76000000000000001,0.73399999999999999,0.77500000000000002,0.79800000000000004,0.82499999999999996,0.83699999999999997,0.85599999999999998,0.80600000000000005,0.71899999999999997,0.69499999999999995,0.70599999999999996,0.71099999999999997,0.69899999999999995,0.72999999999999998,0.76800000000000002,0.78700000000000003,0.78600000000000003,1.018,3.4630000000000001,7.1840000000000002,3.2309999999999999,2.4889999999999999,4.0800000000000001,12.631,12.704000000000001,7.6379999999999999,6.2160000000000002,12.118,19.132999999999999,16.103999999999999,11.335000000000001,7.399,5.3250000000000002,4.0830000000000002,3.2200000000000002,3.6720000000000002,3.335,2.4769999999999999,2.2629999999999999,2.2040000000000002,2.0859999999999999,3.4529999999999998,1.992,1.5780000000000001,1.4299999999999999,1.3580000000000001,1.2649999999999999,1.1180000000000001,1.0129999999999999,1.038,1.8979999999999999,2.0950000000000002,1.6930000000000001,1.462,1.294,1.224,1.139,1.117,1.03,0.94999999999999996,0.92700000000000005,0.91800000000000004,1.431,4.0659999999999998,19.152000000000001,9.8200000000000003,5.4960000000000004,3.8900000000000001,6.7779999999999996,3.972,3.04,2.52,6.3789999999999996,5.3529999999999998,4.7560000000000002,8.827,5.8609999999999998,4.1660000000000004,3.3170000000000002,27.385000000000002,18.609999999999999,12.629,7.319,4.7990000000000004,3.597,2.992,13.381,11.137,8.2599999999999998,5.5620000000000003,3.9500000000000002,2.8759999999999999,2.1070000000000002,1.972,1.6200000000000001,1.3460000000000001,1.7150000000000001,1.764,1.2270000000000001,1.0009999999999999,15.039,12.596,4.444,2.7109999999999999,20.044,17.600999999999999,7.1959999999999997,4.3869999999999996,3.8010000000000002,4.0919999999999996,3.137,3.226,2.0990000000000002,1.571,1.681,13.289,5.0629999999999997,3.0350000000000001,2.2629999999999999,1.8560000000000001,1.359,1.2270000000000001,0.91400000000000003,0.65800000000000003,0.47199999999999998,0.35499999999999998,0.28999999999999998,2.8260000000000001,2.5350000000000001,1.6359999999999999,1.1499999999999999,0.78400000000000003,0.50700000000000001,1.4350000000000001,0.38200000000000001,0.246,0.55900000000000005,0.73599999999999999,0.45700000000000002,0.32800000000000001,0.23400000000000001,0.17499999999999999,0.14499999999999999,0.121,0.104,0.091999999999999998,0.080000000000000002,0.071999999999999995,0.086999999999999994,0.072999999999999995,0.113,0.081000000000000003,0.078,0.073999999999999996,0.071999999999999995,0.086999999999999994,0.255,0.10000000000000001,0.087999999999999995,0.19400000000000001,0.20499999999999999,0.52200000000000002,0.35599999999999998,0.14999999999999999,0.13800000000000001,0.316,0.14599999999999999,0.092999999999999999,0.16300000000000001,0.38200000000000001,0.14899999999999999,0.098000000000000004,2.2949999999999999,28.957000000000001,11.403,5.2859999999999996,2.9510000000000001,1.6699999999999999,1.827,1.52,0.97199999999999998,0.68500000000000005,0.45000000000000001,0.30099999999999999,0.20000000000000001,0.153,0.11,0.097000000000000003,0.083000000000000004,0.108,0.23599999999999999,1.9430000000000001,0.60899999999999999,0.313,0.185,0.16500000000000001,0.28100000000000003,0.23699999999999999,0.53300000000000003,3.6509999999999998,1.3759999999999999,0.73899999999999999,1.595,2.9420000000000002,1.2829999999999999,0.76300000000000001,0.48299999999999998,0.34100000000000003,0.252,0.20300000000000001,0.17499999999999999,0.157,18.486000000000001,20.957999999999998,4.8399999999999999,2.6840000000000002,1.988,2.137,1.4350000000000001,1.1499999999999999,1.0209999999999999,0.97299999999999998,1.5329999999999999,2.1669999999999998,1.8640000000000001,3.319,2.3180000000000001,4.109,4.3520000000000003,3.4329999999999998,2.968,2.786,2.8109999999999999,2.0779999999999998,2.3039999999999998,2.9630000000000001,2.2759999999999998,1.9099999999999999,2.8290000000000002,2.8740000000000001,2.6509999999999998,2.069,1.738,7.9189999999999996,13.907999999999999,6.1100000000000003,4.0519999999999996,2.8719999999999999,2.3839999999999999,2.0379999999999998,1.8300000000000001,1.6899999999999999,1.554,1.7969999999999999,17.856999999999999,18.489999999999998,7.3250000000000002,4.6689999999999996,3.419,2.7410000000000001,2.3109999999999999,1.972,1.786,1.694,1.548,1.49,1.3819999999999999,1.3080000000000001,2.8399999999999999,2.4460000000000002,1.901,1.595,1.3720000000000001,1.194,1.1799999999999999,1.157,1.1040000000000001,1.0449999999999999,1.05,1.014,0.95599999999999996,0.877,0.80400000000000005,0.80900000000000005,0.76600000000000001,0.72199999999999998,0.67000000000000004,1.5669999999999999,5.6310000000000002,2.9470000000000001,4.1070000000000002,2.7229999999999999,2.1019999999999999,1.8660000000000001,1.6619999999999999,6.4930000000000003,7.3120000000000003,3.6840000000000002,2.6509999999999998,2.2280000000000002,1.883,1.6200000000000001,1.5429999999999999,3.0259999999999998,4.7140000000000004,2.9239999999999999,7.1740000000000004,8.3979999999999997,4.226,2.9670000000000001,2.399,2.0169999999999999,1.8999999999999999,1.6850000000000001,1.5569999999999999,1.4570000000000001,1.3340000000000001],"name":"Measured","type":"scatter","mode":"lines","marker":{"color":"rgba(255,127,14,1)","line":{"color":"rgba(255,127,14,1)"}},"error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./15-Watershed-Delineation-and-Analysis.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Geospatial R Raster - Watershed Delineation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./17-Calibrate-HBV.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Intro to Modeling - Calibrate HBV</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

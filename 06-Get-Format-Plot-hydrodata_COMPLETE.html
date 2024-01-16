@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Hydroinformatics - 6&nbsp; Joins, Pivots, and USGS dataRetrieval</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07-Activity-Joins-Pivots_dataRetrieval.html" rel="next">
+<link href="./05-Intro-Stats-Activity.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-Get-Format-Plot-hydrodata_COMPLETE.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Joins, Pivots, and USGS dataRetrieval</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Hydroinformatics</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-Plotting_Demo_COMPLETE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Intro to Plotting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-Programming_Basics_Demo_COMPLETE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R Tidyverse Programming Basics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-Activity-Intro-Skills.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Skills</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-Intro-Stats-Completed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Basic Statistics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-Intro-Stats-Activity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Stats</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-Get-Format-Plot-hydrodata_COMPLETE.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Joins, Pivots, and USGS dataRetrieval</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-Activity-Joins-Pivots_dataRetrieval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">ACTIVITY: Joins Pivots dataRetrieval</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-Summative_Activity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ACTIVITY Summative 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-Flow_Duration_Curves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Flow Duration Curves</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-LowFlowStats-FDC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Low Flow Analysis</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Flood_Frequency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Flood Frequency Analysis and Creating Functions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Intro-Geospatial-R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Geospatial data in R - Vector</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-Summative-Assessment-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Summative Assessment 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-Geospatial-Raster-Hydro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geospatial R Raster - Hydro Analyses</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-Watershed-Delineation-and-Analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Geospatial R Raster - Watershed Delineation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-Modeling-Getting-Started-HBV.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Intro to Modeling - Getting Started with HBV</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-Calibrate-HBV.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Intro to Modeling - Calibrate HBV</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#goals-for-today" id="toc-goals-for-today" class="nav-link active" data-scroll-target="#goals-for-today"><span class="header-section-number">6.1</span> Goals for today</a></li>
+  <li><a href="#exploring-what-dataretrieval-can-do." id="toc-exploring-what-dataretrieval-can-do." class="nav-link" data-scroll-target="#exploring-what-dataretrieval-can-do."><span class="header-section-number">6.2</span> Exploring what dataRetrieval can do.</a></li>
+  <li><a href="#joins" id="toc-joins" class="nav-link" data-scroll-target="#joins"><span class="header-section-number">6.3</span> Joins</a></li>
+  <li><a href="#join-example" id="toc-join-example" class="nav-link" data-scroll-target="#join-example"><span class="header-section-number">6.4</span> Join example</a></li>
+  <li><a href="#finding-ids-to-download-usgs-data" id="toc-finding-ids-to-download-usgs-data" class="nav-link" data-scroll-target="#finding-ids-to-download-usgs-data"><span class="header-section-number">6.5</span> Finding IDs to download USGS data</a></li>
+  <li><a href="#ok-lets-download-some-data" id="toc-ok-lets-download-some-data" class="nav-link" data-scroll-target="#ok-lets-download-some-data"><span class="header-section-number">6.6</span> OK let’s download some data!</a></li>
+  <li><a href="#pivoting-wide-and-long-data" id="toc-pivoting-wide-and-long-data" class="nav-link" data-scroll-target="#pivoting-wide-and-long-data"><span class="header-section-number">6.7</span> Pivoting: wide and long data</a></li>
+  <li><a href="#pivot-examples" id="toc-pivot-examples" class="nav-link" data-scroll-target="#pivot-examples"><span class="header-section-number">6.8</span> Pivot Examples</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="getdata" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Joins, Pivots, and USGS dataRetrieval</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Use Template Repository from github:</p>
+<p>Readings: Introduction to the dataRetrieval package <a href="https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html" class="uri">https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html</a></p>
+<p>Chapter 12 &amp; 13 of R for Data Science <a href="https://r4ds.had.co.nz/tidy-data.html" class="uri">https://r4ds.had.co.nz/tidy-data.html</a></p>
+<section id="goals-for-today" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="goals-for-today"><span class="header-section-number">6.1</span> Goals for today</h2>
+<ul>
+<li>Get familiar with the dataRetrieval package</li>
+<li>Intro to joins</li>
+<li>Learn about long vs.&nbsp;wide data and how to change between them</li>
+</ul>
+<p>Prep question: How would you get data from the USGS NWIS (non-R)?</p>
+<p>Install the dataRetrieval package. Load it and the tidyverse.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("dataRetrieval")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dataRetrieval)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="exploring-what-dataretrieval-can-do." class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="exploring-what-dataretrieval-can-do."><span class="header-section-number">6.2</span> Exploring what dataRetrieval can do.</h2>
+<p>Think about the dataRetrieval as a way to interact with same public data you can access through waterdata.usgs.gov but without having to click on buttons and search around. It makes getting data or doing analyses with USGS data much more reproducible and fast!</p>
+<p>To explore a few of the capabilities (NOT ALL!!) we will start with the USGS gage on the New River at Radford. The gage number is 03171000.</p>
+<p>The documentation for the package is extremely helpful: <a href="https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html" class="uri">https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html</a></p>
+<p>I always have to look up how to do things because the package is very specialized! This is the case with most website APIs, in my experience. It’s a good argument for getting good at navigating package documentation! Basically you just look through and try to piece together the recipe for what you want to do using the examples they give in the document.</p>
+<p>First, let’s get information about the site using the readNWISsite() and whatNWISdata() functions. Try each out and see what they tell you.</p>
+<p>Remember, all the parameter codes and site names get passed to dataRetrieval functions as characters, so they must be in quotes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#important: note the site number gets input as a character</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>site <span class="ot">&lt;-</span> <span class="st">"03171000"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Information about the site</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>siteinfo <span class="ot">&lt;-</span> <span class="fu">readNWISsite</span>(site)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#What data is available for the site?</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Daily values, mean values</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>dataAvailable <span class="ot">&lt;-</span> <span class="fu">whatNWISdata</span>(<span class="at">siteNumber =</span> site, <span class="at">service =</span> <span class="st">"dv"</span>, <span class="at">statCd =</span> <span class="st">"00003"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>dataAvailable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  agency_cd  site_no               station_nm site_tp_cd dec_lat_va dec_long_va
+2      USGS 03171000 NEW RIVER AT RADFORD, VA         ST   37.14179   -80.56922
+3      USGS 03171000 NEW RIVER AT RADFORD, VA         ST   37.14179   -80.56922
+4      USGS 03171000 NEW RIVER AT RADFORD, VA         ST   37.14179   -80.56922
+  coord_acy_cd dec_coord_datum_cd  alt_va alt_acy_va alt_datum_cd   huc_cd
+2            U              NAD83 1711.99       0.13       NAVD88 05050001
+3            U              NAD83 1711.99       0.13       NAVD88 05050001
+4            U              NAD83 1711.99       0.13       NAVD88 05050001
+  data_type_cd parm_cd stat_cd  ts_id loc_web_ds medium_grp_cd parm_grp_cd
+2           dv   00010   00003 241564         NA           wat        &lt;NA&gt;
+3           dv   00060   00003 145684         NA           wat        &lt;NA&gt;
+4           dv   00095   00003 145685         NA           wat        &lt;NA&gt;
+   srs_id access_cd begin_date   end_date count_nu
+2 1645597         0 2006-12-20 2009-03-18      704
+3 1645423         0 1907-10-01 2024-01-15    33709
+4 1646694         0 2006-12-20 2008-09-29      534</code></pre>
+</div>
+</div>
+</section>
+<section id="joins" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="joins"><span class="header-section-number">6.3</span> Joins</h2>
+<p>When we look at what whatNWISdata returns, we see it gives us parameter codes, but doesn’t tell us what they mean. This is a common attribute of databases: you use a common identifier but then have the full information in a lookup file. In this case, the look-up information telling us what the parameter codes mean is in “parameterCdFile” which loads with the dataRetrieval package.</p>
+<p>So, you could look at that and see what the parameters mean.</p>
+<p>OR We could have R do it and add a column that tells us what the parameters mean. Enter JOINS!</p>
+<p>Joins allow us to combine the data from two different data sets that have a column in common. At its most basic, a join looks for a matching row with the same key in both datasets (for example, a USGS gage number) and then combines the rows. So now you have all the data from both sets, matched on the key.</p>
+<p>But you have to make some decisions: what if a key value exists in one set but not the other? Do you just drop that observation? Do you add an NA? Let’s look at the different options.</p>
+<p>Take for example the two data sets, FlowTable and SizeTable. The SiteName values are the key values and the MeanFlow and WSsize values are the data.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/joinsetup.png" title="Join setup" class="img-fluid figure-img" width="400"></p>
+<figcaption class="figure-caption">Join Setup</figcaption>
+</figure>
+</div>
+<p>Note River1 and River2 match up, but River3 and River5 only exist in one data set or the other.</p>
+<p>The first way to deal with this is an <strong>INNER JOIN: inner_join()</strong> In an inner join, you only keep records that match. So the rows for River3 and River5 will be dropped because there is no corresponding data in the other set. See below:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/innerjoin.png" title="Inner Join" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Inner Join</figcaption>
+</figure>
+</div>
+<p>But what if you don’t want to lose the values in one or the other or both?!</p>
+<p>For instance, let’s say you have a bunch of discharge data for a stream, and then chemistry grab samples. You want to join the chemistry to the discharge based on the dates and times they were taken. But when you do this, you don’t want to delete all the discharge data where there is no chemistry! We need another option. Enter OUTER JOINS</p>
+<p><strong>LEFT JOIN, left_join():</strong> Preserves all values from the LEFT data set, and pastes on the matching ones from the right. This creates NAs where there is a value on the left but not the right. (this is what you’d want to do in the discharge - chemistry example above)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/leftjoin1.png" title="Left Join" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Left Join</figcaption>
+</figure>
+</div>
+<p><strong>RIGHT JOIN, right_join():</strong> Preserves all values from the RIGHT data set, and pastes on the matching ones from the left. This creates NAs where there is a value on the right but not the left.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/rightjoin.png" title="Right Join" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Right Join</figcaption>
+</figure>
+</div>
+<p><strong>FULL JOIN, full_join():</strong> KEEP EVERYTHING! The hoarder of the joins. No matching record on the left? create an NA on the right! No matching value on the right? Create an NA on the left! NAs for everyone!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fulljoin.png" title="Full Join" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Full Join</figcaption>
+</figure>
+</div>
+<p>When you do this in R, you use the functions identified in the descriptions with the following syntax (see example below):</p>
+<p><strong>if the column is named the same in both data sets</strong> &gt; xxx_join(left_tibble, right_tibble, by = “key_column”)**</p>
+<p><strong>if the column is named differently in both data sets</strong> &gt; xxx_join(left_tibble, right_tibble, by = c(“left_key” = “right_key”)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/leftjoin2.png" title="Left Join with differing column names" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Left Join Differing Col Names</figcaption>
+</figure>
+</div>
+<p>Note in both of the above, when you specify which column to use as “by” you have to put it in quotes.</p>
+</section>
+<section id="join-example" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="join-example"><span class="header-section-number">6.4</span> Join example</h2>
+<p>So in the chunk below let’s get add information about the parameters in dataAvailable by joining it with the key file: parameterCdFile. The column with the parameter codes is called parm_cd in dataAvailable and parameter_cd in parameterCdFile</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataAvailable <span class="ot">&lt;-</span> <span class="fu">left_join</span>(dataAvailable, parameterCdFile, </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"parm_cd"</span> <span class="ot">=</span> <span class="st">"parameter_cd"</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>dataAvailable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  agency_cd  site_no               station_nm site_tp_cd dec_lat_va dec_long_va
+1      USGS 03171000 NEW RIVER AT RADFORD, VA         ST   37.14179   -80.56922
+2      USGS 03171000 NEW RIVER AT RADFORD, VA         ST   37.14179   -80.56922
+3      USGS 03171000 NEW RIVER AT RADFORD, VA         ST   37.14179   -80.56922
+  coord_acy_cd dec_coord_datum_cd  alt_va alt_acy_va alt_datum_cd   huc_cd
+1            U              NAD83 1711.99       0.13       NAVD88 05050001
+2            U              NAD83 1711.99       0.13       NAVD88 05050001
+3            U              NAD83 1711.99       0.13       NAVD88 05050001
+  data_type_cd parm_cd stat_cd  ts_id loc_web_ds medium_grp_cd parm_grp_cd
+1           dv   00010   00003 241564         NA           wat        &lt;NA&gt;
+2           dv   00060   00003 145684         NA           wat        &lt;NA&gt;
+3           dv   00095   00003 145685         NA           wat        &lt;NA&gt;
+   srs_id access_cd begin_date   end_date count_nu parameter_group_nm
+1 1645597         0 2006-12-20 2009-03-18      704           Physical
+2 1645423         0 1907-10-01 2024-01-15    33709           Physical
+3 1646694         0 2006-12-20 2008-09-29      534           Physical
+                                                                                parameter_nm
+1                                                        Temperature, water, degrees Celsius
+2                                                           Discharge, cubic feet per second
+3 Specific conductance, water, unfiltered, microsiemens per centimeter at 25 degrees Celsius
+  casrn                  srsname parameter_units
+1             Temperature, water           deg C
+2       Stream flow, mean. daily           ft3/s
+3           Specific conductance      uS/cm @25C</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#that made a lot of columns, let's clean it up</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dataAvailClean <span class="ot">&lt;-</span> dataAvailable <span class="sc">%&gt;%</span> <span class="fu">select</span>(site_no, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                           station_nm,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                           parm_cd, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                           srsname, </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                                           parameter_units,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                                           begin_date, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                           end_date)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>dataAvailClean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   site_no               station_nm parm_cd                  srsname
+1 03171000 NEW RIVER AT RADFORD, VA   00010       Temperature, water
+2 03171000 NEW RIVER AT RADFORD, VA   00060 Stream flow, mean. daily
+3 03171000 NEW RIVER AT RADFORD, VA   00095     Specific conductance
+  parameter_units begin_date   end_date
+1           deg C 2006-12-20 2009-03-18
+2           ft3/s 1907-10-01 2024-01-15
+3      uS/cm @25C 2006-12-20 2008-09-29</code></pre>
+</div>
+</div>
+</section>
+<section id="finding-ids-to-download-usgs-data" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="finding-ids-to-download-usgs-data"><span class="header-section-number">6.5</span> Finding IDs to download USGS data</h2>
+<p>You can find sites via map and just enter the id like we did in the chunks above: <a href="https://maps.waterdata.usgs.gov/mapper/index.html" class="uri">https://maps.waterdata.usgs.gov/mapper/index.html</a></p>
+<p>Below we will look at two other ways to get sites: using a bounding box of a geographic region, or search terms like State and drainage area</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#find sites in a bounding box</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#coords of bottom left, top right</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>swva <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">81.36</span>, <span class="fl">36.72</span>, <span class="sc">-</span><span class="fl">80.27</span>, <span class="fl">37.32</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#get sites in this bounding box that have daily water temperature and discharge</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>swva_sites <span class="ot">&lt;-</span> <span class="fu">whatNWISsites</span>(<span class="at">bBox =</span> swva, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">parameterCd =</span> <span class="fu">c</span>(<span class="st">"00060"</span>, <span class="st">"00010"</span>), </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">hasDataTypeCd =</span> <span class="st">"dv"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>swva_sites</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   agency_cd  site_no                                      station_nm
+1       USGS 03473500             M F HOLSTON RIVER AT GROSECLOSE, VA
+2       USGS 03175140         WEST FORK COVE CREEK NEAR BLUEFIELD, VA
+3       USGS 03177710              BLUESTONE RIVER AT FALLS MILLS, VA
+4       USGS 03177700                BLUESTONE RIVER AT BLUEFIELD, VA
+5       USGS 03166000                  CRIPPLE CREEK NEAR IVANHOE, VA
+6       USGS 03164500                      NEW RIVER NEAR GRAYSON, VA
+7       USGS 03165500                        NEW RIVER AT IVANHOE, VA
+8       USGS 03166880  WEST SP AT NAT FISH HAT NEAR GRAHAMS FORGE, VA
+9       USGS 03166800                GLADE CREEK AT GRAHAMS FORGE, VA
+10      USGS 03166900 BOILING SP AT NAT FISH HAT NR GRAHAMS FORGE, VA
+11      USGS 03167000                 REED CREEK AT GRAHAMS FORGE, VA
+12      USGS 03175500                     WOLF CREEK NEAR NARROWS, VA
+13      USGS 03168500                       PEAK CREEK AT PULASKI, VA
+14      USGS 03168000                      NEW RIVER AT ALLISONIA, VA
+15      USGS 03167500        BIG REED ISLAND CREEK NEAR ALLISONIA, VA
+16      USGS 03172500              WALKER CREEK AT STAFFORDSVILLE, VA
+17      USGS 03173000                        WALKER CREEK AT BANE, VA
+18      USGS 03171500                      NEW RIVER AT EGGLESTON, VA
+19      USGS 03171000                        NEW RIVER AT RADFORD, VA
+20      USGS 03170000                 LITTLE RIVER AT GRAYSONTOWN, VA
+21      USGS 03169500             LITTLE RIVER NEAR COPPER VALLEY, VA
+   site_tp_cd dec_lat_va dec_long_va colocated           queryTime
+1          ST   36.88873   -81.34733     FALSE 2024-01-16 12:26:07
+2          ST   37.18428   -81.32982     FALSE 2024-01-16 12:26:07
+3          ST   37.27151   -81.30482     FALSE 2024-01-16 12:26:07
+4          ST   37.25595   -81.28177     FALSE 2024-01-16 12:26:07
+5          ST   36.85984   -80.98036     FALSE 2024-01-16 12:26:07
+6          ST   36.75985   -80.95619     FALSE 2024-01-16 12:26:07
+7          ST   36.83485   -80.95258     FALSE 2024-01-16 12:26:07
+8          SP   36.93429   -80.90313     FALSE 2024-01-16 12:26:07
+9          ST   36.93095   -80.90036     FALSE 2024-01-16 12:26:07
+10         SP   36.93068   -80.89619     FALSE 2024-01-16 12:26:07
+11         ST   36.93901   -80.88730     FALSE 2024-01-16 12:26:07
+12         ST   37.30568   -80.84980     FALSE 2024-01-16 12:26:07
+13         ST   37.04721   -80.78472     FALSE 2024-01-16 12:26:07
+14         ST   36.93762   -80.74563     FALSE 2024-01-16 12:26:07
+15         ST   36.88901   -80.72757     FALSE 2024-01-16 12:26:07
+16         ST   37.24179   -80.71090     FALSE 2024-01-16 12:26:07
+17         ST   37.26818   -80.70951     FALSE 2024-01-16 12:26:07
+18         ST   37.28957   -80.61673     FALSE 2024-01-16 12:26:07
+19         ST   37.14179   -80.56922     FALSE 2024-01-16 12:26:07
+20         ST   37.03763   -80.55672     FALSE 2024-01-16 12:26:07
+21         ST   36.99652   -80.52144     FALSE 2024-01-16 12:26:07</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#find sites with other criteria, VA, less than 20 sqmi, other criteria can be used..</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#check out the CRAN documentation</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>smallVA <span class="ot">&lt;-</span> <span class="fu">readNWISdata</span>(<span class="at">service =</span> <span class="st">"dv"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">stateCd =</span> <span class="st">"VA"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">parameterCd =</span> <span class="st">"00060"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">drainAreaMax =</span> <span class="st">"20"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">statCd =</span> <span class="st">"00003"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ok-lets-download-some-data" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="ok-lets-download-some-data"><span class="header-section-number">6.6</span> OK let’s download some data!</h2>
+<p>We are going to use readNWISdv(), which downloads daily values.</p>
+<p>We will tell it which sites to download, which parameters to download, and then what time period to download.</p>
+<p>siteNumber gets the sites we want to download, USGS site numbers, as a character. We will use the swva_sites data we generated (yep, you can download multiple sites at once!)</p>
+<p>startDate and endDate get the…. start and end dates. IMPORTANT: These must be in YYY-MM-DD format, but you don’t have to tell R they are dates before you give them to the function, it’ll do that for you.</p>
+<p>parameterCd is the parameters you want to download. We want water temperature and discharge, which are “00060” and “00010”, respectively.</p>
+<p>Once we have the data, the column names correspond to the keys that identify them, for example, discharge will be 00060 something something. Fortunately the dataRetrieval package also provides “renameNWISColumns()” which translates these into words, making them more easily understood by humans. We can pipe the results of our download to that function after we get the data to make the column names easier to understand.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="st">"2006-10-01"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="st">"2008-09-30"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"00010"</span>, <span class="st">"00060"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>swva_dat <span class="ot">&lt;-</span> <span class="fu">readNWISdv</span>(<span class="at">siteNumber =</span> swva_sites<span class="sc">$</span>site_no, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">parameterCd =</span> params, </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">startDate =</span> start, </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">endDate =</span> end) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">renameNWISColumns</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s plot the water temperature data as a line and control the color of the lines with the different sites.</p>
+<p>What could be better about this plot?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>swva_dat <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Wtemp, <span class="at">color =</span> site_no)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2218 rows containing missing values (`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can add site names with….More joins! Our swva_sites data has the names of the sites in human-friendly language. The column in the downloaded data and in the swva_sites data is called “site_no” so we just give that to the “by” argument. Perform a left join to add the names of the sites to the data.</p>
+<p>Then use select to remove some of the unnecessary columns.</p>
+<p>Then make the plot and then snazz it up with labels and a non-junky theme.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>swva_dat_clean <span class="ot">&lt;-</span> <span class="fu">left_join</span>(swva_dat, swva_sites, <span class="at">by =</span> <span class="st">"site_no"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(station_nm, site_no, Date, Flow, Wtemp, dec_lat_va, dec_long_va)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>swva_dat_clean <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Wtemp, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Water temperature (deg C)"</span>)<span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Gage Site"</span>)<span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2218 rows containing missing values (`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="pivoting-wide-and-long-data" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="pivoting-wide-and-long-data"><span class="header-section-number">6.7</span> Pivoting: wide and long data</h2>
+<p>Okay, so with the data above: what would you do if you wanted to subtract the discharge or temperature of one gage from another on the same river: to compute rate of change between the two sites, for instance.</p>
+<p>You could split them into two objects, then join based on date?</p>
+<p>Or…now hear me out… you could PIVOT them.</p>
+<p>A two-dimensional object can be either long or wide. Each has it’s advantages.</p>
+<p><strong>LONG</strong></p>
+<p>Each observation has it’s own row. In the first image below, the table on the right is long because each measurement has it’s own row. It’s value and name are identified by a other columns, and the values in that column repeat a lot.</p>
+<p><strong>WIDE</strong></p>
+<p>Observations of different things have their own columns. In the first image below, notice in the left hand table there are “Flow”, “Temp”, and “NO3” columns rather than an identifier in a separate column like in the table on the right.</p>
+<p><strong>Why?</strong></p>
+<p>Long and wide data are more efficient for different things. Think about plotting a data set with 10 stream gages. If they are in a long format, you can just add color = Gage to your ggplot aes(). If they are in a wide format, meaning each gage has it’s own column, you’d have to write a new geom for EACH gage, because they’re all in separate columns.</p>
+<p>Now imagine you want to do some math to create new data: let’s say cases NO3 multiplied by Flow…. How would you even do that using the data on the right? With the wide data on the left it is simply mutate(NO3 * Flow).</p>
+<p>Finally, which table is easier to read in TABLE format (not a plot) in each of the two images below? Wide data is much more fitting for tables.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pivot_longer.png" title="Pivoting to a longer format" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Pivoting to a longer format</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pivot_wider.png" title="Pivoting to a wider format" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Pivoting to a wider format</figcaption>
+</figure>
+</div>
+<p>dplyr, part of the tidyverse, has functions to convert data between wide and long data. I have to look up the syntax every single time I use them. But they are VERY useful.</p>
+</section>
+<section id="pivot-examples" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="pivot-examples"><span class="header-section-number">6.8</span> Pivot Examples</h2>
+<p>Back to our original question: I want to subtract the flow at Ivanhoe from the flow at Radford on the new river to see how much flow increases between the two sites through time.</p>
+<p>To do this I am going to use pivot_wider() to give Ivanhoe and Radford discharges their own column.</p>
+<p>First, we will use select to trim the data to just what we need, then call pivot_wider telling it which data to use for the new column names (names_from = station_nm) and what values we want to pivot into the data under those columns (values_from = Flow).</p>
+<p>Then, subtract the two and make a plot!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pivot so we can compute diffs between one river and others</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>swva_wide <span class="ot">&lt;-</span> swva_dat_clean <span class="sc">%&gt;%</span> <span class="fu">select</span>(station_nm, Flow, Date) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> station_nm, <span class="at">values_from =</span> Flow)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>swva_wide <span class="ot">&lt;-</span> swva_wide <span class="sc">%&gt;%</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Radford_Ivanhoe =</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">NEW RIVER AT RADFORD, VA</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">NEW RIVER AT IVANHOE, VA</span><span class="st">`</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(swva_wide, <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Radford_Ivanhoe))<span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Change in flow from Ivanhoe to Radford"</span>)<span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>To further illustrate how to move between long and wide data and when to use them, let’s grab some water quality data. This process will also review some of the other concepts from this topic.</p>
+<p>In the chunk below we will look to see what sites have data for nitrate and chloride in our swva bounding box from above. We will then filter them to just stream sites (leave out groundwater and springs). And finally we will download the nitrate and chloride data for those sites.</p>
+<p>Note that the readWQPqw() function requires the site number to have a leading “USGS-” so we will add that using the paste0() function in a new column using a mutate. You could also use paste() with sep = ’’. We will also use the resulting column when we join site information with the downloaded data in the next step.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Nitrate as nitrate and chloride</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"00940"</span>, <span class="st">"71851"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#what sites in our bounding box have cloride and nitrate</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>swva_chem_sites <span class="ot">&lt;-</span> <span class="fu">whatNWISsites</span>(<span class="at">bBox =</span> swva, </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">parameterCd =</span> params)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#filter to just stream water and</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#prep to send to readWQPqw by adding USGS- to site_no</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>swva_chem_sites <span class="ot">&lt;-</span> <span class="fu">filter</span>(swva_chem_sites, site_tp_cd <span class="sc">==</span> <span class="st">"ST"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">mutate</span>(<span class="at">site_no_USGS =</span> <span class="fu">paste0</span>(<span class="st">"USGS-"</span>, site_no))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>wqdat <span class="ot">&lt;-</span> <span class="fu">readWQPqw</span>(<span class="at">siteNumber =</span> swva_chem_sites<span class="sc">$</span>site_no_USGS, </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                    <span class="at">parameterCd =</span> params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s clean things up a bit.</p>
+<p>Join the parameter names from parameterCdFile and then join the site names from swva_chem_site. Then select just the columns we want, and finally filter the remaining data to just look at sites from the New River.</p>
+<p>To illustrate the functionality of the data in this format, plot Chloride for each site, and then plot Chloride AND Nitrate, using the parameter name in facet_wrap.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="ot">&lt;-</span> wqdat <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(swva_chem_sites, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"MonitoringLocationIdentifier"</span> <span class="ot">=</span> <span class="st">"site_no_USGS"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MonitoringLocationIdentifier, ActivityStartDate,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         CharacteristicName, ResultMeasure.MeasureUnitCode, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         station_nm, ResultMeasureValue) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(station_nm, <span class="st">"NEW RIVER"</span>))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="sc">%&gt;%</span> <span class="fu">filter</span>(CharacteristicName <span class="sc">==</span> <span class="st">"Chloride"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ActivityStartDate, <span class="at">y =</span> ResultMeasureValue, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Chloride (mg/L)"</span>)<span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Site"</span>)<span class="sc">+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ActivityStartDate, <span class="at">y =</span> ResultMeasureValue, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="st">"CharacteristicName"</span>, <span class="at">nrow =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Concentration (mg/L)"</span>)<span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">element_blank</span>())<span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Site"</span>)<span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now let’s say we want to calculate something with chloride and nitrate. We need to make the data wide so we have a nitrate column and a chloride column. Do that below. What goes into values_from? what goes into names_from?</p>
+<p>Next, plot Chloride and Nitrate added together (Chloride + Nitrate). Could you do this with the data in the previous format?</p>
+<p>Finally, use pivot_longer to transform the data back into a long format. Often you’ll get data in a wide format and need to convert it to long, and we haven’t tried that yet. The only argument you’ll need to pass to pivot_longer() in this case is to tell it what columns to turn into the new DATA column (using the cols = ) parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make wqdat_clean wide</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>wqdat_wide <span class="ot">&lt;-</span> wqdat_clean <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>ResultMeasure.MeasureUnitCode) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> ResultMeasureValue, <span class="at">names_from =</span> CharacteristicName)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wqdat_wide, <span class="fu">aes</span>(<span class="at">x =</span> ActivityStartDate, <span class="at">y =</span> Chloride <span class="sc">+</span> Nitrate)) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 104 rows containing missing values (`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>wqlonger <span class="ot">&lt;-</span> wqdat_wide <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Chloride"</span>, <span class="st">"Nitrate"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05-Intro-Stats-Activity.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Stats</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07-Activity-Joins-Pivots_dataRetrieval.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">ACTIVITY: Joins Pivots dataRetrieval</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
