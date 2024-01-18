@@ -1,37 +1,33 @@
 project:
   type: book
-
 book:
-  title: "Hydroinformatics"
-  author: "JP Gannon"
-  date: "1/9/2024"
+  title: Hydroinformatics
+  author: JP Gannon
+  date: 1/9/2024
   chapters:
-    - index.qmd
-    - 01-Plotting_Demo_COMPLETE.qmd
-    - 02-Programming_Basics_Demo_COMPLETE.qmd
-    - 03-Activity-Intro-Skills.qmd
-    - 04-Intro-Stats-Completed.qmd
-    - 05-Intro-Stats-Activity.qmd
-    - 06-Get-Format-Plot-hydrodata_COMPLETE.qmd
-    - 07-Activity-Joins-Pivots_dataRetrieval.qmd
-    - 08-Summative_Activity.qmd
-    - 09-Flow_Duration_Curves.qmd
-    - 10-LowFlowStats-FDC.qmd
-    - 11-Flood_Frequency.qmd
-    - 12-Intro-Geospatial-R.qmd
-    - 13-Summative-Assessment-2.qmd
-    - 14-Geospatial-Raster-Hydro.qmd
-    - 15-Watershed-Delineation-and-Analysis.qmd
-    - 16-Modeling-Getting-Started-HBV.qmd
-    - 17-Calibrate-HBV.qmd
-
+  - index.qmd
+  - 01-Plotting_Demo_COMPLETE.qmd
+  - 02-Programming_Basics_Demo_COMPLETE.qmd
+  - 03-Activity-Intro-Skills.qmd
+  - 04-Intro-Stats-Completed.qmd
+  - 05-Intro-Stats-Activity.qmd
+  - 06-Get-Format-Plot-hydrodata_COMPLETE.qmd
+  - 07-Activity-Joins-Pivots_dataRetrieval.qmd
+  - 08-Summative_Activity.qmd
+  - 09-Flow_Duration_Curves.qmd
+  - 10-LowFlowStats-FDC.qmd
+  - 11-Flood_Frequency.qmd
+  - 12-Intro-Geospatial-R.qmd
+  - 13-Summative-Assessment-2.qmd
+  - 14-Geospatial-Raster-Hydro.qmd
+  - 15-Watershed-Delineation-and-Analysis.qmd
+  - 16-Modeling-Getting-Started-HBV.qmd
+  - 17-Calibrate-HBV.qmd
 format:
   html:
     theme: cosmo
-#  pdf:
- #   documentclass: scrreprt
-  
+    css: include/webex.css
+    include-after-body: include/webex.js
 editor: visual
-
 execute:
   freeze: auto

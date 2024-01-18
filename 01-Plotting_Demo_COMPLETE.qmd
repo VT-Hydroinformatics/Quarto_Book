@@ -159,3 +159,18 @@ ggplot(RBI, aes(RBI, DRAIN_SQKM, color = AGGECOREGION))+
   geom_point()
 
 ```
+
+```{r echo=FALSE}
+library(webexercises)
+```
+
+## Test your knowledge!
+
+### Which is a valid ggplot statement?
+`r longmcq(c(
+answer="ggplot(mydata, c(x = date, y = flow)) + geom_line()", 
+"ggplot(mydata, c(x = date, y = flow)), geom_line()", 
+"ggplot(mydata c(x = date, y = flow)) + geom_line()",
+"ggplot(mydata, c(x = date y = flow)) + geom_line()"))`
+
+

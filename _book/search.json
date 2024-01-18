@@ -18,7 +18,7 @@
     "href": "01-Plotting_Demo_COMPLETE.html#download-and-install-tidyverse-library",
     "title": "1  Intro to Plotting",
     "section": "1.1 Download and install tidyverse library",
-    "text": "1.1 Download and install tidyverse library\nWe will use the tidyverse a lot this semester. It is a suite of packages that handles plotting and data wrangling efficiently.\nYou only have to install the library once. You have to load it using the library() function each time you start an R session.\n\n#install.packages(\"tidyverse\")\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.1     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n#library(webexercises)"
+    "text": "1.1 Download and install tidyverse library\nWe will use the tidyverse a lot this semester. It is a suite of packages that handles plotting and data wrangling efficiently.\nYou only have to install the library once. You have to load it using the library() function each time you start an R session.\n\n#install.packages(\"tidyverse\")\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.2     ✔ readr     2.1.4\n✔ forcats   1.0.0     ✔ stringr   1.5.0\n✔ ggplot2   3.4.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.2     ✔ tidyr     1.3.0\n✔ purrr     1.0.1     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors"
   },
   {
     "objectID": "01-Plotting_Demo_COMPLETE.html#reading-data",
@@ -96,6 +96,13 @@
     "title": "1  Intro to Plotting",
     "section": "1.12 Multiple geoms",
     "text": "1.12 Multiple geoms\nFinally: You can add multiple geoms to the same plot. Examples of when you might want to do this are when you are showing a line fit and want to show the points as well, or maybe showing a boxplot and want to show the data behind it. You simply add additional geom_… lines to add additional geoms.\n\nggplot(RBI, aes(RBI, DRAIN_SQKM, color = AGGECOREGION))+\n  stat_smooth(method = \"lm\", linetype = 2)+\n  geom_point()\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "01-Plotting_Demo_COMPLETE.html#test-your-knowledge",
+    "href": "01-Plotting_Demo_COMPLETE.html#test-your-knowledge",
+    "title": "1  Intro to Plotting",
+    "section": "1.13 Test your knowledge!",
+    "text": "1.13 Test your knowledge!\n\n1.13.1 Which is a valid ggplot statement?\n\n ggplot(mydata, c(x = date, y = flow)) + geom_line() ggplot(mydata, c(x = date, y = flow)), geom_line() ggplot(mydata c(x = date, y = flow)) + geom_line() ggplot(mydata, c(x = date y = flow)) + geom_line()"
   },
   {
     "objectID": "02-Programming_Basics_Demo_COMPLETE.html#introduction",
