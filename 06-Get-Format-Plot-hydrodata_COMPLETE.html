@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 4           dv   00095   00003 145685         NA           wat        &lt;NA&gt;
    srs_id access_cd begin_date   end_date count_nu
 2 1645597         0 2006-12-20 2009-03-18      704
-3 1645423         0 1907-10-01 2024-01-15    33709
+3 1645423         0 1907-10-01 2024-01-31    33725
 4 1646694         0 2006-12-20 2008-09-29      534</code></pre>
 </div>
 </div>
@@ -421,7 +421,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3           dv   00095   00003 145685         NA           wat        &lt;NA&gt;
    srs_id access_cd begin_date   end_date count_nu parameter_group_nm
 1 1645597         0 2006-12-20 2009-03-18      704           Physical
-2 1645423         0 1907-10-01 2024-01-15    33709           Physical
+2 1645423         0 1907-10-01 2024-01-31    33725           Physical
 3 1646694         0 2006-12-20 2008-09-29      534           Physical
                                                                                 parameter_nm
 1                                                        Temperature, water, degrees Celsius
@@ -433,7 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3           Specific conductance      uS/cm @25C</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#that made a lot of columns, let's clean it up</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dataAvailClean <span class="ot">&lt;-</span> dataAvailable <span class="sc">%&gt;%</span> <span class="fu">select</span>(site_no, </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>dataAvailClean <span class="ot">&lt;-</span> dataAvailable <span class="sc">|&gt;</span> <span class="fu">select</span>(site_no, </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                           station_nm,</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                           parm_cd, </span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                           srsname, </span>
@@ -449,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3 03171000 NEW RIVER AT RADFORD, VA   00095     Specific conductance
   parameter_units begin_date   end_date
 1           deg C 2006-12-20 2009-03-18
-2           ft3/s 1907-10-01 2024-01-15
+2           ft3/s 1907-10-01 2024-01-31
 3      uS/cm @25C 2006-12-20 2008-09-29</code></pre>
 </div>
 </div>
@@ -493,27 +493,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 20      USGS 03170000                 LITTLE RIVER AT GRAYSONTOWN, VA
 21      USGS 03169500             LITTLE RIVER NEAR COPPER VALLEY, VA
    site_tp_cd dec_lat_va dec_long_va colocated           queryTime
-1          ST   36.88873   -81.34733     FALSE 2024-01-16 12:26:07
-2          ST   37.18428   -81.32982     FALSE 2024-01-16 12:26:07
-3          ST   37.27151   -81.30482     FALSE 2024-01-16 12:26:07
-4          ST   37.25595   -81.28177     FALSE 2024-01-16 12:26:07
-5          ST   36.85984   -80.98036     FALSE 2024-01-16 12:26:07
-6          ST   36.75985   -80.95619     FALSE 2024-01-16 12:26:07
-7          ST   36.83485   -80.95258     FALSE 2024-01-16 12:26:07
-8          SP   36.93429   -80.90313     FALSE 2024-01-16 12:26:07
-9          ST   36.93095   -80.90036     FALSE 2024-01-16 12:26:07
-10         SP   36.93068   -80.89619     FALSE 2024-01-16 12:26:07
-11         ST   36.93901   -80.88730     FALSE 2024-01-16 12:26:07
-12         ST   37.30568   -80.84980     FALSE 2024-01-16 12:26:07
-13         ST   37.04721   -80.78472     FALSE 2024-01-16 12:26:07
-14         ST   36.93762   -80.74563     FALSE 2024-01-16 12:26:07
-15         ST   36.88901   -80.72757     FALSE 2024-01-16 12:26:07
-16         ST   37.24179   -80.71090     FALSE 2024-01-16 12:26:07
-17         ST   37.26818   -80.70951     FALSE 2024-01-16 12:26:07
-18         ST   37.28957   -80.61673     FALSE 2024-01-16 12:26:07
-19         ST   37.14179   -80.56922     FALSE 2024-01-16 12:26:07
-20         ST   37.03763   -80.55672     FALSE 2024-01-16 12:26:07
-21         ST   36.99652   -80.52144     FALSE 2024-01-16 12:26:07</code></pre>
+1          ST   36.88873   -81.34733     FALSE 2024-02-01 08:08:36
+2          ST   37.18428   -81.32982     FALSE 2024-02-01 08:08:36
+3          ST   37.27151   -81.30482     FALSE 2024-02-01 08:08:36
+4          ST   37.25595   -81.28177     FALSE 2024-02-01 08:08:36
+5          ST   36.85984   -80.98036     FALSE 2024-02-01 08:08:36
+6          ST   36.75985   -80.95619     FALSE 2024-02-01 08:08:36
+7          ST   36.83485   -80.95258     FALSE 2024-02-01 08:08:36
+8          SP   36.93429   -80.90313     FALSE 2024-02-01 08:08:36
+9          ST   36.93095   -80.90036     FALSE 2024-02-01 08:08:36
+10         SP   36.93068   -80.89619     FALSE 2024-02-01 08:08:36
+11         ST   36.93901   -80.88730     FALSE 2024-02-01 08:08:36
+12         ST   37.30568   -80.84980     FALSE 2024-02-01 08:08:36
+13         ST   37.04721   -80.78472     FALSE 2024-02-01 08:08:36
+14         ST   36.93762   -80.74563     FALSE 2024-02-01 08:08:36
+15         ST   36.88901   -80.72757     FALSE 2024-02-01 08:08:36
+16         ST   37.24179   -80.71090     FALSE 2024-02-01 08:08:36
+17         ST   37.26818   -80.70951     FALSE 2024-02-01 08:08:36
+18         ST   37.28957   -80.61673     FALSE 2024-02-01 08:08:36
+19         ST   37.14179   -80.56922     FALSE 2024-02-01 08:08:36
+20         ST   37.03763   -80.55672     FALSE 2024-02-01 08:08:36
+21         ST   36.99652   -80.52144     FALSE 2024-02-01 08:08:36</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#find sites with other criteria, VA, less than 20 sqmi, other criteria can be used..</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#check out the CRAN documentation</span></span>
@@ -540,13 +540,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>swva_dat <span class="ot">&lt;-</span> <span class="fu">readNWISdv</span>(<span class="at">siteNumber =</span> swva_sites<span class="sc">$</span>site_no, </span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">parameterCd =</span> params, </span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">startDate =</span> start, </span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">endDate =</span> end) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">endDate =</span> end) <span class="sc">|&gt;</span> </span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">renameNWISColumns</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s plot the water temperature data as a line and control the color of the lines with the different sites.</p>
 <p>What could be better about this plot?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>swva_dat <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Wtemp, <span class="at">color =</span> site_no)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>swva_dat <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Wtemp, <span class="at">color =</span> site_no)) <span class="sc">+</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 2218 rows containing missing values (`geom_line()`).</code></pre>
@@ -559,10 +559,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Then use select to remove some of the unnecessary columns.</p>
 <p>Then make the plot and then snazz it up with labels and a non-junky theme.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>swva_dat_clean <span class="ot">&lt;-</span> <span class="fu">left_join</span>(swva_dat, swva_sites, <span class="at">by =</span> <span class="st">"site_no"</span>) <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>swva_dat_clean <span class="ot">&lt;-</span> <span class="fu">left_join</span>(swva_dat, swva_sites, <span class="at">by =</span> <span class="st">"site_no"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(station_nm, site_no, Date, Flow, Wtemp, dec_lat_va, dec_long_va)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>swva_dat_clean <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Wtemp, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>swva_dat_clean <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Wtemp, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Water temperature (deg C)"</span>)<span class="sc">+</span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">element_blank</span>())<span class="sc">+</span></span>
@@ -613,10 +613,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pivot so we can compute diffs between one river and others</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>swva_wide <span class="ot">&lt;-</span> swva_dat_clean <span class="sc">%&gt;%</span> <span class="fu">select</span>(station_nm, Flow, Date) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>swva_wide <span class="ot">&lt;-</span> swva_dat_clean <span class="sc">|&gt;</span> <span class="fu">select</span>(station_nm, Flow, Date) <span class="sc">|&gt;</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> station_nm, <span class="at">values_from =</span> Flow)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>swva_wide <span class="ot">&lt;-</span> swva_wide <span class="sc">%&gt;%</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>swva_wide <span class="ot">&lt;-</span> swva_wide <span class="sc">|&gt;</span> </span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Radford_Ivanhoe =</span> </span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">NEW RIVER AT RADFORD, VA</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">NEW RIVER AT IVANHOE, VA</span><span class="st">`</span>)</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
@@ -641,7 +641,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#filter to just stream water and</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#prep to send to readWQPqw by adding USGS- to site_no</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>swva_chem_sites <span class="ot">&lt;-</span> <span class="fu">filter</span>(swva_chem_sites, site_tp_cd <span class="sc">==</span> <span class="st">"ST"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>swva_chem_sites <span class="ot">&lt;-</span> <span class="fu">filter</span>(swva_chem_sites, site_tp_cd <span class="sc">==</span> <span class="st">"ST"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">mutate</span>(<span class="at">site_no_USGS =</span> <span class="fu">paste0</span>(<span class="st">"USGS-"</span>, site_no))</span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>wqdat <span class="ot">&lt;-</span> <span class="fu">readWQPqw</span>(<span class="at">siteNumber =</span> swva_chem_sites<span class="sc">$</span>site_no_USGS, </span>
@@ -651,15 +651,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Join the parameter names from parameterCdFile and then join the site names from swva_chem_site. Then select just the columns we want, and finally filter the remaining data to just look at sites from the New River.</p>
 <p>To illustrate the functionality of the data in this format, plot Chloride for each site, and then plot Chloride AND Nitrate, using the parameter name in facet_wrap.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="ot">&lt;-</span> wqdat <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="ot">&lt;-</span> wqdat <span class="sc">|&gt;</span> </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(swva_chem_sites, </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"MonitoringLocationIdentifier"</span> <span class="ot">=</span> <span class="st">"site_no_USGS"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"MonitoringLocationIdentifier"</span> <span class="ot">=</span> <span class="st">"site_no_USGS"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MonitoringLocationIdentifier, ActivityStartDate,</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         CharacteristicName, ResultMeasure.MeasureUnitCode, </span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         station_nm, ResultMeasureValue) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         station_nm, ResultMeasureValue) <span class="sc">|&gt;</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(station_nm, <span class="st">"NEW RIVER"</span>))</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="sc">%&gt;%</span> <span class="fu">filter</span>(CharacteristicName <span class="sc">==</span> <span class="st">"Chloride"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="sc">|&gt;</span> <span class="fu">filter</span>(CharacteristicName <span class="sc">==</span> <span class="st">"Chloride"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ActivityStartDate, <span class="at">y =</span> ResultMeasureValue, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Chloride (mg/L)"</span>)<span class="sc">+</span></span>
@@ -669,7 +669,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>wqdat_clean <span class="sc">|&gt;</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ActivityStartDate, <span class="at">y =</span> ResultMeasureValue, <span class="at">color =</span> station_nm)) <span class="sc">+</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="st">"CharacteristicName"</span>, <span class="at">nrow =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
@@ -687,7 +687,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make wqdat_clean wide</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>wqdat_wide <span class="ot">&lt;-</span> wqdat_clean <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>ResultMeasure.MeasureUnitCode) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>wqdat_wide <span class="ot">&lt;-</span> wqdat_clean <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>ResultMeasure.MeasureUnitCode) <span class="sc">|&gt;</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> ResultMeasureValue, <span class="at">names_from =</span> CharacteristicName)</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wqdat_wide, <span class="fu">aes</span>(<span class="at">x =</span> ActivityStartDate, <span class="at">y =</span> Chloride <span class="sc">+</span> Nitrate)) <span class="sc">+</span></span>
@@ -699,7 +699,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <p><img src="06-Get-Format-Plot-hydrodata_COMPLETE_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>wqlonger <span class="ot">&lt;-</span> wqdat_wide <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>wqlonger <span class="ot">&lt;-</span> wqdat_wide <span class="sc">|&gt;</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Chloride"</span>, <span class="st">"Nitrate"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
