@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-Intro-Stats-Activity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Stats</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Intro Stats Activity</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -305,19 +305,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="problem-1" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="problem-1"><span class="header-section-number">7.2</span> Problem 1</h2>
-<p>Using readWQPqw(), read all the chloride (00940) data for the New River at Radford (03171000, must add USGS- to gage id). Use the head() function to print the beginning of the output from readNWISqw.</p>
+<p>Using readWQPqw(), read all the chloride (00940) data for the New River at Radford (03171000, must add USGS- to gage id). Use the head() function to print the beginning of the output from this function.</p>
 </section>
 <section id="problem-2" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="problem-2"><span class="header-section-number">7.3</span> Problem 2</h2>
-<p>Using the readNWISdv (daily values) function, download discharge (00060), temperature (00003), and specific conductivity (00095) for the New River at Radford from 2007 to 2009 (regular year). Use renameNWIScolumns() to rename the output of the download. Use head() to show the beginning of the results of your download.</p>
+<p>Using the readNWISdv (daily values) function, download discharge (00060), temperature (00010), and specific conductivity (00095) for the New River at Radford from 2007 to 2009 (regular year). Use renameNWIScolumns() to rename the output of the download. Use head() to show the beginning of the results of your download.</p>
 </section>
 <section id="problem-3" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="problem-3"><span class="header-section-number">7.4</span> Problem 3</h2>
-<p>Do a left join on newphys and newriver to add the chloride data to the daily discharge, temp, and conductivity data. hint: you will join on the date. Preview your data below the chunk using head().</p>
+<p>Join the data from Problem 1 and Problem 2 to add the chloride data to the daily discharge, temp, and conductivity data. hint: you will join on the date. Preview your data below the chunk using head().</p>
 </section>
 <section id="problem-4" class="level2" data-number="7.5">
 <h2 data-number="7.5" class="anchored" data-anchor-id="problem-4"><span class="header-section-number">7.5</span> Problem 4</h2>
-<p>Create a line plot of Date (x) and Flow (y). Create a scatter plot of Date (x) and chloride concentration (y). Put the graphs on top of each other using the patchwork library.</p>
+<p>Using the joined data, create a line plot of Date (x) and Flow (y). Create a scatter plot of Date (x) and chloride concentration (y). Put the graphs on top of each other using the patchwork library.</p>
 </section>
 <section id="problem-5" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="problem-5"><span class="header-section-number">7.6</span> Problem 5</h2>

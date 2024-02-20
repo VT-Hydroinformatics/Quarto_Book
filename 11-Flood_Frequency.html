@@ -169,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-Intro-Stats-Activity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACTIVITY Intro Stats</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Intro Stats Activity</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -287,21 +287,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="intro" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="intro"><span class="header-section-number">11.2</span> Intro</h2>
 <p>This methods for this chapter are adapted from the following activity: https://serc.carleton.edu/hydromodules/steps/166250.html</p>
-<p>After working with Flow Duration Curves (FDCs) and performing a low flow analysis, we now understand all the concepts necessary to perform a floow frequency analysis. In this chapter we will perform a flood frequency analysis using a Gumbel extreme value distribution and then write our own function that will return the magnitude of whatever probability flood we want!</p>
+<p>After working with Flow Duration Curves (FDCs) and performing a low flow analysis, we now understand all the concepts necessary to perform a flood frequency analysis. In this chapter we will perform a flood frequency analysis using a Gumbel extreme value distribution and then write our own function that will return the magnitude of whatever probability flood we want!</p>
 <p>First we will load the tidyverse and dataRetrieval packages and the set the theme for our plots.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dataRetrieval)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_classic</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extRemes)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_classic</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, download the yearly peakflow data from USGS dataRetrieval using the readNWISpeak() function. We don’t have to create our own yearly values like we did in the low flow analysis. This function just returns the highest flow for each year.</p>
-<p>Download the data for the New River at Radford starting in 1945.</p>
+<p>Download the data for the New River at Radford.</p>
 <p>Then make a plot of the peak flow for each year.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>radford <span class="ot">&lt;-</span> <span class="st">"03171000"</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> <span class="fu">readNWISpeak</span>(radford, <span class="at">startDate =</span> <span class="st">"1945-01-01"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> <span class="fu">readNWISpeak</span>(radford)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(peakflows, <span class="fu">aes</span>(peak_dt, peak_va))<span class="sc">+</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -314,8 +316,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create rank column (minus flips the ranking)</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#then clean it up, pull out only peak value, date, rank</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">%&gt;%</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ranks =</span> <span class="fu">rank</span>(<span class="sc">-</span>peak_va)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ranks =</span> <span class="fu">rank</span>(<span class="sc">-</span>peak_va)) <span class="sc">|&gt;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(peak_dt, peak_va, ranks)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#look at it</span></span>
@@ -328,46 +330,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(peakflows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     peak_dt peak_va ranks
-1 1945-09-18   62700  15.0
-2 1946-01-08   44400  35.0
-3 1947-01-20   34500  49.5
-4 1948-02-14   34500  49.5
-5 1949-08-29   40800  39.0
-6 1949-11-02   15200  76.0</code></pre>
+1 1878-09-15  217000   2.0
+2 1896-04-01   52400  40.0
+3 1897-02-22   67200  24.0
+4 1898-09-23   37200  70.0
+5 1899-03-05   50600  41.5
+6 1900-03-01   34000  78.5</code></pre>
 </div>
 </div>
-<p>Now we need to calculate the exceedance probability and return interval for each value in our data. For flood frequency analysis, it is common to use the Gringorten plotting position formula:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/plottingposition.png" title="Plotting Position Formula" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Plotting Position Formula</figcaption>
-</figure>
-</div>
-<p>qi = Exceedance probability</p>
-<p>N = Number of observations in your record</p>
-<p>i = Rank of specific observation, i = 1 is the largest, i = N is the smallest.</p>
-<p>a = constant for estimation = 0.44</p>
+<p>Now we need to calculate the exceedance probability and return period for each value in our data. For flood frequency analysis, it is common to use the Weibull plotting formula:</p>
+<p><span class="math inline">\(Tp = (N + 1) / m\)</span></p>
+<p><span class="math inline">\(Tp\)</span> = Return Period</p>
+<p><span class="math inline">\(N\)</span> = Number of observations in your record</p>
+<p><span class="math inline">\(m\)</span> = Rank of specific observation, m = 1 is the largest, m = N is the smallest.</p>
 <hr>
-<p><span class="math inline">\(Non-exceedence probability = pi = 1 - qi\)</span></p>
+<p>And the return period is the inverse of the exceedance probability so:</p>
+<p>Exceedance probability = <span class="math inline">\(p = 1 / Tp\)</span></p>
+<p>Non-exceedance probability = <span class="math inline">\(pne = 1 - p\)</span></p>
 <hr>
-<p>Return period</p>
-<p><span class="math inline">\(Tp = 1/(1-p)\)</span></p>
-<p>In the chunk below, create a column in your dataset and calculate each: exceedance probability, non-exceedane probabily, and return period.</p>
+<p>In the chunk below, create a column in your dataset and calculate each: exceedance probability, non-exceedance probability, and return period.</p>
 <p>Then make a plot with peak flow on the Y axis and Return Period on the X.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">length</span>(peakflows<span class="sc">$</span>peak_dt)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.44</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate exceedence/non-exceedence with gringorten and return period</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">%&gt;%</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">qi =</span> (ranks <span class="sc">-</span> a) <span class="sc">/</span> (N <span class="sc">+</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="dv">2</span><span class="sc">*</span>a))) <span class="sc">%&gt;%</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pi =</span> <span class="dv">1</span> <span class="sc">-</span> qi) <span class="sc">%&gt;%</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">TpEst =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span>pi))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot peak flows on y and est return period on the x</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>peakflows <span class="sc">%&gt;%</span> </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> TpEst, <span class="at">y =</span> peak_va)) <span class="sc">+</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate return period, exceedence/non-exceedence with Weibull</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Tp =</span> (N <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">/</span>ranks,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">pe =</span> <span class="dv">1</span> <span class="sc">/</span> Tp,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">pne =</span> <span class="dv">1</span> <span class="sc">-</span> pe)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot peak flows on y and est return period on the x</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>peakflows <span class="sc">|&gt;</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Tp, <span class="at">y =</span> peak_va)) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="11-Flood_Frequency_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -406,19 +401,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <p>In the chunk below:</p>
-<p>First calculate p theoretical with the equation above.</p>
+<p>First calculate non-exceedance probability with the equation above.</p>
 <p>Then calculate Tp theoretical (the return period) as T was calculated above Tp = 1 / (1-p)</p>
 <p>Finally create a plot of return period on the x axis and peak values on the y. Include return periods calculated from your data and those calculated from the Gumbel distribution on your plot as points of different colors.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pTheoretical =</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">exp</span>(<span class="sc">-</span>((peak_va <span class="sc">-</span> u) <span class="sc">/</span> alpha)))) <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">TpTheoretical =</span> (<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span>pTheoretical)))</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pne_gumbel =</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">exp</span>(<span class="sc">-</span>((peak_va <span class="sc">-</span> u) <span class="sc">/</span> alpha)))) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Tp_gumbel =</span> (<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span>pne_gumbel)))</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>peakflows <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> TpEst, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Estimated"</span>)) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> TpTheoretical, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Theoretical"</span>))<span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>peakflows <span class="sc">|&gt;</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Tp_gumbel, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Gumbel"</span>))<span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Tp, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Estimated"</span>))<span class="sc">+</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Annual Peak Flows"</span>)<span class="sc">+</span></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Return Period"</span>)<span class="sc">+</span></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -427,19 +422,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Let’s look at these data a slightly different way to make it easier to see what is going on and how we can pull of flows for different return periods.</p>
-<p>Make the same plot as abote but show the theoretical values (from the distribution) as a line, with the estimated values as points, and log the x axis with limits set to 1 - 100.</p>
+<p>Make the same plot as above but show the Gumbel distribution values as a line, with the estimated values as points, and log the x axis with limits set to 1 - 100. Save this plot, we will add to it later.</p>
 <p>With this plot you could look up the return period for any flood or the discharge level for any return period.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>peakflows <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> TpEst, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Estimated"</span>)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> TpTheoretical, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Theoretical"</span>))<span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Annual Peak Flows"</span>)<span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Return Period"</span>)<span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">100</span>))<span class="sc">+</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 1 rows containing missing values (`geom_point()`).</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>peakplot <span class="ot">&lt;-</span> peakflows <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Tp, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Estimated"</span>))<span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Tp_gumbel, <span class="at">y =</span> peak_va, <span class="at">color =</span> <span class="st">"Gumbel"</span>))<span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Annual Peak Flows"</span>)<span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Return Period"</span>)<span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">50</span>,<span class="dv">100</span>,<span class="dv">200</span>))<span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>peakplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="11-Flood_Frequency_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -451,26 +446,105 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(log() in r is the natural log, log10() is base 10 log)</p>
 <p>According to this flow, what is the 1 in 100 chance flood at this location? Do you see any issues with reporting this as the 1 in 100 chance flood? What are they?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Tp <span class="ot">=</span> <span class="dv">100</span></span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Tp <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>pne <span class="ot">=</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span><span class="sc">/</span>Tp)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>peak_va <span class="ot">=</span> u <span class="sc">-</span> (alpha <span class="sc">*</span> <span class="fu">log</span>(<span class="sc">-</span><span class="fu">log</span>(pne)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The gumbel distribution fit for the New River at Radford isn’t great. Fortunately there are ways to find an appropriate fit.</p>
+<p>The generalized extreme value distribution will fit a much wider range of extreme value distributions. The distribution has three parameters:</p>
+<p>location, scale, and shape</p>
+<p>When the shape parameter is 0, the GEV is the same as the Gumbel Distribution. If it is greater than 0, the GEV is the the same as the Type II extreme value distribution. If it is less than 0, the GEV is the the same as the Type III extreme value distribution</p>
+<p>Fitting data to this distribution is much more complex than what we did above with the Gumbel, but there are stats packages available that will do it for us.</p>
+<p>Here we will use the fevd() function from the extRemes package to fit a generalized extreme value distribution to our data.</p>
+<p>Below, do the following - Pass the peak flow values to fevd() and save the result as “GEVD”. This will save all the outputs from fevd() so we can use them in a few different ways.</p>
+<ul>
+<li><p>Pass the “GEVD” object to summary() and then plot(). You can see the GEVD object includes the three parameters: location, scale, and shape. plot() also shows you how well the fit turned out using several plots.</p></li>
+<li><p>Save the location, scale, and shape parameters. You get them out of the GEVD object using the following syntax: GEVD$results$par[#] where # is 1: Location, 2: Scale, 3: Shape. (if you are looking at the syntax in an un-knitted rmd, ignore the backslashes)</p></li>
+</ul>
+<p>Based on the parameters from the fit, what type of extreme value distribution best fits the New River data?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GEVD <span class="ot">&lt;-</span> <span class="fu">fevd</span>(peakflows<span class="sc">$</span>peak_va)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span><span class="sc">/</span>Tp)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>peak_va <span class="ot">=</span> u <span class="sc">-</span> (alpha <span class="sc">*</span> <span class="fu">log</span>(<span class="sc">-</span><span class="fu">log</span>(p)))</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>peak_va</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(GEVD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 119390.3</code></pre>
+<pre><code>
+fevd(x = peakflows$peak_va)
+
+[1] "Estimation Method used: MLE"
+
+
+ Negative Log-Likelihood Value:  1478.643 
+
+
+ Estimated parameters:
+    location        scale        shape 
+3.243469e+04 1.679966e+04 2.824642e-01 
+
+ Standard Error Estimates:
+    location        scale        shape 
+1.688961e+03 1.419770e+03 7.949888e-02 
+
+ Estimated parameter covariance matrix.
+              location         scale         shape
+location 2852588.84028  1.501585e+06 -40.722126890
+scale    1501585.06140  2.015746e+06  -4.189323634
+shape        -40.72213 -4.189324e+00   0.006320071
+
+ AIC = 2963.286 
+
+ BIC = 2971.865 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GEVD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-Flood_Frequency_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="768"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>location <span class="ot">&lt;-</span> GEVD<span class="sc">$</span>results<span class="sc">$</span>par[<span class="dv">1</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>scale <span class="ot">&lt;-</span> GEVD<span class="sc">$</span>results<span class="sc">$</span>par[<span class="dv">2</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>shape <span class="ot">&lt;-</span> GEVD<span class="sc">$</span>results<span class="sc">$</span>par[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now calculate flow magnitudes for the non-exceedance probabilities in our peakflows data using the function qevd(). Use a mutate to add a column of flows calculated from qevd, using the parameters from your distribution fit (location, scale, shape) and the non-exceedance probabilities calculated earlier (the pne column in the peakflows data).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>peakflows <span class="ot">&lt;-</span> peakflows <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">GEVDflows =</span> <span class="fu">qevd</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">p =</span> pne, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">loc =</span> location, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale =</span> scale, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">shape =</span> shape))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now add a line showing flows you just calculated to the plot we made above showing the Gumbel fit. Does this approach work better in this case?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add a line to the plot above that shows the Gumbel fit</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>peakplot <span class="sc">+</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> peakflows, <span class="fu">aes</span>(<span class="at">x =</span> Tp, <span class="at">y =</span> GEVDflows, <span class="at">color =</span> <span class="st">"GEVD"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="11-Flood_Frequency_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Finally, we can calculate the magnitude of a flow with a specific return interval using the same qevd() function. If we want the 1 in 100 chance flood. Our return interval would be 100 and the non-exceedance probability would be 0.99 (pne above). Pass qevd this probability value and the location, scale, and shape parameters you got above to get the 1 in 100 chance flood magnitude.</p>
+<p>How is this different from what we calculated above? Do you think it is more accurate? Why?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#p from above is the </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qevd</span>(<span class="at">p =</span> .<span class="dv">99</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">loc =</span> location, </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale =</span> scale, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">shape =</span> shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>location 
+191056.2 </code></pre>
 </div>
 </div>
 <p>This is a good opportunity to illustrate the usefulness of writing your own functions. When you install packages in R, you get a bunch of functions you can use. But you can also create these on your own to simplify your analyses!</p>
 <p>You do this with the following syntax &gt;MyNewFunction &lt;- function(param1, param2){ &gt;code &gt;}</p>
 <p>Whatever the last line of the “code” portion of the function spits out, get’s returned from the function. So if you said X &lt;- mynewfunction(param1, parm2) X would now have it in whatever your function returned. See a simple example below: a function that adds 1 to any number we pass to it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>add1 <span class="ot">&lt;-</span> <span class="cf">function</span>(number){</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>          number <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>          }</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add1</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>add1 <span class="ot">&lt;-</span> <span class="cf">function</span>(number){</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>          number <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add1</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5</code></pre>
 </div>
@@ -479,23 +553,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Our function will be called “ReturnPeriod” and we will pass it the flow we want the return period for, and the u and alpha of the distribution.</p>
 <p>We will test the function by having it calculate the return period for the 100 year flood we calculated earlier (120027). If it works, it should spit out 100.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ReturnPeriod <span class="ot">&lt;-</span> <span class="cf">function</span>(flow, u, alpha){</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  pTheoretical <span class="ot">=</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">exp</span>(<span class="sc">-</span>((flow <span class="sc">-</span> u) <span class="sc">/</span> alpha)))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  TpTheoretical <span class="ot">=</span> (<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pTheoretical))</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  TpTheoretical</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ReturnPeriod</span>(<span class="dv">120027</span>, u, alpha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ReturnPeriod <span class="ot">&lt;-</span> <span class="cf">function</span>(flow, u, alpha){</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  pTheoretical <span class="ot">=</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">exp</span>(<span class="sc">-</span>((flow <span class="sc">-</span> u) <span class="sc">/</span> alpha)))</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  TpTheoretical <span class="ot">=</span> (<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> pTheoretical))</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  TpTheoretical</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ReturnPeriod</span>(<span class="dv">158349</span>, u, alpha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 103.5193</code></pre>
+<pre><code>[1] 103.3297</code></pre>
 </div>
 </div>
 </section>
 <section id="challenge-create-a-function" class="level2" data-number="11.3">
 <h2 data-number="11.3" class="anchored" data-anchor-id="challenge-create-a-function"><span class="header-section-number">11.3</span> Challenge: Create a function</h2>
-<p>Create a function that returns the 100 year flood when given a USGS gage id, startdate, and enddate for the period you want to investigate.</p>
+<p>Create a function that returns the 100 year flood when given a USGS gage id. Use the generalized extreme value distribution fit function to do this.</p>
 
 
 </section>
