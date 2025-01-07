@@ -2,6 +2,8 @@
 
 Get this document and a version with empty code chunks at the template repository on github: <https://github.com/VT-Hydroinformatics/1-Intro-plotting-R>
 
+You can watch and follow along with a live coding video for this chapter here: <https://youtu.be/L7J2mJrl33k>
+
 ## Download and install tidyverse library
 
 We will use the tidyverse a lot this semester. It is a suite of packages that handles plotting and data wrangling efficiently.
@@ -166,11 +168,6 @@ library(webexercises)
 
 ## Test your knowledge!
 
-### Which is a valid ggplot statement?
-`r longmcq(c(
-answer="ggplot(mydata, c(x = date, y = flow)) + geom_line()", 
-"ggplot(mydata, c(x = date, y = flow)), geom_line()", 
-"ggplot(mydata c(x = date, y = flow)) + geom_line()",
-"ggplot(mydata, c(x = date y = flow)) + geom_line()"))`
+### TESTING...Which is a valid ggplot statement?
 
-
+`r longmcq(c( answer="ggplot(mydata, c(x = date, y = flow)) + geom_line()",  "ggplot(mydata, c(x = date, y = flow)), geom_line()",  "ggplot(mydata c(x = date, y = flow)) + geom_line()", "ggplot(mydata, c(x = date y = flow)) + geom_line()"))`
